@@ -14,9 +14,9 @@ namespace Engine {
 
 		s_consoleLogger = spdlog::stdout_color_mt("Console");
 
-		char filepath[256] = "logs/";
-		char time[128];
-
+		//char filepath[256] = "logs/";
+		//char time[128];
+//
 		/*
 		try
 		{

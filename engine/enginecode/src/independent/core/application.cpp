@@ -173,11 +173,11 @@ namespace Engine {
 	Application::~Application()
 	{
 		// Stop systems
-
+		m_windowsSystem->stop();
 		//Stop logger
 		m_logSystem->stop();
 		//Stop window system
-		//m_windowsSystem->stop();
+		//
 	}
 
 	void Application::run()
