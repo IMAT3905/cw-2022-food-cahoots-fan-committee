@@ -5,7 +5,7 @@
 
 namespace Engine {
 	struct UIColourScheme {
-		glm::vec4 beckground = { 0.2f,0.2f,0.2f,1.0f };
+		glm::vec4 background = { 0.2f,0.2f,0.2f,1.0f };
 		glm::vec4 foreground = { 1.0f,1.0f,1.0f,1.0f };
 		glm::vec4 highlight = { 0.4f,0.2f,0.6f,1.0f };
 	};
@@ -19,9 +19,10 @@ namespace Engine {
 		virtual void OnRender() const {};
 		virtual void OnMouseMove(glm::ivec2& mousepos) {};
 		virtual void OnMousePress(glm::ivec2& mousepos, int32_t button) {};
+		virtual void OnMouseRelease(glm::ivec2& mousepos, int32_t button) {};
 		void SetParent(UIComponent* parent) { m_parent = parent; }
 		UIComponent* GetParent() const { return m_parent; }
-		UIColourScheme* m_colourscheem = nullptr;
+		UIColourScheme* m_colourscheme = nullptr;
 	protected:
 		glm::ivec2 m_position;
 		glm::ivec2 m_size;

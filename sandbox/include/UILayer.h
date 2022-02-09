@@ -27,6 +27,7 @@ public:
 	b2Body* groundBody;
 	b2Body* body;
 private:
+	//FixedOthroCameraController2D
 	glm::mat4 view2D = glm::mat4(1.f);
 	glm::mat4 projection2D;
 	SceneWideUniforms m_swu;
