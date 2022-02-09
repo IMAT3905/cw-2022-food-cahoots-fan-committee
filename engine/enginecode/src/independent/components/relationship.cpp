@@ -10,7 +10,7 @@ namespace Engine
 	{
 		void setChild(entt::entity parentEntity, entt::entity childEntity)
 		{
-			entt::registry& registry = Application::getInstance().m_registry;
+			entt::registry& registry = Application::getInstance().getRegistry();
 
 			auto& parentComponent = registry.get<RelationshipComponent>(parentEntity);
 			auto& childComponent = registry.get<RelationshipComponent>(childEntity);
@@ -39,7 +39,7 @@ namespace Engine
 
 		void updateChildren()
 		{
-			entt::registry& registry = Application::getInstance().m_registry;
+			entt::registry& registry = Application::getInstance().getRegistry();
 
 			auto view = registry.view<RelationshipComponent, TransformComponent>(entt::exclude<RootComponent>);
 			for (auto entity : view)

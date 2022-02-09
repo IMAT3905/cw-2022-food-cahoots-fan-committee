@@ -1,9 +1,8 @@
-/* \file nativeScriptComponent.h */
+/* \file scripting.h */
 #pragma once
 
 #include <entt/entt.hpp>
 #include "events/events.h"
-#include <glm/gtc/type_ptr.hpp>
 
 namespace Engine
 {
@@ -15,7 +14,7 @@ namespace Engine
 		virtual ~NativeScript() = default;
 		virtual void onCreate() {};
 		virtual void onDestroy() {};
-		virtual void onUpdate(float timestep);
+		virtual void onUpdate(float timestep) {};
 		virtual void onKeyPress(KeyPressedEvent& e) {};
 	protected:
 		entt::entity m_entity;
@@ -37,4 +36,10 @@ namespace Engine
 	protected:
 		std::shared_ptr<NativeScript> m_instance = nullptr;
 	};
+
+	namespace ScriptSystem
+	{
+		void updateScripts(float timestep);
+		void onKeyPressed(KeyPressedEvent& e);
+	}
 }

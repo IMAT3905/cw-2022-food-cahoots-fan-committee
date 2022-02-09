@@ -55,7 +55,7 @@
 		return result;
 	};
 
-	SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().m_registry), m_entities(Application::getInstance().m_entities)
+	SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 	{
 		Renderer3D::init();
 		

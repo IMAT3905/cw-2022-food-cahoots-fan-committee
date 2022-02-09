@@ -5,5 +5,7 @@
 #pragma once
 
 #include "core/application.h"
-#include "core/layer.h"
+
 #include "rendering/rendererCommon.h"
+
+#include "components/scripting.h"

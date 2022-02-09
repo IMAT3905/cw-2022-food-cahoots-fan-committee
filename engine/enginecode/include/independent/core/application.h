@@ -56,14 +56,15 @@ namespace Engine {
 	private:
 		static Application* s_instance; //!< Singleton instance of the application
 		bool m_running = true; //!< Is the application running?	
-		
+		entt::registry m_registry; //!< ECS
+		std::vector<entt::entity> m_entities; //!< The entities
 	public:
 		virtual ~Application(); //!< Deconstructor
 		inline static Application& getInstance() { return *s_instance; } //!< Instance getter from singleton pattern
 		void run(); //!< Main loop	
-		std::shared_ptr<Window> getWindow() { return m_window; }
-		entt::registry m_registry;
-		std::vector<entt::entity> m_entities;
+		inline std::shared_ptr<Window> getWindow() { return m_window; }
+		inline std::vector<entt::entity>& getEntities() { return m_entities; }
+		inline entt::registry& getRegistry() { return m_registry; }
 	};
 
 	Application* startApplication(); //!< Function definition which provides an entry hook
