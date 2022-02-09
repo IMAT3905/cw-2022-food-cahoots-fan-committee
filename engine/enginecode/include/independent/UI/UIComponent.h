@@ -15,7 +15,7 @@ namespace Engine {
 		glm::ivec2 GetPosition() { return m_position; }
 		glm::ivec2 GetSize() { return m_size; }
 		virtual void UpdateSize() = 0;
-		virtual void UpdatePosition() = 0;
+		virtual void UpdatePosition(glm::ivec2& relativeposition) = 0;
 		virtual void OnRender() const {};
 		virtual void OnMouseMove(glm::ivec2& mousepos) {};
 		virtual void OnMousePress(glm::ivec2& mousepos, int32_t button) {};
