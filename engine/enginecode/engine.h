@@ -9,3 +9,7 @@
 #include "rendering/rendererCommon.h"
 
 #include "components/scripting.h"
+#include "components/transform.h"
+#include "components/label.h"
+#include "components/relationship.h"
+#include "components/render.h"

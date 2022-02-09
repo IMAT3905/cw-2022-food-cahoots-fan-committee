@@ -31,20 +31,18 @@ private:
 	std::shared_ptr<Material> pyramidMat;
 	std::shared_ptr<Material> letterCubeMat;
 	std::shared_ptr<Material> numberCubeMat;
+	std::shared_ptr<Material> checkerCubeMat;
 
 	std::shared_ptr<Shader> TPShader;
 
 	std::shared_ptr<VertexArray> cubeVAO;
 	std::shared_ptr<VertexArray> pyramidVAO;
 
-
-
 	std::shared_ptr<UniformBuffer> cameraUBO;
 	std::shared_ptr<UniformBuffer> lightsUBO;
 
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
 		
-
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
 };

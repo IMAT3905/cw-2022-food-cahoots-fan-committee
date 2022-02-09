@@ -118,7 +118,8 @@ project "Sandbox"
 		"vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/lua",
-		"vendor/react3D/include"
+		"vendor/react3D/include",
+		"%{prj.name}/assets/scripts"
 	}
 
 	links

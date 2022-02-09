@@ -1,6 +1,6 @@
 /* \file sceneLayer.cpp */
 #include "sceneLayer.h"
-
+#include "movementScript.h"
 
 	/** \class TPVertexNormalised
 		** \brief Class which uses a textured phong and has normalised data
@@ -103,6 +103,8 @@
 		letterTexture.reset(Texture::create("assets/textures/letterCube.png"));
 		std::shared_ptr<Texture> numberTexture;
 		numberTexture.reset(Texture::create("assets/textures/numberCube.png"));
+		std::shared_ptr<Texture> checkerTexture;
+		checkerTexture.reset(Texture::create("assets/textures/checkerBoard.png"));
 
 		SubTexture letterSubTexture(letterTexture, glm::vec2(0.f), glm::vec2(1.f));
 		SubTexture ESubTexture(letterTexture, glm::vec2(0.33f, 0.5f), glm::vec2(0.66, 1.f));
@@ -214,31 +216,34 @@
 		pyramidMat.reset(new Material(TPShader, { 0.4f, 0.7f, 0.3f, 1.f }));
 		letterCubeMat.reset(new Material(TPShader, letterTexture));
 		numberCubeMat.reset(new Material(TPShader, numberTexture));
+		checkerCubeMat.reset(new Material(TPShader, checkerTexture));
 
 #pragma endregion
 
 		m_entities.resize(12);
 
 		m_entities[0] = m_registry.create();
-		m_entities[1] = m_registry.create();
-		m_entities[2] = m_registry.create();
-		m_entities[3] = m_registry.create();
-
 		m_registry.emplace<RootComponent>(m_entities[0]);
-
 		m_registry.emplace<LabelComponent>(m_entities[0], "Root");
-		m_registry.emplace<LabelComponent>(m_entities[1], "Pyramid");
-		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
-		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");
-
 		m_registry.emplace<TransformComponent>(m_entities[0]);
-		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(-2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 
-		m_registry.emplace<RenderComponent>(m_entities[1], pyramidVAO, pyramidMat);
+		m_entities[1] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[1], "Ground");
+		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, 0.25f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(6.f, 0.25f, 6.f));
+		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
+
+		m_entities[2] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
+		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, letterCubeMat);
+
+		m_entities[3] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");		
+		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));	
 		m_registry.emplace<RenderComponent>(m_entities[3], cubeVAO, numberCubeMat);
+		
+		//auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[3]);
+		//nsc.create<MovementScript>(m_entities[3]);
 	}
 
 	void SceneLayer::onRender()
@@ -269,12 +274,18 @@
 	{
 		m_eulerCam->onUpdate(timestep);
 		cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
+
+		auto& view = m_registry.view<NativeScriptComponent>();
+		for (auto& entity : view)
+		{
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onUpdate(timestep);
+		}
 	}
 
 	void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 	{
-		glm::vec3 forward, right;
-	
+		glm::vec3 forward, right;	
 	}
 
 	void SceneLayer::onResize(WindowResizeEvent& e)
