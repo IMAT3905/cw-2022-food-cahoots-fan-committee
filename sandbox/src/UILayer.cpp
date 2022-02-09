@@ -3,6 +3,11 @@
 
 UILayer::UILayer(const char* name) : Layer(name)
 {
+	auto& window = Application::getInstance().getWindow();
+	CameraParams camparams;
+	camparams.width = window->getWidth();
+	camparams.height = window->getHeight();
+
 	Renderer2D::init();
 
 	auto& window = Application::getInstance().getWindow();
