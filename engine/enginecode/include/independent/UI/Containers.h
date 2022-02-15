@@ -32,4 +32,29 @@ namespace Engine {
 	private:
 		std::vector<HorizontalContainer> m_containers;
 	};
+
+	class HorizontalContainer : public Container {
+	public:
+		bool IsEmpty() const override { return m_widgets.empty(); }
+		template <typename G, typename ...Args>
+		void AddWidget(Args && ... args) {
+			std::shared_ptr<Widget> widget;
+			widget.reset(new G(std::forward<Args>(args) ...));
+			widget->SetParent(this);
+			widget->m_colourscheme = m_colourscheme;
+			m_widgets.push_back(widget);
+			UpdateSize();
+		}
+
+		void UpdatePosition(glm::ivec2& relativepos) override;
+		void UpdateSize() override;
+		void OnRender() const override;
+
+		std::vector<std::shared_ptr<Widget>>::iterator begin(){ return m_widgets.begin(); }
+		std::vector<std::shared_ptr<Widget>>::iterator end() { return m_widgets.end(); }
+		std::vector<std::shared_ptr<Widget>>::const_iterator begin() const { return m_widgets.begin(); }
+		std::vector<std::shared_ptr<Widget>>::const_iterator end() const { return m_widgets.end(); }
+	private:
+		std::vector<std::shared_ptr<Widget>> m_widgets;
+	};
 }
