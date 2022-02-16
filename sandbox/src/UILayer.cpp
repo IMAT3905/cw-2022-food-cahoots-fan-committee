@@ -50,9 +50,11 @@ void UILayer::onKeyPressed(KeyPressedEvent& e) {
 	switch (e.getKeyCode()) {
 	case NG_KEY_G:
 		m_state = UILayerState::Activating;
+		Log::debug("Activating UI");
 		break;
 	case NG_KEY_H:
 		m_state = UILayerState::Deactivating;
+		Log::debug("Deactivating UI");
 		break;
 	}
 
@@ -72,4 +74,9 @@ void UILayer::onMousePressed(MouseButtonPressedEvent& e) {
 void UILayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 	glm::ivec2 mousepos = InputPoller::getMousePosition();
 	m_window.OnMousePress(mousepos, e.getButton());
+}
+
+void UILayer::onUpdate(float timestep)
+{
+	Log::debug("This is being run every frame");
 }
