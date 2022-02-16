@@ -8,8 +8,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "engine.h"
 #include "rendering/renderer2D.h"
+#include "include/independent/UI/ModalWindow.h"
 
-#include <box2d/box2d.h>
+
 
 using namespace Engine;
 
@@ -23,16 +24,17 @@ public:
 	void onRender() override;
 	void onUpdate(float timestep) override; //!< Runs every frame
 	UILayerState GetState() { return m_state; } //Return state
-	b2World* world;
-	b2Body* groundBody;
-	b2Body* body;
+
+	virtual void onKeyPressed(KeyPressedEvent& e) override;
+	virtual void onMouseMoved(MouseMovedEvent& e) override;
+	virtual void onMousePressed(MouseButtonPressedEvent& e) override;
+	virtual void onMouseReleased(MouseButtonReleasedEvent& e) override;
+
 private:
 	//FixedOthroCameraController2D
 	glm::mat4 view2D = glm::mat4(1.f);
 	glm::mat4 projection2D;
 	SceneWideUniforms m_swu;
-	std::shared_ptr<Window> m_window; //Window to render on
+	ModalWindow m_window; //Window to render on
 	UILayerState m_state = UILayerState::InActive; //Default state
-	std::vector<Quad> m_quads;
-	float advance;
 };

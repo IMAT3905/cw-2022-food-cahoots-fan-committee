@@ -26,6 +26,9 @@ namespace Engine
 		inline const bool isFocused() const { return m_isFocused; }
 
 		virtual void onKeyPressed(KeyPressedEvent& e) { e.handle(false); } //!< On key press event
+		virtual void onMouseMoved(MouseMovedEvent& e) { e.handle(false); }
+		virtual void onMousePressed(MouseButtonPressedEvent& e) { e.handle(false); }
+		virtual void onMouseReleased(MouseButtonReleasedEvent& e) { e.handle(false); }
 
 	protected:
 		const char* m_name; //!< Name, useful for debugging

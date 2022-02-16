@@ -5,6 +5,7 @@
 
 #include "ft2build.h"
 #include "freetype/freetype.h"
+#include <stdlib.h>
 
 namespace Engine
 {

@@ -43,6 +43,26 @@ namespace Engine {
 	}
 
 	void ModalWindow::OnMousePress(glm::ivec2& mousepos, int32_t button) {
+		for (auto& hzcontainer : m_container) {
+			for (auto& widget : hzcontainer) {
+				widget->OnMousePress(mousepos, button);
+			}
+		}
+	}
 
+	void ModalWindow::OnMouseRelease(glm::ivec2& mousepos, int32_t button) {
+		for (auto& hzcontainer : m_container) {
+			for (auto& widget : hzcontainer) {
+				widget->OnMouseRelease(mousepos, button);
+			}
+		}
+	}
+
+	void ModalWindow::OnMouseMove(glm::ivec2& mousepos) {
+		for (auto& hzcontainer : m_container) {
+			for (auto& widget : hzcontainer) {
+				widget->OnMouseMove(mousepos);
+			}
+		}
 	}
 }
