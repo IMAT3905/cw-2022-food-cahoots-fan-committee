@@ -17,7 +17,7 @@ namespace Engine
 
         m_transform = glm::translate(glm::mat4(1.f), m_position);
 
-        m_rotation = glm::vec3(0.0f);
+        m_rotation = glm::vec3(-45.0f, 0.f, 0.f);
 
         m_camera.updateView(m_transform);
 
@@ -40,11 +40,11 @@ namespace Engine
         if (InputPoller::isKeyPressed(NG_KEY_W)) m_position += (forward * m_speed * timestep);
         if (InputPoller::isKeyPressed(NG_KEY_S)) m_position -= (forward * m_speed * timestep);
         //rotation with key presses
-        if (InputPoller::isKeyPressed(NG_KEY_LEFT)) m_rotation.y += m_rotationSpeed * timestep;
+        /*if (InputPoller::isKeyPressed(NG_KEY_LEFT)) m_rotation.y += m_rotationSpeed * timestep;
         if (InputPoller::isKeyPressed(NG_KEY_RIGHT)) m_rotation.y -= m_rotationSpeed * timestep;
 
         if (InputPoller::isKeyPressed(NG_KEY_UP)) m_rotation.x += m_rotationSpeed * timestep;
-        if (InputPoller::isKeyPressed(NG_KEY_DOWN)) m_rotation.x -= m_rotationSpeed * timestep;
+        if (InputPoller::isKeyPressed(NG_KEY_DOWN)) m_rotation.x -= m_rotationSpeed * timestep;*/
 
         //Mouse controls for camera
         glm::vec2 currentMousePos = InputPoller::getMousePosition();
@@ -53,8 +53,8 @@ namespace Engine
 
         m_lastMousePos = currentMousePos;
 
-        m_rotation.y -= m_sensitivity * deltaMousePos.x * timestep;
-        m_rotation.x -= m_sensitivity * deltaMousePos.y * timestep;
+        //m_rotation.y -= m_sensitivity * deltaMousePos.x * timestep;
+        //m_rotation.x -= m_sensitivity * deltaMousePos.y * timestep;
 
         glm::mat4 rotationY = glm::rotate(glm::mat4(1.f), m_rotation.y, glm::vec3(0.f, 1.f, 0.f));
         glm::mat4 rotationX = glm::rotate(glm::mat4(1.f), m_rotation.x, glm::vec3(1.f, 0.f, 0.f));

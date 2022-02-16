@@ -10,7 +10,7 @@ namespace Engine
     struct CameraParams
     {
     public:
-        glm::vec3 position = glm::vec3(0.f);
+        glm::vec3 position = glm::vec3(-2.5f, 5.f, 6.f);
         float FOV = 45.f;
         float height;
         float width;
@@ -38,7 +38,7 @@ namespace Engine
         Camera m_camera; //!< The camera object
         glm::mat4 m_transform; //!< Camera's transformation matrix
         glm::vec3 m_position; //!< Camera's current position
-        float m_speed = 1.f; //!< Speed for movement using WASD
+        float m_speed = 2.f; //!< Speed for movement using WASD
         glm::vec2 m_lastMousePos; //!< Last position of the mouse
         glm::vec3 m_rotation; //!< Camera's current rotation
         float m_rotationSpeed = 0.3f; //!< Speed for rotating using the arrow keys
