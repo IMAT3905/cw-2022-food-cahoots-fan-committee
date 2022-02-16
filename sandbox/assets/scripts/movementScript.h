@@ -64,8 +64,15 @@ public:
 		{
 			if (keyFrames[i].t <= t && t <= keyFrames[i+1].t)
 			{
+				float local_t = (t - keyFrames[i].t) / (keyFrames[i + 1].t - keyFrames[i].t);//(t-s)/(e-s)
+				Log::debug("local t {0}", local_t);
 				pos = keyFrames[i].position;
+				pos = lerp(keyFrames[i].position, keyFrames[i + 1].position, local_t);
 				hit = true;
+				if (local_t > 1.0f)
+				{
+					int a = 0;
+				}
 			}
 		}
 
