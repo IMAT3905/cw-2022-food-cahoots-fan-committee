@@ -39,13 +39,14 @@ namespace Engine {
 
 	void Label::UpdatePosition(glm::ivec2& relativepos) {
 		m_position = relativepos;
-		//gettextsize
+		glm::ivec2 textsize = {2.0f,2.0f};
 		glm::ivec2 centre = m_position + m_size / 2;
-		//finish
+		m_textpos.x = centre.x - textsize.x / 2;
+		m_textpos.y = centre.y - textsize.y / 2;
 	}
 
 	void Button::OnRender() const {
-		//create top left size
+		Renderer2D::submit(Quad::createTopLeftSize(m_position, m_size), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
 		Renderer2D::submit(m_text, m_textpos, glm::vec4(1.0f));
 	}
 

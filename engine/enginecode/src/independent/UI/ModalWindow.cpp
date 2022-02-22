@@ -21,8 +21,9 @@ namespace Engine {
 
 			glm::vec4 bgcover = m_windowcolourscheme.background;
 			bgcover.a = 0.5f;
-			//create top left size
-			//create top left size
+			Renderer2D::submit(Quad::createTopLeftSize({0.0f,0.0f},winsize), bgcover);
+			Renderer2D::submit(Quad::createTopLeftSize(m_position, m_size), m_windowcolourscheme.background);
+			m_container.OnRender();
 		}
 	}
 

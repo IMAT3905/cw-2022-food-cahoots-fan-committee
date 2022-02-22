@@ -309,6 +309,13 @@ namespace Engine
 		return result;
 	}
 
+	Quad Quad::createTopLeftSize(const glm::vec2& topleft, const glm::vec2& size)
+	{
+		glm::vec2 halfextents = size * 2.0f;
+		glm::vec2 centre = topleft + halfextents;
+		return createCentreHalfExtents(centre, halfextents);
+	}
+
 	uint32_t Renderer2DVertex::pack(const glm::vec4& tint)
 	{
 		uint32_t result = 0;

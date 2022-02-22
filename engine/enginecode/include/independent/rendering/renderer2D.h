@@ -34,6 +34,7 @@ namespace Engine
 	public:
 		Quad() = default; //!< Default constructor
 		static Quad createCentreHalfExtents(const glm::vec2& centre, const glm::vec2& halfExtents); //!< Creating a quad using half extents data \param centre is the centre of the quad \param halfExtents is data that represents the distance from the centre to the edges of the shape
+		static Quad createTopLeftSize(const glm::vec2& topleft, const glm::vec2& size);
 	private:
 		glm::vec3 m_translate = glm::vec3(0.f); //!< Translation vector
 		glm::vec3 m_scale = glm::vec3(1.0f); //!< Scale vector
