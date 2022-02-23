@@ -229,21 +229,16 @@
 
 		m_entities[1] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[1], "Ground");
-		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(-2.5f, -0.5f, 2.5f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(6.f, 0.25f, 6.f));
+		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
 
 		m_entities[2] = m_registry.create();
-		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
-		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, letterCubeMat);
-
-		m_entities[3] = m_registry.create();
-		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");		
-		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));	
-		m_registry.emplace<RenderComponent>(m_entities[3], cubeVAO, numberCubeMat);
+		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube");		
+		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));	
+		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, numberCubeMat);
 		
-		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[3]);
-		nsc.create<MovementScript>(m_entities[3]);
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[2]);
+		nsc.create<MovementScript>(m_entities[2], 4);
 	}
 
 	void SceneLayer::onRender()

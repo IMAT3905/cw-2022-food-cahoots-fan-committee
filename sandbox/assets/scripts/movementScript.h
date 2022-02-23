@@ -12,7 +12,7 @@ struct MovementKeyFrames
 class MovementScript : public Engine::NativeScript
 {
 public:
-	MovementScript(entt::entity& entity) : NativeScript(entity) {};
+	MovementScript(entt::entity& entity, uint32_t startPoint) : NativeScript(entity), startPoint(startPoint){};
 
 	virtual void onCreate() override
 	{
@@ -36,13 +36,21 @@ public:
 		keyFrames[5].t = keyFrames[4].t + width;
 		keyFrames[5].position = positions[5];
 
-		keyFrames[6].t = keyFrames[4].t + (glm::pi<float>() * radius) / 2.f;
+		keyFrames[6].t = keyFrames[5].t + (glm::pi<float>() * radius) / 2.f;
 		keyFrames[6].position = positions[6];
 
-		keyFrames[7].t = l;
+		keyFrames[7].t = keyFrames[6].t + height;
 		keyFrames[7].position = positions[7];
 
-		for (size_t i = 0; i < 8; i++) keyFrames[i].t /= l;
+		keyFrames[8].t = l;
+		keyFrames[8].position = positions[0];
+
+		for (size_t i = 0; i < 9; i++) keyFrames[i].t /= l;
+
+		if (startPoint > 8) startPoint = 0;
+		auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
+		tc.translation = keyFrames[startPoint].position;
+		tc.updateTransform();
 	};
 
 	glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float t)
@@ -52,69 +60,48 @@ public:
 	};
 
 	virtual void onUpdate(float timestep) override
-	{
-		entt::registry& m_registry = Application::getInstance().getRegistry();
+	{	
 		elapsedTime += timestep;	
-		t += speed * timestep;
+		t += speed * (timestep);
 		if (t > 1.0f) t -= 1.f;
-		glm::vec3 pos;
 		
-		bool hit = false;
-		for (size_t i = 0; i < 7; i++)
+		for (size_t i = 0; i < 9; i++)
 		{
 			if (keyFrames[i].t <= t && t <= keyFrames[i+1].t)
 			{
-				float local_t = (t - keyFrames[i].t) / (keyFrames[i + 1].t - keyFrames[i].t);//(t-s)/(e-s)
-				Log::debug("local t {0}", local_t);
+				float local_t = (t - keyFrames[i].t) / (keyFrames[i + 1].t - keyFrames[i].t); //(t-s)/(e-s)
+				Log::debug("local t: {0}", local_t);
 				pos = keyFrames[i].position;
 				pos = lerp(keyFrames[i].position, keyFrames[i + 1].position, local_t);
-				hit = true;
-				if (local_t > 1.0f)
-				{
-					int a = 0;
-				}
 			}
 		}
 
-		if (!hit)
-		{
-			int a = 0;
-		}
 		auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
-
 		tc.translation = pos;
 		tc.updateTransform();
-		/*if (tc.translation != position[nextPosition])
-		{
-			tc.translation = lerp(tc.translation, position[nextPosition], speed);
-			tc.updateTransform();
-		}	*/	
 	}
 
 private:
-	//entt::registry& m_registry;
+	entt::registry& m_registry = Application::getInstance().getRegistry();
 	float elapsedTime = 0.f;
 	bool toggle = false;
-	float r = 0.7f;
-	float edgeWidth = 5.f;
-	float edgeHeight = 5.f;
 	float speed = 0.1;
-	MovementKeyFrames keyFrames[8];
-	//glm::vec3 position(float t);
-
+	MovementKeyFrames keyFrames[9];
+	glm::vec3 pos;
 	float t = 0.f;
 	float height = 5.f;
 	float width = 5.f;
 	float radius = 0.5f;
+	uint32_t startPoint;
 	glm::vec3 positions[8] =
 	{
-		glm::vec3(0.f - width, 0, -0.f),
-		glm::vec3(0.f - width - radius, 0, -0.f + radius),
-		glm::vec3(0.f - width - radius, 0, -0.f + radius + height),
-		glm::vec3(0.f - width - radius + radius, 0, -0.f + radius + height + radius),
-		glm::vec3(0.f - width - radius + radius + width, 0, -0.f + radius + height + radius),
-		glm::vec3(0.f - width - radius + radius + width + radius, 0, -0.f + radius + height + radius - radius),
-		glm::vec3(0.f - width - radius + radius + width + radius, 0, -0.f + radius + height + radius - radius - height),
-		glm::vec3(0.f - width - radius + radius + width + radius - radius, 0, -0.f + radius + height + radius - radius - height - radius)
+		glm::vec3(2.5f, 0.f, 3.f),
+		glm::vec3(2.5f - width, 0.f, 3.f),
+		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius),
+		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius - height),
+		glm::vec3(2.5f - width, 0.f, 3.f - radius - height - radius),
+		glm::vec3(2.5f, 0.f, 3.f - radius - height - radius),
+		glm::vec3(2.5f + radius, 0.f, 3.f - radius - height),
+		glm::vec3(2.5f + radius, 0.f, 3.f - radius),
 	};
 };

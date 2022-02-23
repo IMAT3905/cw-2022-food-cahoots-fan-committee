@@ -10,7 +10,7 @@ namespace Engine
     struct CameraParams
     {
     public:
-        glm::vec3 position = glm::vec3(-2.5f, 5.f, 6.f);
+        glm::vec3 position = glm::vec3(0.f, 10.f, 7.f);
         float FOV = 45.f;
         float height;
         float width;
