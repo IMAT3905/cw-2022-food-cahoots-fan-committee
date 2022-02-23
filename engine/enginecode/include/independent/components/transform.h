@@ -65,6 +65,11 @@ namespace Engine
 			glm::quat rotationDelta(eulerAngles);
 			rotation *= rotationDelta;
 		}
+
+		void setRotation(glm::vec3& eulerAngles)
+		{
+			rotation = glm::quat(eulerAngles);
+		}
 	private:
 		glm::mat4 transform;
 		glm::quat rotation;
