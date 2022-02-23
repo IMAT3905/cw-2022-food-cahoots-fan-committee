@@ -48,6 +48,7 @@ void UILayer::onRender()
 }
 
 void UILayer::onKeyPressed(KeyPressedEvent& e) {
+	Log::debug("Key Pressed");
 	switch (e.getKeyCode()) {
 	case NG_KEY_G:
 		m_state = UILayerState::Activating;
@@ -68,6 +69,7 @@ void UILayer::onMouseMoved(MouseMovedEvent& e) {
 }
 
 void UILayer::onMousePressed(MouseButtonPressedEvent& e) {
+	Log::debug("Mouse Pressed");
 	glm::ivec2 mousepos = InputPoller::getMousePosition();
 	m_window.OnMousePress(mousepos, e.getButton());
 }

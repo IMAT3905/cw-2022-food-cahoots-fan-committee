@@ -45,7 +45,7 @@ namespace Engine
 
 	void LayerStack::onMousePressed(MouseButtonPressedEvent& e)
 	{
-		e.handle(false);
+		for (auto& layer : m_stack) if (layer->isFocused() && !e.handled()) layer->onMousePressed(e);
 	}
 
 	void LayerStack::onMouseReleased(MouseButtonReleasedEvent& e)

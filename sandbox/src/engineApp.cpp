@@ -3,7 +3,7 @@
 
 EngineApp::EngineApp(Engine::ApplicationProps props) : Application(props)
 {
-	m_layerStack.push(new SceneLayer("Scene Layer"));
+	//m_layerStack.push(new SceneLayer("Scene Layer"));
 	m_layerStack.push(new UILayer("UI Layer"));
 }
 
