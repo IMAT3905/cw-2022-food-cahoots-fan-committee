@@ -39,7 +39,7 @@ namespace Engine {
 
 	void Label::UpdatePosition(glm::ivec2& relativepos) {
 		m_position = relativepos;
-		glm::ivec2 textsize = {2.0f,2.0f};
+		glm::ivec2 textsize = Renderer2D::GetTextSize(m_text);
 		glm::ivec2 centre = m_position + m_size / 2;
 		m_textpos.x = centre.x - textsize.x / 2;
 		m_textpos.y = centre.y - textsize.y / 2;

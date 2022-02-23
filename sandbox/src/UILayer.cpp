@@ -5,6 +5,7 @@ UILayer::UILayer(const char* name) : Layer(name)
 {
 	auto& window = Application::getInstance().getWindow();
 
+	Renderer2D::init();
 	projection2D = glm::ortho(0.f, static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()), 0.f);
 
 	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
@@ -78,5 +79,5 @@ void UILayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 
 void UILayer::onUpdate(float timestep)
 {
-	Log::debug("This is being run every frame");
+	//Log::debug("This is being run every frame");
 }
