@@ -7,6 +7,7 @@ struct MovementKeyFrames
 {
 	float t;
 	glm::vec3 position;
+	float length;
 };
 
 class MovementScript : public Engine::NativeScript
@@ -20,37 +21,42 @@ public:
 
 		keyFrames[0].t = 0.f;
 		keyFrames[0].position = positions[0];
+		keyFrames[0].length = 0.f;
 
 		keyFrames[1].t = width;
 		keyFrames[1].position = positions[1];
+		keyFrames[1].length = 5.f;
 
 		keyFrames[2].t = keyFrames[1].t + (glm::pi<float>() * radius) / 2.f;
 		keyFrames[2].position = positions[2];
+		keyFrames[2].length = 6.f;
 
 		keyFrames[3].t = keyFrames[2].t + height;
 		keyFrames[3].position = positions[3];
+		keyFrames[3].length = 11.f;
 
 		keyFrames[4].t = keyFrames[3].t + (glm::pi<float>() * radius) / 2.f;
 		keyFrames[4].position = positions[4];
+		keyFrames[4].length = 12.f;
 
 		keyFrames[5].t = keyFrames[4].t + width;
 		keyFrames[5].position = positions[5];
+		keyFrames[5].length = 17.f;
 
 		keyFrames[6].t = keyFrames[5].t + (glm::pi<float>() * radius) / 2.f;
 		keyFrames[6].position = positions[6];
+		keyFrames[6].length = 18.f;
 
 		keyFrames[7].t = keyFrames[6].t + height;
 		keyFrames[7].position = positions[7];
+		keyFrames[7].length = 23.f;
 
 		keyFrames[8].t = l;
 		keyFrames[8].position = positions[0];
+		keyFrames[8].length = 24.f;
 
 		for (size_t i = 0; i < 9; i++) keyFrames[i].t /= l;
-
 		if (startPoint > 8) startPoint = 0;
-		auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
-		tc.translation = keyFrames[startPoint].position;
-		tc.updateTransform();
 	}
 
 	glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float t)
@@ -61,18 +67,16 @@ public:
 
 	virtual void onUpdate(float timestep) override
 	{
-		elapsedTime += timestep;
-		t += speed * (timestep * 0.5);
-		if (t > 1.0f) t -= 1.f;
-		//angle = 0.f;
+		if (first)
+		{
+			t = keyFrames[startPoint].length / keyFrames[8].length;
+			first = false;
+		}
+		t += speed * (timestep);
+		if (t > 1.0f) t -= 1.f;	
+		Engine::Log::debug("t: {0}", t);
 		for (size_t i = 0; i < 9; i++)
 		{
-			/*if (first)
-			{
-				i += startPoint;
-				first = false;
-			}*/
-			
 			if (keyFrames[i].t <= t && t <= keyFrames[i + 1].t)
 			{
 				float local_t = (t - keyFrames[i].t) / (keyFrames[i + 1].t - keyFrames[i].t); //(t-s)/(e-s)
@@ -139,10 +143,7 @@ public:
 				else
 				{
 					pos = lerp(keyFrames[i].position, keyFrames[i + 1].position, local_t);
-				}
-				
-				//pos = keyFrames[i].position;
-				
+				}							
 			}
 		}
 		auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
@@ -150,10 +151,8 @@ public:
 		tc.setRotation(glm::vec3(0.0, angle, 0.0));
 		tc.updateTransform();
 	}
-
 private:
 	entt::registry& m_registry = Engine::Application::getInstance().getRegistry();
-	float elapsedTime = 0.f;
 	bool toggle = false;
 	float speed = 0.1;
 	MovementKeyFrames keyFrames[9];
