@@ -32,6 +32,7 @@ private:
 	std::shared_ptr<Material> letterCubeMat;
 	std::shared_ptr<Material> numberCubeMat;
 	std::shared_ptr<Material> checkerCubeMat;
+	std::shared_ptr<Material> conveyorMat;
 
 	std::shared_ptr<Shader> TPShader;
 

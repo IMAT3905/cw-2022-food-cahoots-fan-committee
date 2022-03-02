@@ -217,10 +217,11 @@
 		letterCubeMat.reset(new Material(TPShader, letterTexture));
 		numberCubeMat.reset(new Material(TPShader, numberTexture));
 		checkerCubeMat.reset(new Material(TPShader, checkerTexture));
+		conveyorMat.reset(new Material(TPShader, { 0.5f, 0.5f, 0.5f, 1.f }));
 
 #pragma endregion
 
-		m_entities.resize(12);
+		m_entities.resize(18);
 
 		m_entities[0] = m_registry.create();
 		m_registry.emplace<RootComponent>(m_entities[0]);
@@ -234,43 +235,83 @@
 
 		m_entities[2] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube");		
-		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));	
-		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, conveyorMat);
 
 		m_entities[3] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[3], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[3], cubeVAO, conveyorMat);
 
 		m_entities[4] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[4], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[4], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[4], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[4], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[4], cubeVAO, conveyorMat);
 
 		m_entities[5] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[5], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[5], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[5], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[5], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[5], cubeVAO, conveyorMat);
 
 		m_entities[6] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[6], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[6], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[6], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[6], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[6], cubeVAO, conveyorMat);
 
 		m_entities[7] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[7], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[7], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[7], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[7], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[7], cubeVAO, conveyorMat);
 
 		m_entities[8] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[8], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[8], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[8], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[8], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[8], cubeVAO, conveyorMat);
 
 		m_entities[9] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[9], "Letter Cube");
-		m_registry.emplace<TransformComponent>(m_entities[9], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-		m_registry.emplace<RenderComponent>(m_entities[9], cubeVAO, numberCubeMat);
+		m_registry.emplace<TransformComponent>(m_entities[9], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[9], cubeVAO, conveyorMat);
+
+		m_entities[10] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[10], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[10], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[10], cubeVAO, conveyorMat);
+
+		m_entities[11] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[11], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[11], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[11], cubeVAO, conveyorMat);
+
+		m_entities[12] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[12], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[12], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[12], cubeVAO, conveyorMat);
+
+		m_entities[13] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[13], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[13], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[13], cubeVAO, conveyorMat);
+
+		m_entities[14] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[14], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[14], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[14], cubeVAO, conveyorMat);
+
+		m_entities[15] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[15], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[15], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[15], cubeVAO, conveyorMat);
+
+		m_entities[16] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[16], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[16], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[16], cubeVAO, conveyorMat);
+
+		m_entities[17] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[17], "Letter Cube");
+		m_registry.emplace<TransformComponent>(m_entities[17], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.75f, 0.25f, 1.f));
+		m_registry.emplace<RenderComponent>(m_entities[17], cubeVAO, conveyorMat);
 		
 		auto& nsc2 = m_registry.emplace<NativeScriptComponent>(m_entities[2]);
 		nsc2.create<MovementScript>(m_entities[2], 0);
@@ -295,6 +336,30 @@
 
 		auto& nsc9 = m_registry.emplace<NativeScriptComponent>(m_entities[9]);
 		nsc9.create<MovementScript>(m_entities[9], 7);
+
+		auto& nsc10 = m_registry.emplace<NativeScriptComponent>(m_entities[10]);
+		nsc10.create<MovementScript>(m_entities[10], 8);
+
+		auto& nsc11 = m_registry.emplace<NativeScriptComponent>(m_entities[11]);
+		nsc11.create<MovementScript>(m_entities[11], 9);
+
+		auto& nsc12 = m_registry.emplace<NativeScriptComponent>(m_entities[12]);
+		nsc12.create<MovementScript>(m_entities[12], 10);
+
+		auto& nsc13 = m_registry.emplace<NativeScriptComponent>(m_entities[13]);
+		nsc13.create<MovementScript>(m_entities[13], 11);
+
+		auto& nsc14 = m_registry.emplace<NativeScriptComponent>(m_entities[14]);
+		nsc14.create<MovementScript>(m_entities[14], 12);
+
+		auto& nsc15 = m_registry.emplace<NativeScriptComponent>(m_entities[15]);
+		nsc15.create<MovementScript>(m_entities[15], 13);
+
+		auto& nsc16 = m_registry.emplace<NativeScriptComponent>(m_entities[16]);
+		nsc16.create<MovementScript>(m_entities[16], 14);
+
+		auto& nsc17 = m_registry.emplace<NativeScriptComponent>(m_entities[17]);
+		nsc17.create<MovementScript>(m_entities[17], 15);
 	}
 
 	void SceneLayer::onRender()
