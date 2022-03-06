@@ -46,4 +46,12 @@ namespace Engine {
 	private:
 		std::function<void(void)> m_callback;
 	};
+
+	class ColouredSquare : public Widget {
+	public:
+		ColouredSquare(int32_t sizex, int32_t ysizey, glm::vec4 tint);
+		virtual void OnRender() const override;
+	private:
+		glm::vec4 m_tint;
+	};
 }

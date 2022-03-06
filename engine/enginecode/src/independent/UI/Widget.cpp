@@ -60,4 +60,14 @@ namespace Engine {
 			}
 		}
 	}
+
+	ColouredSquare::ColouredSquare(int32_t sizex, int32_t sizey, glm::vec4 tint) : m_tint(tint){
+		m_size = glm::ivec2(sizex, sizey);
+		m_position = { 0,0 };
+	}
+
+	void ColouredSquare::OnRender() const {
+		Log::info("Displaying Square");
+		Renderer2D::submit(Quad::createTopLeftSize(m_position, m_size), m_tint);
+	}
 }

@@ -21,10 +21,30 @@ UILayer::UILayer(const char* name) : Layer(name)
 	m_window.AddContainer(top);
 	m_window.AddContainer(bottom);*/
 
-	top.AddWidget<Label>(600, 500, "Score: 100");
-	bottom.AddWidget<Label>(200, 600, "Player 1");
-	bottom.AddWidget<Label>(200, 600, "Player 2");
-	bottom.AddWidget<Label>(200, 600, "Player 3");
+	top.AddWidget<Spacer>(300, 10);
+	top.AddWidget<Label>(300, 100, "Timer: 10");
+	top.AddWidget<Spacer>(0, 500);
+
+	bottom.AddWidget<Spacer>(50, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
+	bottom.AddWidget<Spacer>(20, 0);
+	bottom.AddWidget<Label>(10, 100, ": ");
+	bottom.AddWidget<Label>(100, 100, "123");
+
+
+	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
+	bottom.AddWidget<Spacer>(20, 0);
+	bottom.AddWidget<Label>(10, 100, ": ");
+	bottom.AddWidget<Label>(100, 100, "1234");
+
+	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
+	bottom.AddWidget<Spacer>(20, 0);
+	bottom.AddWidget<Label>(10, 100, ": ");
+	bottom.AddWidget<Label>(100, 100, "12345");
+	//bottom.AddWidget<Label>(200, 600, "Player 2");
+	//bottom.AddWidget<Label>(200, 600, "Player 3");
 	m_window.AddContainer(top);
 	m_window.AddContainer(bottom);
 
