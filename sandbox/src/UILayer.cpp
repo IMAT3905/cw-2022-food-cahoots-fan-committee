@@ -11,8 +11,27 @@ UILayer::UILayer(const char* name) : Layer(name)
 	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
-	HorizontalContainer top, middle, bottom;
+	HorizontalContainer top, bottom;
+
+	/* MAIN MENU
 	top.AddWidget<Spacer>(100, 10);
+	top.AddWidget<Label>(300, 100, "Food Cahoots Fan Commitee");
+	bottom.AddWidget<Spacer>(50, 10);
+	bottom.AddWidget<Button>(100, 100, "Start", []() {Log::info("Proceed"); });
+	m_window.AddContainer(top);
+	m_window.AddContainer(bottom);*/
+
+	top.AddWidget<Label>(600, 500, "Score: 100");
+	bottom.AddWidget<Label>(200, 600, "Player 1");
+	bottom.AddWidget<Label>(200, 600, "Player 2");
+	bottom.AddWidget<Label>(200, 600, "Player 3");
+	m_window.AddContainer(top);
+	m_window.AddContainer(bottom);
+
+
+
+
+	/*top.AddWidget<Spacer>(100, 10);
 	top.AddWidget<Label>(300, 100, "Hello World!");
 
 	middle.AddWidget<Spacer>(50, 10);
@@ -22,7 +41,7 @@ UILayer::UILayer(const char* name) : Layer(name)
 
 	m_window.AddContainer(top);
 	m_window.AddContainer(middle);
-	m_window.AddContainer(bottom);
+	m_window.AddContainer(bottom);*/
 	m_window.show();
 }
 
@@ -45,10 +64,13 @@ void UILayer::onRender()
 		m_window.OnRender();
 		Renderer2D::end();
 	}
+
+	if (m_state == UILayerState::InActive) {
+		Log::info("not active");
+	}
 }
 
 void UILayer::onKeyPressed(KeyPressedEvent& e) {
-	Log::debug("Key Pressed");
 	switch (e.getKeyCode()) {
 	case NG_KEY_G:
 		m_state = UILayerState::Activating;
@@ -69,7 +91,6 @@ void UILayer::onMouseMoved(MouseMovedEvent& e) {
 }
 
 void UILayer::onMousePressed(MouseButtonPressedEvent& e) {
-	Log::debug("Mouse Pressed");
 	glm::ivec2 mousepos = InputPoller::getMousePosition();
 	m_window.OnMousePress(mousepos, e.getButton());
 }

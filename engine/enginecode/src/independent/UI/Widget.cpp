@@ -56,7 +56,6 @@ namespace Engine {
 				m_position.x <= mousepos.x && mousepos.x <= m_position.x + m_size.x &&
 				m_position.y <= mousepos.y && mousepos.y <= m_position.y + m_size.y;
 			if (clickedon) {
-				Log::debug("BUTTON PRESSED");
 				m_callback();
 			}
 		}
