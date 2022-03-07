@@ -8,6 +8,7 @@ namespace Engine
 {
 	std::shared_ptr<Renderer3D::InternalData> Renderer3D::s_data = nullptr;
 
+	VertexBufferLayout TPVertexNormalised::s_layout = { {ShaderDataType::Float3, {ShaderDataType::Short3, true}, {ShaderDataType::Short2, true} }, 24 }; //!< Layout for data in TPVertexNormalised
 
 	void Renderer3D::init()
 	{
@@ -60,4 +61,38 @@ namespace Engine
 	{
 		s_data->sceneWideUniforms.clear();
 	}
+
+	std::array<int16_t, 3> TPVertexNormalised::normalise(const glm::vec3& normal)
+	{
+		std::array<int16_t, 3> result;
+
+		if (normal.x == 1.0) result.at(0) = INT16_MAX;
+		else if (normal.x == -1.0) result.at(0) = INT16_MIN;
+		else result.at(0) = static_cast<int16_t>(normal.x * static_cast<float>(INT16_MAX));
+
+		if (normal.y == 1.0) result.at(1) = INT16_MAX;
+		else if (normal.y == -1.0) result.at(1) = INT16_MIN;
+		else result.at(1) = static_cast<int16_t>(normal.y * static_cast<float>(INT16_MAX));
+
+		if (normal.z == 1.0) result.at(2) = INT16_MAX;
+		else if (normal.z == -1.0) result.at(2) = INT16_MIN;
+		else result.at(2) = static_cast<int16_t>(normal.z * static_cast<float>(INT16_MAX));
+
+		return result;
+	};
+
+	std::array<int16_t, 2> TPVertexNormalised::normalise(const glm::vec2& uv)
+	{
+		std::array<int16_t, 2> result;
+
+		if (uv.x == 1.0) result.at(0) = INT16_MAX;
+		else if (uv.x == -1.0) result.at(0) = INT16_MIN;
+		else result.at(0) = static_cast<int16_t>(uv.x * static_cast<float>(INT16_MAX));
+
+		if (uv.y == 1.0) result.at(1) = INT16_MAX;
+		else if (uv.y == -1.0) result.at(1) = INT16_MIN;
+		else result.at(1) = static_cast<int16_t>(uv.y * static_cast<float>(INT16_MAX));
+
+		return result;
+	};
 }
