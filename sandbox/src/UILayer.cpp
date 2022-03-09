@@ -13,14 +13,16 @@ UILayer::UILayer(const char* name) : Layer(name)
 
 	HorizontalContainer top, bottom;
 
-	/* MAIN MENU
-	top.AddWidget<Spacer>(100, 10);
-	top.AddWidget<Label>(300, 100, "Food Cahoots Fan Commitee");
-	bottom.AddWidget<Spacer>(50, 10);
-	bottom.AddWidget<Button>(100, 100, "Start", []() {Log::info("Proceed"); });
-	m_window.AddContainer(top);
-	m_window.AddContainer(bottom);*/
+	top.AddWidget<Spacer>(300, 0);
+	top.AddWidget<Label>(300, 100, "Main Menu");
 
+	bottom.AddWidget<Spacer>(300, 0);
+	bottom.AddWidget<Button>(100, 100, "Start", []() {Log::info("I clicked on a button"); });
+
+	m_window.AddContainer(top);
+	m_window.AddContainer(bottom);
+
+	/*
 	top.AddWidget<Spacer>(300, 10);
 	top.AddWidget<Label>(300, 100, "Timer: 10");
 	top.AddWidget<Spacer>(0, 500);
@@ -29,22 +31,26 @@ UILayer::UILayer(const char* name) : Layer(name)
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
 	bottom.AddWidget<Spacer>(20, 0);
 	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(100, 100, "123");
+	bottom.AddWidget<Label>(20, 100, "1");
 
-
-	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Spacer>(125, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
 	bottom.AddWidget<Spacer>(20, 0);
 	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(100, 100, "1234");
+	bottom.AddWidget<Label>(20, 100, "2");
 
-	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Spacer>(125, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
 	bottom.AddWidget<Spacer>(20, 0);
 	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(100, 100, "12345");
-	//bottom.AddWidget<Label>(200, 600, "Player 2");
-	//bottom.AddWidget<Label>(200, 600, "Player 3");
+	bottom.AddWidget<Label>(20, 100, "3");
+
+	bottom.AddWidget<Spacer>(125, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 1, 1));
+	bottom.AddWidget<Spacer>(20, 0);
+	bottom.AddWidget<Label>(10, 100, ": ");
+	bottom.AddWidget<Label>(20, 100, "4");*/
+
 	m_window.AddContainer(top);
 	m_window.AddContainer(bottom);
 
