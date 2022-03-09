@@ -5,6 +5,7 @@
 #include "UI/UIComponent.h"
 
 namespace Engine {
+	enum class Justification {left, centre, right};
 	class HorizontalContainer;
 
 	class Widget : public UIComponent {
@@ -22,23 +23,24 @@ namespace Engine {
 
 	class Label : public Widget {
 	public:
-		Label(glm::ivec2 size, const char* labeltext);
-		Label(int32_t sizex, int32_t sizey, const char* labeltext);
+		Label(glm::ivec2 size, const char* labeltext, Justification just = Justification::centre);
+		Label(int32_t sizex, int32_t sizey, const char* labeltext, Justification just = Justification::centre);
 		virtual void OnRender() const;
 		virtual void UpdatePosition(glm::ivec2& relativepos) override;
 	protected:
 		const char* m_text;
 		glm::ivec2 m_textpos;
+		Justification m_just;
 	};
 
 	class Button : public Label {
 	public:
 		Button(int32_t x, int32_t y, const char* buttontext, std::function<void(void)> OnClick) :
-			Label(x, y, buttontext),
+			Label(x, y, buttontext,Justification::left),
 			m_callback(OnClick)
 		{}
 		Button(glm::ivec2 size, const char* buttontext, std::function<void(void)> OnClick) :
-			Label(size,buttontext),
+			Label(size,buttontext,Justification::left),
 			m_callback(OnClick)
 		{}
 		virtual void OnRender() const override;

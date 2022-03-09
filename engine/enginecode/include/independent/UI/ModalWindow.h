@@ -21,6 +21,8 @@ namespace Engine {
 		virtual void OnMouseRelease(glm::ivec2& mousepos, int32_t button) override;
 		virtual void OnMouseMove(glm::ivec2& mousepos) override;
 
+		void ClearWindow();
+
 		bool IsShown() { return m_active; }
 		static int32_t padding;
 

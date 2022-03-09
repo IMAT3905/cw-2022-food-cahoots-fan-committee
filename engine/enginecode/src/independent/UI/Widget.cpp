@@ -22,12 +22,12 @@ namespace Engine {
 		m_position = { 0,0 };
 	}
 
-	Label::Label(glm::ivec2 size, const char* labeltext) : m_text(labeltext) {
+	Label::Label(glm::ivec2 size, const char* labeltext,Justification just) : m_text(labeltext), m_just(just) {
 		m_size = size;
 		m_position = { 0,0 };
 	}
 
-	Label::Label(int32_t sizex, int32_t sizey, const char* labeltext) : m_text(labeltext) {
+	Label::Label(int32_t sizex, int32_t sizey, const char* labeltext, Justification just) : m_text(labeltext), m_just(just) {
 		m_size = glm::ivec2(sizex, sizey);
 		m_position = { 0,0 };
 		m_textpos = { 0,0 };
@@ -41,8 +41,23 @@ namespace Engine {
 		m_position = relativepos;
 		glm::ivec2 textsize = Renderer2D::GetTextSize(m_text);
 		glm::ivec2 centre = m_position + m_size / 2;
-		m_textpos.x = centre.x - textsize.x / 2;
-		m_textpos.y = centre.y - textsize.y / 2;
+		switch (m_just)
+		{
+		case Engine::Justification::left:
+			m_textpos.x = m_position.x;
+			m_textpos.y = centre.y - textsize.y / 2;
+			break;
+		case Engine::Justification::centre:
+			m_textpos.x = centre.x - textsize.x / 2;
+			m_textpos.y = centre.y - textsize.y / 2;
+			break;
+		case Engine::Justification::right:
+			m_textpos.x = (m_position.x+m_size.x) - textsize.x;
+			m_textpos.y = centre.y - textsize.y / 2;
+			break;
+		default:
+			break;
+		}
 	}
 
 	void Button::OnRender() const {
@@ -67,7 +82,6 @@ namespace Engine {
 	}
 
 	void ColouredSquare::OnRender() const {
-		Log::info("Displaying Square");
 		Renderer2D::submit(Quad::createTopLeftSize(m_position, m_size), m_tint);
 	}
 }

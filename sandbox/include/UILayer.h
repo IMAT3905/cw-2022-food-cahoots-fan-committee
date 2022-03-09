@@ -16,6 +16,7 @@ using namespace Engine;
 
 //New enum state
 enum class UILayerState {InActive, Activating, Active, Deactivating};
+enum class UIMode {MainMenu, InGame};
 
 class UILayer : public Layer
 {
@@ -29,6 +30,8 @@ public:
 	virtual void onMouseMoved(MouseMovedEvent& e) override;
 	virtual void onMousePressed(MouseButtonPressedEvent& e) override;
 	virtual void onMouseReleased(MouseButtonReleasedEvent& e) override;
+	void SetMenu();
+	void SetInGame();
 
 private:
 	//FixedOthroCameraController2D
@@ -37,4 +40,5 @@ private:
 	SceneWideUniforms m_swu;
 	ModalWindow m_window; //Window to render on
 	UILayerState m_state = UILayerState::InActive; //Default state
+	UIMode m_mode = UIMode::InGame;
 };

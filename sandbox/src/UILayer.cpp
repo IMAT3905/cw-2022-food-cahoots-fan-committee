@@ -11,63 +11,16 @@ UILayer::UILayer(const char* name) : Layer(name)
 	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
-	HorizontalContainer top, bottom;
+	switch (m_mode)
+	{
+	case UIMode::MainMenu:
+		SetMenu();
+		break;
+	case UIMode::InGame:
+		SetInGame();
+		break;
+	}
 
-	top.AddWidget<Spacer>(300, 0);
-	top.AddWidget<Label>(300, 100, "Main Menu");
-
-	bottom.AddWidget<Spacer>(300, 0);
-	bottom.AddWidget<Button>(100, 100, "Start", []() {Log::info("I clicked on a button"); });
-
-	m_window.AddContainer(top);
-	m_window.AddContainer(bottom);
-
-	/*
-	top.AddWidget<Spacer>(300, 10);
-	top.AddWidget<Label>(300, 100, "Timer: 10");
-	top.AddWidget<Spacer>(0, 500);
-
-	bottom.AddWidget<Spacer>(50, 0);
-	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
-	bottom.AddWidget<Spacer>(20, 0);
-	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(20, 100, "1");
-
-	bottom.AddWidget<Spacer>(125, 0);
-	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
-	bottom.AddWidget<Spacer>(20, 0);
-	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(20, 100, "2");
-
-	bottom.AddWidget<Spacer>(125, 0);
-	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
-	bottom.AddWidget<Spacer>(20, 0);
-	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(20, 100, "3");
-
-	bottom.AddWidget<Spacer>(125, 0);
-	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 1, 1));
-	bottom.AddWidget<Spacer>(20, 0);
-	bottom.AddWidget<Label>(10, 100, ": ");
-	bottom.AddWidget<Label>(20, 100, "4");*/
-
-	m_window.AddContainer(top);
-	m_window.AddContainer(bottom);
-
-
-
-
-	/*top.AddWidget<Spacer>(100, 10);
-	top.AddWidget<Label>(300, 100, "Hello World!");
-
-	middle.AddWidget<Spacer>(50, 10);
-	middle.AddWidget<Label>(500, 100, "This is some text!");
-
-	bottom.AddWidget<Button>(200, 60, "Button 1", []() {Log::info("I clicked on a button"); });
-
-	m_window.AddContainer(top);
-	m_window.AddContainer(middle);
-	m_window.AddContainer(bottom);*/
 	m_window.show();
 }
 
@@ -106,6 +59,14 @@ void UILayer::onKeyPressed(KeyPressedEvent& e) {
 		m_state = UILayerState::Deactivating;
 		Log::debug("Deactivating UI");
 		break;
+	case NG_KEY_SPACE:
+		if (m_mode == UIMode::InGame) {
+			m_window.ClearWindow();
+			SetMenu();
+			m_mode = UIMode::MainMenu;
+			Log::debug("Menu");
+		}
+		break;
 	}
 
 	if (m_state == UILayerState::Active) e.handle(true);
@@ -129,4 +90,48 @@ void UILayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 void UILayer::onUpdate(float timestep)
 {
 	//Log::debug("This is being run every frame");
+}
+
+void UILayer::SetMenu() {
+	HorizontalContainer top, bottom;
+
+	top.AddWidget<Spacer>(200, 500);
+	top.AddWidget<Label>(300, 100, "Main Menu", Justification::left);
+
+	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Button>(100, 100, "Start", []() {Log::info("lol"); });
+
+	m_window.AddContainer(top);
+	m_window.AddContainer(bottom);
+}
+
+void UILayer::SetInGame() {
+	HorizontalContainer top, bottom;
+
+	top.AddWidget<Spacer>(250, 500);
+	top.AddWidget<Label>(300, 100, "Timer: 10", Justification::left);
+	top.AddWidget<Spacer>(0, 500);
+
+	bottom.AddWidget<Spacer>(40, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
+	bottom.AddWidget<Spacer>(10, 0);
+	bottom.AddWidget<Label>(10, 100, ": 1", Justification::left);
+
+	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
+	bottom.AddWidget<Spacer>(10, 0);
+	bottom.AddWidget<Label>(10, 100, ": 2", Justification::left);
+
+	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
+	bottom.AddWidget<Spacer>(10, 0);
+	bottom.AddWidget<Label>(10, 100, ": 3", Justification::left);
+
+	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 1, 1));
+	bottom.AddWidget<Spacer>(10, 0);
+	bottom.AddWidget<Label>(10, 100, ": 4", Justification::left);
+
+	m_window.AddContainer(top);
+	m_window.AddContainer(bottom);
 }

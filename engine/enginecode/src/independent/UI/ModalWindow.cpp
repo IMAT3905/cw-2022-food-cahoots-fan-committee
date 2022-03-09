@@ -66,4 +66,8 @@ namespace Engine {
 			}
 		}
 	}
+
+	void ModalWindow::ClearWindow() {
+		m_container = RootContainer(this);
+	}
 }
