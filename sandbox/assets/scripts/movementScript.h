@@ -20,7 +20,7 @@ public:
 private:
 	entt::registry& m_registry = Engine::Application::getInstance().getRegistry();
 	float speed = 0.1;
-	MovementKeyFrames keyFrames[17];
+	MovementKeyFrames keyFrames[9];
 	glm::vec3 pos;
 	float t = 0.f;
 	float height = 5.f;
@@ -28,23 +28,15 @@ private:
 	float radius = 0.5f;
 	bool first = true;
 	float angle = 0.f;
-	glm::vec3 positions[16] =
+	glm::vec3 positions[8] =
 	{
 		glm::vec3(2.5f, 0.f, 3.f),
-		glm::vec3(2.5f - (width / 3.f), 0.f, 3.f),
-		glm::vec3(2.5f - width / 3.f * 2.f, 0.f, 3.f),
 		glm::vec3(2.5f - width, 0.f, 3.f),
 		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius),
-		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius - height / 3.f),
-		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius - height / 3.f * 2.f),
 		glm::vec3(2.5f - width - radius, 0.f, 3.f - radius - height),
 		glm::vec3(2.5f - width, 0.f, 3.f - radius - height - radius),
-		glm::vec3(2.5f - width + (width / 3.f), 0.f, 3.f - radius - height - radius),
-		glm::vec3(2.5f - width + (width / 3.f * 2.f), 0.f, 3.f - radius - height - radius),
 		glm::vec3(2.5f, 0.f, 3.f - radius - height - radius),
 		glm::vec3(2.5f + radius, 0.f, 3.f - height - radius),
-		glm::vec3(2.5f + radius, 0.f, 3.f - height + (height / 3.f) - radius),
-		glm::vec3(2.5f + radius, 0.f, 3.f - height + (height / 3.f * 2.f) - radius),
 		glm::vec3(2.5f + radius, 0.f, 3.f - radius),
 	};
 };

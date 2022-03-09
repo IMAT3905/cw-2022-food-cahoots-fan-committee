@@ -20,8 +20,8 @@ namespace Engine {
 			glm::vec3 diffuseTint = { 1.f, 1.f, 1.f };
 		};
 
-		static std::shared_ptr<Material> material;
-		static std::shared_ptr<VertexArray> geometry;
+		static std::shared_ptr<Material> s_material;
+		static std::shared_ptr<VertexArray> s_geometry;
 		//need geometry
 
 		static void ASSIMPProcessMesh(aiMesh* mesh, const aiScene* scene)
@@ -58,7 +58,6 @@ namespace Engine {
 			}
 
 			//Log::info("INDICES");
-
 			for (uint32_t i = 0; i < mesh->mNumFaces; i++)
 			{
 				aiFace face = mesh->mFaces[i];
@@ -104,7 +103,7 @@ namespace Engine {
 					if (type == aiTextureType_DIFFUSE)
 					{
 						std::string fn(str.C_Str());
-						tmpMesh.diffuseTexture.reset(Texture::create(("./models/lettercube" + fn).c_str()));
+						tmpMesh.diffuseTexture.reset(Texture::create(("./assets/models/lettercube" + fn).c_str()));
 					}
 					//Log::info("Texture type:{0} filepath:{1}", type, str.C_Str());
 				}
@@ -115,6 +114,10 @@ namespace Engine {
 			float floatValue;
 			aiColor3D colorValue;
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, colorValue)) tmpMesh.diffuseTint = { colorValue.r, colorValue.g, colorValue.b };
+			std::shared_ptr<Shader> shader;
+			shader.reset(Shader::create("./assets/shaders/texturedPhong.glsl"));
+			if (tmpMesh.diffuseTexture) s_material.reset(new Material(shader, tmpMesh.diffuseTexture));
+			else s_material.reset(new Material(shader, tmpMesh.diffuseTexture));
 		}
 
 		static void ASSIMPProcessNode(aiNode* node, const aiScene* scene)
