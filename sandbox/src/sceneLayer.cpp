@@ -1,6 +1,7 @@
 /* \file AssimpLayer.cpp */
 #include "sceneLayer.h"
 #include "movementScript.h"
+#include "assimpLoader.h"
 
 SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 {
@@ -307,6 +308,8 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 
 	auto& nsc17 = m_registry.emplace<NativeScriptComponent>(m_entities[17]);
 	nsc17.create<MovementScript>(m_entities[17], 15);
+
+	//Loader::ASSIMPLoad("./assets/models/lettercube/letterCube.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, numberCubeMat, ); //needs geometry
 }
 
 void SceneLayer::onRender()
