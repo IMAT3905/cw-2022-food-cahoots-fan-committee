@@ -1,6 +1,6 @@
 #include "movementScript.h"
 
-MovementScript::MovementScript(entt::entity& entity, uint32_t startPoint) : NativeScript(entity), startPoint(startPoint) {};
+//MovementScript::MovementScript(entt::entity& entity, uint32_t startPoint) : NativeScript(entity), startPoint(startPoint) {};
 
 void MovementScript::onCreate()
 { 
@@ -58,37 +58,10 @@ void MovementScript::onCreate()
 	keyFrames[16].position = positions[0];
 
 	for (size_t i = 0; i < 17; i++) keyFrames[i].t /= l;
-	if (startPoint > 16) startPoint = 0;
 };
 
 void MovementScript::onUpdate(float timestep)
 {
-	if (first)
-	{
-		t = keyFrames[startPoint].t / keyFrames[16].t;
-		if (startPoint == 4 || startPoint == 5 || startPoint == 6)
-		{
-			angle = glm::radians(-90.f);
-			auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
-			tc.setRotation(glm::vec3(0.0, angle, 0.0));
-			tc.updateTransform();
-		}
-		else if (startPoint == 8 || startPoint == 9 || startPoint == 10)
-		{
-			angle = glm::radians(180.f);
-			auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
-			tc.setRotation(glm::vec3(0.0, angle, 0.0));
-			tc.updateTransform();
-		}
-		else if (startPoint == 12 || startPoint == 13 || startPoint == 14)
-		{
-			angle = glm::radians(90.f);
-			auto& tc = m_registry.get<Engine::TransformComponent>(m_entity);
-			tc.setRotation(glm::vec3(0.0, angle, 0.0));
-			tc.updateTransform();
-		}
-		first = false;
-	}
 	t += speed * (timestep / 4);
 	if (t > 1.0f) t -= 1.f;
 	//Engine::Log::debug("t: {0}", t);

@@ -98,6 +98,7 @@ project "Sandbox"
 	{
 		"%{prj.name}/include/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/assets/scripts/**.cpp"
 	}
 
 	includedirs
