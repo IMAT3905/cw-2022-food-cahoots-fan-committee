@@ -1,4 +1,6 @@
-/* \file UILayer.h */
+#pragma once
+
+/* \file MenuLayer.h */
 
 //Start
 #pragma once
@@ -11,19 +13,16 @@
 #include "include/independent/UI/ModalWindow.h"
 
 
-
 using namespace Engine;
 
-//New enum state
-enum class UILayerState {InActive, Activating, Active, Deactivating};
-enum class UIMode {MainMenu, InGame};
 
-class UILayer : public Layer
+class MenuLayer : public Layer
 {
 public:
-	UILayer(const char* name);
+	MenuLayer(const char* name);
 	void onRender() override;
 	void onUpdate(float timestep) override; //!< Runs every frame
+	enum class UILayerState { InActive, Activating, Active, Deactivating };
 	UILayerState GetState() { return m_state; } //Return state
 
 	virtual void onKeyPressed(KeyPressedEvent& e) override;
@@ -31,8 +30,7 @@ public:
 	virtual void onMousePressed(MouseButtonPressedEvent& e) override;
 	virtual void onMouseReleased(MouseButtonReleasedEvent& e) override;
 	void SetMenu();
-	void SetInGame();
-
+	void ButtonCall();
 private:
 	//FixedOthroCameraController2D
 	glm::mat4 view2D = glm::mat4(1.f);
@@ -40,5 +38,4 @@ private:
 	SceneWideUniforms m_swu;
 	ModalWindow m_window; //Window to render on
 	UILayerState m_state = UILayerState::InActive; //Default state
-	UIMode m_mode = UIMode::MainMenu;
 };

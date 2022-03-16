@@ -1,7 +1,7 @@
 /* \file UILayer.cpp */
-#include "UILayer.h"
+#include "InGameLayer.h"
 
-UILayer::UILayer(const char* name) : Layer(name)
+InGameLayer::InGameLayer(const char* name) : Layer(name)
 {
 	auto& window = Application::getInstance().getWindow();
 
@@ -11,20 +11,12 @@ UILayer::UILayer(const char* name) : Layer(name)
 	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
-	switch (m_mode)
-	{
-	case UIMode::MainMenu:
-		SetMenu();
-		break;
-	case UIMode::InGame:
-		SetInGame();
-		break;
-	}
+	SetInGame();
 
 	m_window.show();
 }
 
-void UILayer::onRender()
+void InGameLayer::onRender()
 {
 	switch (m_state) {
 	case UILayerState::Activating:
@@ -43,13 +35,9 @@ void UILayer::onRender()
 		m_window.OnRender();
 		Renderer2D::end();
 	}
-
-	if (m_state == UILayerState::InActive) {
-		Log::info("not active");
-	}
 }
 
-void UILayer::onKeyPressed(KeyPressedEvent& e) {
+void InGameLayer::onKeyPressed(KeyPressedEvent& e) {
 	switch (e.getKeyCode()) {
 	case NG_KEY_G:
 		m_state = UILayerState::Activating;
@@ -59,53 +47,32 @@ void UILayer::onKeyPressed(KeyPressedEvent& e) {
 		m_state = UILayerState::Deactivating;
 		Log::debug("Deactivating UI");
 		break;
-	case NG_KEY_SPACE:
-		if (m_mode == UIMode::InGame) {
-			m_window.ClearWindow();
-			SetMenu();
-			m_mode = UIMode::MainMenu;
-			Log::debug("Menu");
-		}
-		break;
 	}
 
 	if (m_state == UILayerState::Active) e.handle(true);
 }
 
-void UILayer::onMouseMoved(MouseMovedEvent& e) {
+void InGameLayer::onMouseMoved(MouseMovedEvent& e) {
 	glm::ivec2 mousepos = e.getPos();
 	m_window.OnMouseMove(mousepos);
 }
 
-void UILayer::onMousePressed(MouseButtonPressedEvent& e) {
+void InGameLayer::onMousePressed(MouseButtonPressedEvent& e) {
 	glm::ivec2 mousepos = InputPoller::getMousePosition();
 	m_window.OnMousePress(mousepos, e.getButton());
 }
 
-void UILayer::onMouseReleased(MouseButtonReleasedEvent& e) {
+void InGameLayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 	glm::ivec2 mousepos = InputPoller::getMousePosition();
 	m_window.OnMousePress(mousepos, e.getButton());
 }
 
-void UILayer::onUpdate(float timestep)
+void InGameLayer::onUpdate(float timestep)
 {
 	//Log::debug("This is being run every frame");
 }
 
-void UILayer::SetMenu() {
-	HorizontalContainer top, bottom;
-
-	top.AddWidget<Spacer>(200, 500);
-	top.AddWidget<Label>(300, 100, "Main Menu", Justification::left);
-
-	bottom.AddWidget<Spacer>(200, 0);
-	bottom.AddWidget<Button>(100, 100, "Start", [this]() {this->SetInGame(); });
-
-	m_window.AddContainer(top);
-	m_window.AddContainer(bottom);
-}
-
-void UILayer::SetInGame() {
+void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
 
 	top.AddWidget<Spacer>(250, 500);
@@ -134,4 +101,8 @@ void UILayer::SetInGame() {
 
 	m_window.AddContainer(top);
 	m_window.AddContainer(bottom);
+}
+
+void InGameLayer::ButtonCall() {
+
 }
