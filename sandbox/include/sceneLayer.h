@@ -26,7 +26,6 @@ public:
 	void onResize(WindowResizeEvent& e) override;
 private:
 	SceneWideUniforms m_swu;
-	glm::vec3 lightData[3] = { {1.0f, 1.0f, 1.0f}, { -2.0f, 4.0f, 6.0f }, { 0.0f, 0.0f, 0.0f } };
 
 	std::shared_ptr<Material> pyramidMat;
 	std::shared_ptr<Material> letterCubeMat;
@@ -34,16 +33,19 @@ private:
 	std::shared_ptr<Material> checkerCubeMat;
 	std::shared_ptr<Material> conveyorMat;
 
-	std::shared_ptr<Shader> TPShader;
+	std::shared_ptr<Shader> TPShaderBatch;
 
 	std::shared_ptr<VertexArray> cubeVAO;
 	std::shared_ptr<VertexArray> pyramidVAO;
 
-	std::shared_ptr<UniformBuffer> cameraUBO;
-	std::shared_ptr<UniformBuffer> lightsUBO;
+	std::shared_ptr<Material> material;
+
+	Geometry cube, pyramid, geo;
 
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
-		
+	
+	glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 4.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
+
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
 };

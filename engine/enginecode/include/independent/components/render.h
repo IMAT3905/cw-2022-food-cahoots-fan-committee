@@ -9,29 +9,29 @@ namespace Engine
 	class RenderComponent
 	{
 	public: 
-		RenderComponent(const std::shared_ptr<VertexArray>& pGeometry, std::shared_ptr<Material> pMaterial) { geometry = pGeometry; material = pMaterial; }
-		RenderComponent(const std::shared_ptr<VertexArray>& pGeometry, const std::shared_ptr<Shader>& shader)
+		RenderComponent(const Geometry pGeometry, std::shared_ptr<Material> pMaterial) { geometry = pGeometry; material = pMaterial; }
+		RenderComponent(const Geometry pGeometry, const std::shared_ptr<Shader>& shader)
 		{
 			geometry = pGeometry;
 			material.reset(new Material(shader));
 		}
-		RenderComponent(const std::shared_ptr<VertexArray>& pGeometry, const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const glm::vec4& tint)
+		RenderComponent(const Geometry pGeometry, const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const glm::vec4& tint)
 		{
 			geometry = pGeometry;
 			material.reset(new Material(shader, texture, tint));
 		}
-		RenderComponent(const std::shared_ptr<VertexArray>& pGeometry, const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture)
+		RenderComponent(const Geometry pGeometry, const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture)
 		{
 			geometry = pGeometry;
 			material.reset(new Material(shader, texture));
 		}
-		RenderComponent(const std::shared_ptr<VertexArray>& pGeometry, const std::shared_ptr<Shader>& shader, const glm::vec4& tint)
+		RenderComponent(const Geometry pGeometry, const std::shared_ptr<Shader>& shader, const glm::vec4& tint)
 		{
 			geometry = pGeometry;
 			material.reset(new Material(shader, tint));
 		}
 
-		std::shared_ptr<VertexArray> geometry;
+		Geometry geometry;
 		std::shared_ptr<Material> material;
 	};
 }

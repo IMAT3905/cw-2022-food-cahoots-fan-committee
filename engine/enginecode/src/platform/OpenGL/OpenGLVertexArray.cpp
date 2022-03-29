@@ -3,6 +3,7 @@
 #include "engine_pch.h"
 #include <glad/glad.h>
 #include "platform/OpenGL/OpenGLVertexArray.h"
+#include "systems/log.h"
 
 namespace Engine
 {
@@ -13,7 +14,7 @@ namespace Engine
 			switch (type)
 			{
 			case ShaderDataType::FlatByte: return GL_BYTE;
-			case ShaderDataType::FlatInt: return GL_INT;
+			case ShaderDataType::FlatInt: return GL_INT; 
 			case ShaderDataType::Byte4: return GL_UNSIGNED_BYTE;
 			case ShaderDataType::Short: return GL_SHORT;
 			case ShaderDataType::Short2: return GL_SHORT;
@@ -29,6 +30,7 @@ namespace Engine
 			}		
 		}
 	}
+
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		glCreateVertexArrays(1, &m_OpenGL_ID);
@@ -42,6 +44,7 @@ namespace Engine
 
 	void OpenGLVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
+		//m_attributeIndex = 0;
 		m_vertexBuffer.push_back(vertexBuffer);
 
 		glBindVertexArray(m_OpenGL_ID);
@@ -51,17 +54,50 @@ namespace Engine
 		for (const auto& element : layout)
 		{
 			uint32_t normalised = GL_FALSE;
-			if (element.m_normalised) { normalised = GL_TRUE; }
-			glEnableVertexAttribArray(m_attributeIndex);
+			if (element.m_normalised) { 
+				normalised = GL_TRUE; 
+			}
+
 			if (element.m_dataType == ShaderDataType::FlatInt || element.m_dataType == ShaderDataType::FlatByte)
 			{
-				//glEnableVertexAttribArray(m_attributeIndex);
-				glVertexAttribIPointer(
-					m_attributeIndex, 
+				glEnableVertexAttribArray(m_attributeIndex);
+				glVertexAttribIPointer(m_attributeIndex, 
 					SDT::componentCount(element.m_dataType), 
 					SDT::toGLType(element.m_dataType), 
 					layout.getStride(), 
 					(const void*)element.m_offset);
+				/*Log::info("{0} {1} {2} {3} {4} {5} {6}", m_attributeIndex,
+					SDT::componentCount(element.m_dataType),
+					SDT::toGLType(element.m_dataType),
+					element.m_normalised ? GL_TRUE : GL_FALSE,
+					layout.getStride(),
+					element.m_offset, element.m_instanceDivisor
+				);*/
+				glVertexAttribDivisor(m_attributeIndex, element.m_instanceDivisor);
+				m_attributeIndex++;
+			}
+			else if (element.m_dataType == ShaderDataType::Mat4)
+			{
+				uint8_t count = SDT::componentCount(element.m_dataType);
+				for (uint8_t i = 0; i < count; i++)
+				{
+					glEnableVertexAttribArray(m_attributeIndex);
+					glVertexAttribPointer(m_attributeIndex,
+						count,
+						SDT::toGLType(element.m_dataType),
+						element.m_normalised ? GL_TRUE : GL_FALSE,
+						layout.getStride(),
+						(const void*)(sizeof(float) * count * i));
+					/*Log::info("{0} {1} {2} {3} {4} {5} {6}", m_attributeIndex,
+						SDT::componentCount(element.m_dataType),
+						SDT::toGLType(element.m_dataType),
+						element.m_normalised ? GL_TRUE : GL_FALSE,
+						layout.getStride(),
+						sizeof(float) * count * i, element.m_instanceDivisor
+					);*/
+					glVertexAttribDivisor(m_attributeIndex, element.m_instanceDivisor);
+					m_attributeIndex++;
+				}			
 			}
 			else
 			{
@@ -71,9 +107,16 @@ namespace Engine
 					SDT::toGLType(element.m_dataType), 
 					normalised, 
 					layout.getStride(), 
-					(void*)element.m_offset); // position
-			}		
-			m_attributeIndex++;
+					(void*)element.m_offset);
+				/*Log::info("{0} {1} {2} {3} {4} {5} {6}", m_attributeIndex,
+					SDT::componentCount(element.m_dataType),
+					SDT::toGLType(element.m_dataType),
+					element.m_normalised ? GL_TRUE : GL_FALSE,
+					layout.getStride(),
+					element.m_offset, element.m_instanceDivisor
+				);*/
+				m_attributeIndex++;
+			}				
 		}
 	}
 

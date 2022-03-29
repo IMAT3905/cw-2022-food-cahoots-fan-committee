@@ -53,8 +53,8 @@ namespace Engine
 			case ShaderDataType::Float3: return 3;
 			case ShaderDataType::Float4: return 4;
 			case ShaderDataType::Int: return 1;
-			case ShaderDataType::Mat3: return 3 * 3;
-			case ShaderDataType::Mat4: return 4 * 4;
+			case ShaderDataType::Mat3: return 3;
+			case ShaderDataType::Mat4: return 4;
 			default: return 0;
 			}
 		}

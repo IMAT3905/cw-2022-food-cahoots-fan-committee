@@ -12,6 +12,7 @@ namespace Engine
 	{
 	public:
 		virtual ~IndexBuffer() = default; //!< Virtual Destructor
+		virtual void edit(void* indices, uint32_t size, uint32_t offset) = 0;
 		virtual inline uint32_t getID() const = 0; //!< Function to return render ID
 		virtual inline uint32_t getCount() const = 0; //!< Function to return the count
 

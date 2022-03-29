@@ -10,8 +10,6 @@
 
 namespace Engine
 {
-	TextureUnitManager RendererCommon::texUnitMan = TextureUnitManager(32);
-
 	VertexBufferLayout Renderer2DVertex::layout = VertexBufferLayout({ ShaderDataType::Float4, ShaderDataType::Float2, ShaderDataType::FlatInt, { ShaderDataType::Byte4, true } });
 
 	std::shared_ptr<Renderer2D::InternalData> Renderer2D::s_data = nullptr;
@@ -177,7 +175,7 @@ namespace Engine
 		}
 
 		s_data->model = glm::scale(glm::translate(glm::mat4(1.f), quad.m_translate), quad.m_scale);
-		uint32_t packedTint = Renderer2DVertex::pack(tint);
+		uint32_t packedTint = RendererCommon::pack(tint);
 		
 		uint32_t startIdx = s_data->drawCount;
 		for (int i = 0; i < 4; i++)
@@ -219,7 +217,7 @@ namespace Engine
 		}
 
 		s_data->model = glm::scale(glm::rotate(glm::translate(glm::mat4(1.f), quad.m_translate), angle, { 0.f, 0.f, 1.f }), quad.m_scale);
-		uint32_t packedTint = Renderer2DVertex::pack(tint);
+		uint32_t packedTint = RendererCommon::pack(tint);
 
 		uint32_t startIdx = s_data->drawCount;
 		for (int i = 0; i < 4; i++)
@@ -306,19 +304,6 @@ namespace Engine
 		result.m_translate = glm::vec3(centre, 0.f);
 		result.m_scale = glm::vec3(halfExtents * 2.f, 1.f);
 
-		return result;
-	}
-
-	uint32_t Renderer2DVertex::pack(const glm::vec4& tint)
-	{
-		uint32_t result = 0;
-
-		uint32_t r = (static_cast<uint32_t>(tint.r * 255.f)) << 0;
-		uint32_t g = (static_cast<uint32_t>(tint.g * 255.f)) << 8;
-		uint32_t b = (static_cast<uint32_t>(tint.b * 255.f)) << 16;
-		uint32_t a = (static_cast<uint32_t>(tint.a * 255.f)) << 24;
-
-		result = (r | g | b | a);
 		return result;
 	}
 }

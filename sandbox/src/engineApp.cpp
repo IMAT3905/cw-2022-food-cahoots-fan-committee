@@ -20,6 +20,7 @@ EngineApp::Application* Engine::startApplication()
 	props.winProps.height = 800;
 	props.fontFilePath = "./assets/fonts/CURLZ___.TTF";
 	props.characterSize = 56;
-
+	props.vertexCapacity3D = 10000;
+	props.batchSize3D = 1024;
 	return new EngineApp(props);
 }

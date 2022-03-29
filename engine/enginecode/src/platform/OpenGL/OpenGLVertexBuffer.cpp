@@ -16,7 +16,6 @@ namespace Engine
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		glDeleteBuffers(1, &m_OpenGL_ID);
-
 	}
 
 	void OpenGLVertexBuffer::edit(void* vertices, uint32_t size, uint32_t offset)

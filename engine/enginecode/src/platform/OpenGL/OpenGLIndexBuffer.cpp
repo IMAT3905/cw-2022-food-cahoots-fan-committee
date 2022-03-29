@@ -17,4 +17,10 @@ namespace Engine
 	{
 		glDeleteBuffers(1, &m_OpenGL_ID);
 	}
+
+	void OpenGLIndexBuffer::edit(void* indices, uint32_t size, uint32_t offset)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_OpenGL_ID);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, indices);
+	}
 }

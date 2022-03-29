@@ -15,13 +15,12 @@ namespace Engine
 	{
 	public:
 		Renderer2DVertex() = default; //!< Default constructor 
-		Renderer2DVertex(const glm::vec4& pos, const glm::vec2& UVs, const uint32_t tu, const glm::vec4 pTint) : position(pos), uvCoords(UVs), texUnit(tu), tint(pack(pTint)) {} //!< Constructor \param pos is the position \param UVs is the texture's size \param tu is the texture unit \param pTint is the packed tint of the rendered shape
+		Renderer2DVertex(const glm::vec4& pos, const glm::vec2& UVs, const uint32_t tu, const glm::vec4 pTint) : position(pos), uvCoords(UVs), texUnit(tu), tint(RendererCommon::pack(pTint)) {} //!< Constructor \param pos is the position \param UVs is the texture's size \param tu is the texture unit \param pTint is the packed tint of the rendered shape
 		glm::vec4 position; //!< position of the rendered shape
 		glm::vec2 uvCoords; //!< uv coords of the rendered shape
 		uint32_t texUnit; //!< the texture unit used
 		uint32_t tint; //!< tint to be applied to the shape
 		static VertexBufferLayout layout; //!< data layout
-		static uint32_t pack(const glm::vec4& tint); //!< function to pack tint data \param tint the data that will be packed
 	};
 
 	/** \class Quad

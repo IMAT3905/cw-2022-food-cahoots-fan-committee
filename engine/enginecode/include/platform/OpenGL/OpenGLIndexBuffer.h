@@ -13,6 +13,7 @@ namespace Engine
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t count); //!< Constructor \param indices is the indices data \param count is the number of indices
 		virtual ~OpenGLIndexBuffer(); //!< Destructor
+		virtual void edit(void* indices, uint32_t size, uint32_t offset) override;
 		virtual inline uint32_t getID() const override { return m_OpenGL_ID; } //!< function to return render ID
 		virtual inline uint32_t getCount() const override { return m_count; } //!< function to return the count
 	private:

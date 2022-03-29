@@ -14,15 +14,14 @@ namespace Engine {
 	{
 		struct TempMesh
 		{
-			std::vector<TPVertexNormalised> vertices;
+			std::vector<Renderer3DVertex> vertices;
 			std::vector<uint32_t> indices;
 			std::shared_ptr<Texture> diffuseTexture = nullptr;
 			glm::vec3 diffuseTint = { 1.f, 1.f, 1.f };
 		};
 
-		static std::shared_ptr<Material> s_material;
-		static std::shared_ptr<VertexArray> s_geometry;
-		//need geometry
+		static std::shared_ptr<Material> s_material = nullptr;
+		static Geometry s_geometry;
 
 		static void ASSIMPProcessMesh(aiMesh* mesh, const aiScene* scene)
 		{
@@ -42,19 +41,14 @@ namespace Engine {
 				std::vector<glm::vec2> texCoords(numUVChannels);
 
 				if (hasPositions) position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-				if (hasNormals) normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);		
+				if (hasNormals) normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 
 				for (uint32_t j = 0; j < numUVChannels; j++)
 				{
 					texCoords[j] = glm::vec2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
 				}
 
-				tmpMesh.vertices.push_back(TPVertexNormalised(position, normal, texCoords[0]));
-
-				// Log part - assume postion, normal and UV coords
-				//Log::info("VERTEX DATA");
-				if (texCoords.size() > 0)Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, T u:{6}, v{7}", position.x, position.y, position.z, normal.x, normal.y, normal.z, texCoords[0].x, texCoords[0].y);
-				else Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, NO TEXTURE", position.x, position.y, position.z, normal.x, normal.y, normal.z);
+				tmpMesh.vertices.push_back(Renderer3DVertex(position, normal, texCoords[0]));
 			}
 
 			//Log::info("INDICES");
@@ -70,6 +64,7 @@ namespace Engine {
 				// Log part - assume all faces are triangles and therefore have 3 indices
 				//Log::info("Face {0}: {1} {2} {3}", i, face.mIndices[0], face.mIndices[1], face.mIndices[2]);
 			}
+			//Log::info("Num vertices {0} Num indices {1}", mesh->mNumVertices, elementCount);
 
 			std::vector<aiTextureType> types = {
 				aiTextureType_NONE,
@@ -103,29 +98,29 @@ namespace Engine {
 					if (type == aiTextureType_DIFFUSE)
 					{
 						std::string fn(str.C_Str());
-						tmpMesh.diffuseTexture.reset(Texture::create(("./assets/models/lettercube" + fn).c_str()));
+						tmpMesh.diffuseTexture.reset(Texture::create(("./assets/models/lettercube/" + fn).c_str()));
 					}
 					//Log::info("Texture type:{0} filepath:{1}", type, str.C_Str());
 				}
 			}
-		
+
 			aiString stringValue;
 			int intValue;
 			float floatValue;
 			aiColor3D colorValue;
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, colorValue)) tmpMesh.diffuseTint = { colorValue.r, colorValue.g, colorValue.b };
+
+			Renderer3D::addGeometry(tmpMesh.vertices, tmpMesh.indices, s_geometry);
 			std::shared_ptr<Shader> shader;
-			shader.reset(Shader::create("./assets/shaders/texturedPhong.glsl"));
+			shader.reset(Shader::create("./assets/shaders/texturedPhongBatch.glsl"));
 			if (tmpMesh.diffuseTexture) s_material.reset(new Material(shader, tmpMesh.diffuseTexture));
-			else s_material.reset(new Material(shader, tmpMesh.diffuseTexture));
+			else s_material.reset(new Material(shader, glm::vec4(tmpMesh.diffuseTint, 1.0f)));
 		}
 
 		static void ASSIMPProcessNode(aiNode* node, const aiScene* scene)
 		{
 			std::string parentName = "Null";
 			if (node->mParent != nullptr) parentName = node->mParent->mName.C_Str();
-			//if (node->mNumMeshes > 0) Log::info("MESHED NODE: {0} PARENT: {1}", node->mName.C_Str(), parentName);
-			//if (node->mNumMeshes == 0) Log::info("UNMESHED NODE: {0} PARENT: {1}", node->mName.C_Str(), parentName);
 
 			aiMatrix4x4* transform = &node->mTransformation;
 			/*
@@ -149,7 +144,7 @@ namespace Engine {
 			}
 		}
 
-		static void ASSIMPLoad(const std::string& filepath, uint32_t flags, std::shared_ptr<Material> material, std::shared_ptr<VertexArray> geometry) //needs geometry
+		static void ASSIMPLoad(const std::string& filepath, uint32_t flags, std::shared_ptr<Material> material, Geometry& geo) //needs geometry
 		{
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(filepath, flags);
