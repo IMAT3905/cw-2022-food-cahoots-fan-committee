@@ -51,7 +51,8 @@ project "Engine"
 		"vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/lua",
-		"vendor/react3D/include"
+		"vendor/react3D/include",
+		"vendor/SoLoud/include"
 	}
 	
 	links 
@@ -63,7 +64,8 @@ project "Engine"
 		"assimp",
 		"box2d",
 		"lua",
-		"ReactPhysics3D"
+		"ReactPhysics3D",
+		"SoLoud"
 	}
 	
 	filter "system:windows"
@@ -273,3 +275,4 @@ group "Vendor"
 	include "vendor/box2D"
 	include "vendor/lua"
 	include "vendor/react3D"
+	include "vendor/SoLoud"
