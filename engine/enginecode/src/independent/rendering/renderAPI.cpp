@@ -10,6 +10,7 @@
 #include "platform/OpenGL/OpenGLShader.h"
 #include "platform/OpenGL/OpenGLTexture.h"
 #include "platform/OpenGL/OpenGLUniformBuffer.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
 
 namespace Engine
 {
@@ -164,6 +165,46 @@ namespace Engine
 			break;
 		case RenderAPI::API::OpenGL:
 			return new OpenGLUniformBuffer(layout);
+		case RenderAPI::API::Direct3D:
+			Log::error("Direct3D is not currently supported");
+			break;
+		case RenderAPI::API::Vulkan:
+			Log::error("Vulkan is not currently supported");
+			break;
+		}
+
+		return nullptr;
+	}
+
+	FrameBuffer* FrameBuffer::create(glm::ivec2 size, FrameBufferLayout layout)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case RenderAPI::API::None:
+			Log::error("Not having a rendering API is not currently supported");
+			break;
+		case RenderAPI::API::OpenGL:
+			return new OpenGLFrameBuffer(size, layout);
+		case RenderAPI::API::Direct3D:
+			Log::error("Direct3D is not currently supported");
+			break;
+		case RenderAPI::API::Vulkan:
+			Log::error("Vulkan is not currently supported");
+			break;
+		}
+
+		return nullptr;
+	}
+
+	FrameBuffer* FrameBuffer::createDefault()
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case RenderAPI::API::None:
+			Log::error("Not having a rendering API is not currently supported");
+			break;
+		case RenderAPI::API::OpenGL:
+			return new OpenGLFrameBuffer();
 		case RenderAPI::API::Direct3D:
 			Log::error("Direct3D is not currently supported");
 			break;
