@@ -50,3 +50,6 @@
 [submodule "vendor/STBimage"]
 	path = vendor/STBimage
 	url = https://github.com/nothings/stb.git
+[submodule "vendor/SoLoud"]
+	path = vendor/SoLoud
+	url = https://github.com/jarikomppa/soloud.git
