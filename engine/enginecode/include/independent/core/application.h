@@ -2,6 +2,7 @@
 #pragma once
 
 #include "systems/log.h"
+#include "systems/audio.h"
 #include "timer.h"
 #include "events/events.h"
 #include "events/eventHandler.h"
@@ -35,6 +36,7 @@ namespace Engine {
 
 		std::shared_ptr<Log> m_logSystem; //!< Log system		
 		std::shared_ptr<System> m_windowsSystem; //!< Windows system
+		std::shared_ptr<AudioSystem> m_audioSystem; //!< Audio System
 
 		std::shared_ptr<Window> m_window; //!< Window
 		std::shared_ptr<Timer> m_timer; //!< Timer

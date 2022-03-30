@@ -1,6 +1,9 @@
 /* \file sceneLayer.cpp */
 #include "sceneLayer.h"
 
+		//bool result = m_audioSystem->addSound("tasmanian", "./assets/audio/tasmanian-devil-scream.wav");
+		//bool result2 = m_audioSystem->setSoundLooping("tasmanian", true);
+		//bool result3 = m_audioSystem->playSound("tasmanian");
 
 	/** \class TPVertexNormalised
 		** \brief Class which uses a textured phong and has normalised data

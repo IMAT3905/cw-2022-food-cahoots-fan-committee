@@ -49,6 +49,10 @@ namespace Engine {
 
 		WindowProperties props("My Game Engine", 1024, 800);
 		
+		//start the audio system
+		m_audioSystem.reset(new AudioSystem);
+		m_audioSystem->start();
+
 		m_window.reset(Window::create(appProps.winProps));
 
 		m_window->getEventHandler().setOnCloseCallback(std::bind(&Application::onClose, this, std::placeholders::_1));
@@ -172,20 +176,20 @@ namespace Engine {
 
 	Application::~Application()
 	{
+		//stop audio system
+		m_audioSystem->stop();
 		// Stop systems
 		m_windowsSystem->stop();
 		//Stop logger
 		m_logSystem->stop();
 		//Stop window system
-		//
 	}
 
 	void Application::run()
 	{
 		float timestep = 0.f;
 
-		
-
+	
 		while (m_running)
 		{
 			timestep = m_timer->getElapsedTime();
