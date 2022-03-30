@@ -33,14 +33,14 @@ private:
 	std::shared_ptr<Material> checkerCubeMat;
 	std::shared_ptr<Material> conveyorMat;
 
-	std::shared_ptr<Shader> TPShaderBatch;
-
-	std::shared_ptr<VertexArray> cubeVAO;
-	std::shared_ptr<VertexArray> pyramidVAO;
+	std::shared_ptr<Shader> TPShader;
 
 	std::shared_ptr<Material> material;
 
-	Geometry cube, pyramid, geo;
+	std::shared_ptr<VertexArray> cube, pyramid, geo;
+
+	std::shared_ptr<UniformBuffer> cameraUBO;
+	std::shared_ptr<UniformBuffer> lightsUBO;
 
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
 	

@@ -8,6 +8,7 @@
 #include <map>
 
 #include "systems/log.h"
+#include "rendering/Renderer3D.h"
 
 namespace Engine {
 	namespace Loader
@@ -20,9 +21,9 @@ namespace Engine {
 			glm::vec3 diffuseTint = { 1.f, 1.f, 1.f };
 		};
 
-		static std::shared_ptr<Material> material;
-		static std::shared_ptr<VertexArray> geometry;
-		//need geometry
+		static std::shared_ptr<Material> s_material;
+		static std::shared_ptr<VertexArray> s_geometry;
+		static std::shared_ptr<Shader> s_shader;
 
 		static void ASSIMPProcessMesh(aiMesh* mesh, const aiScene* scene)
 		{
@@ -53,8 +54,8 @@ namespace Engine {
 
 				// Log part - assume postion, normal and UV coords
 				//Log::info("VERTEX DATA");
-				if (texCoords.size() > 0)Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, T u:{6}, v{7}", position.x, position.y, position.z, normal.x, normal.y, normal.z, texCoords[0].x, texCoords[0].y);
-				else Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, NO TEXTURE", position.x, position.y, position.z, normal.x, normal.y, normal.z);
+				//if (texCoords.size() > 0)Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, T u:{6}, v{7}", position.x, position.y, position.z, normal.x, normal.y, normal.z, texCoords[0].x, texCoords[0].y);
+				//else Log::info("P x:{0}, y:{1}, z:{2}, N x:{3}, y:{4}, z:{5}, NO TEXTURE", position.x, position.y, position.z, normal.x, normal.y, normal.z);
 			}
 
 			//Log::info("INDICES");
@@ -104,7 +105,7 @@ namespace Engine {
 					if (type == aiTextureType_DIFFUSE)
 					{
 						std::string fn(str.C_Str());
-						tmpMesh.diffuseTexture.reset(Texture::create(("./models/lettercube" + fn).c_str()));
+						tmpMesh.diffuseTexture.reset(Texture::create(("./assets/models/" + fn).c_str()));
 					}
 					//Log::info("Texture type:{0} filepath:{1}", type, str.C_Str());
 				}
@@ -115,6 +116,21 @@ namespace Engine {
 			float floatValue;
 			aiColor3D colorValue;
 			if (AI_SUCCESS == material->Get(AI_MATKEY_COLOR_DIFFUSE, colorValue)) tmpMesh.diffuseTint = { colorValue.r, colorValue.g, colorValue.b };
+			if (colorValue.IsBlack()) tmpMesh.diffuseTint = glm::vec3(1.0f);
+
+			std::shared_ptr<VertexBuffer> VBO;
+			std::shared_ptr<IndexBuffer> IBO;
+
+			s_geometry.reset(VertexArray::create());
+			VBO.reset(VertexBuffer::create(tmpMesh.vertices.data(), sizeof(TPVertexNormalised) * tmpMesh.vertices.size(), TPVertexNormalised::getLayout()));
+			IBO.reset(IndexBuffer::create(tmpMesh.indices.data(), tmpMesh.indices.size()));
+
+			s_geometry->addVertexBuffer(VBO);
+			s_geometry->setIndexBuffer(IBO);
+
+			//letterCubeMat.reset(new Material(TPShader, letterTexture));
+			s_material.reset(new Material(s_shader, tmpMesh.diffuseTexture, glm::vec4(tmpMesh.diffuseTint, 1.0f)));
+
 		}
 
 		static void ASSIMPProcessNode(aiNode* node, const aiScene* scene)
@@ -148,6 +164,7 @@ namespace Engine {
 
 		static void ASSIMPLoad(const std::string& filepath, uint32_t flags, std::shared_ptr<Material> material, std::shared_ptr<VertexArray> geometry) //needs geometry
 		{
+			s_shader = std::shared_ptr<Shader>(Shader::create("./assets/shaders/texturedPhong.glsl"));
 			Assimp::Importer importer;
 			const aiScene* scene = importer.ReadFile(filepath, flags);
 

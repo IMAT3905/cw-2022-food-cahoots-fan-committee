@@ -16,10 +16,9 @@ namespace Engine
 		uint32_t m_size; //!< The size of the element
 		uint32_t m_offset; //!< The offset of the element
 		bool m_normalised; //!< If the data is normalised
-		uint32_t m_instanceDivisor;
 
 		VertexBufferElement() {} //!< Default constructor
-		VertexBufferElement(ShaderDataType dataType, uint32_t instanceDivisor = 0, bool normalised = false) : m_dataType(dataType), m_size(SDT::size(dataType)), m_offset(0), m_instanceDivisor(instanceDivisor), m_normalised(normalised) {} //!< Constructor for vertex buffer element \param datatype is the type of data \param normalised is if the data is normalised
+		VertexBufferElement(ShaderDataType dataType, bool normalised = false) : m_dataType(dataType), m_size(SDT::size(dataType)), m_offset(0), m_normalised(normalised) {} //!< Constructor for vertex buffer element \param datatype is the type of data \param normalised is if the data is normalised
 	};
 
 	/** \class UniformBufferElement
@@ -34,7 +33,7 @@ namespace Engine
 		uint32_t m_offset; //!< The offset of the element
 
 		UniformBufferElement() {} //!< Default constructor
-		UniformBufferElement(const char * name, ShaderDataType dataType) : m_name(name), m_dataType(dataType), m_size(SDT::std140alignment(dataType)), m_offset(0) {} //!< Constructor for uniform buffer element \param name is the name of the data \param datatype is the type of data
+		UniformBufferElement(const char* name, ShaderDataType dataType) : m_name(name), m_dataType(dataType), m_size(SDT::std140alignment(dataType)), m_offset(0) {} //!< Constructor for uniform buffer element \param name is the name of the data \param datatype is the type of data
 	};
 
 	/** \class BufferLayout
