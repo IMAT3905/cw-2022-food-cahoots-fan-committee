@@ -110,4 +110,17 @@ namespace Engine
 			layer->setActive(focusedState);
 		}
 	}
+
+	void LayerStack::SetVariables() {
+		std::shared_ptr<Layer> newlayer = nullptr;
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "InGame Layer") newlayer = layer;
+		}
+
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "Menu Layer") layer->enablelayer = newlayer;
+		}
+	}
 }

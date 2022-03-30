@@ -7,7 +7,7 @@ EngineApp::EngineApp(Engine::ApplicationProps props) : Application(props)
 	m_layerStack.push(new MenuLayer("Menu Layer"));
 	m_layerStack.push(new InGameLayer("InGame Layer"));
 
-	//add pointer 
+	m_layerStack.SetVariables();
 }
 
 EngineApp::~EngineApp()

@@ -13,6 +13,8 @@ InGameLayer::InGameLayer(const char* name) : Layer(name)
 
 	SetInGame();
 
+	m_isFocused = false;
+	m_isDisplayed = false;
 	m_window.show();
 }
 
@@ -39,16 +41,19 @@ void InGameLayer::onRender()
 
 void InGameLayer::onKeyPressed(KeyPressedEvent& e) {
 	switch (e.getKeyCode()) {
-	case NG_KEY_G:
-		m_state = UILayerState::Activating;
-		Log::debug("Activating UI");
+	case NG_KEY_1:
+		scores[0] += 1;
 		break;
-	case NG_KEY_H:
-		m_state = UILayerState::Deactivating;
-		Log::debug("Deactivating UI");
+	case NG_KEY_2:
+		scores[1] += 1;
+		break;
+	case NG_KEY_3:
+		scores[2] += 1;
+		break;
+	case NG_KEY_4:
+		scores[3] += 1;
 		break;
 	}
-
 	if (m_state == UILayerState::Active) e.handle(true);
 }
 
@@ -69,12 +74,13 @@ void InGameLayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 
 void InGameLayer::onUpdate(float timestep)
 {
-	//Log::debug("This is being run every frame");
+	
 }
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
-
+	
+	std::string score = ": " + std::to_string(scores[0]);
 	top.AddWidget<Spacer>(250, 500);
 	top.AddWidget<Label>(300, 100, "Timer: 10", Justification::left);
 	top.AddWidget<Spacer>(0, 500);
@@ -82,7 +88,7 @@ void InGameLayer::SetInGame() {
 	bottom.AddWidget<Spacer>(40, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
-	bottom.AddWidget<Label>(10, 100, ": 1", Justification::left);
+	bottom.AddWidget<Label>(10, 100, score.c_str(), Justification::left);
 
 	bottom.AddWidget<Spacer>(80, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));

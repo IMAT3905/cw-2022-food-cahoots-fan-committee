@@ -87,6 +87,9 @@ void MenuLayer::SetMenu() {
 
 void MenuLayer::ButtonCall() {
 	Log::info("Button Pressed");
+
+	enablelayer->setDisplayed(true);
+	enablelayer->setFocused(true);
 	this->setDisplayed(false);
 	this->setFocused(false);
 }

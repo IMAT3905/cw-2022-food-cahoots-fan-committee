@@ -30,6 +30,7 @@ namespace Engine
 		void setAllDisplayed(bool displayState);
 		void setFocused(const char* layerName, bool focusedState);
 		void setAllFocused(bool focusedState);
+		void SetVariables();
 
 		std::vector<std::shared_ptr<Layer>>::iterator begin() { return m_stack.begin(); }
 		std::vector<std::shared_ptr<Layer>>::iterator end() { return m_stack.end(); }

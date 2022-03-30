@@ -31,12 +31,11 @@ public:
 	virtual void onMouseReleased(MouseButtonReleasedEvent& e) override;
 	void SetInGame();
 	void ButtonCall();
-
+	UILayerState m_state = UILayerState::Active; //Default state
 private:
 	//FixedOthroCameraController2D
 	glm::mat4 view2D = glm::mat4(1.f);
 	glm::mat4 projection2D;
 	SceneWideUniforms m_swu;
 	ModalWindow m_window; //Window to render on
-	UILayerState m_state = UILayerState::InActive; //Default state
 };
