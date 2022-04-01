@@ -46,6 +46,11 @@ namespace Engine {
 			UpdateSize();
 		}
 
+		std::vector<std::shared_ptr<Widget>>::iterator getWidget(size_t index)
+		{
+			return m_widgets.begin() + index;
+		}
+
 		void UpdatePosition(glm::ivec2& relativepos) override;
 		void UpdateSize() override;
 		void OnRender() const override;

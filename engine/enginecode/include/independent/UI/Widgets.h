@@ -27,6 +27,7 @@ namespace Engine {
 		Label(int32_t sizex, int32_t sizey, const char* labeltext, Justification just = Justification::centre);
 		virtual void OnRender() const;
 		virtual void UpdatePosition(glm::ivec2& relativepos) override;
+		virtual void setText(const char* newText) { m_text = newText; }
 	protected:
 		const char* m_text;
 		glm::ivec2 m_textpos;

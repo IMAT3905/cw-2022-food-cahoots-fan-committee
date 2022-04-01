@@ -25,6 +25,9 @@ namespace Engine {
 
 		bool IsShown() { return m_active; }
 		static int32_t padding;
+		std::vector<HorizontalContainer>::iterator getContainer(size_t index) {
+			return m_container.begin() + index;
+		}
 
 	private:
 		bool m_active = false;

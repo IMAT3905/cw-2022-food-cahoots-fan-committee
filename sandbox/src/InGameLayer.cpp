@@ -74,13 +74,14 @@ void InGameLayer::onMouseReleased(MouseButtonReleasedEvent& e) {
 
 void InGameLayer::onUpdate(float timestep)
 {
-	
+	m_scoreStr = ": " + std::to_string(scores[0]);
+
 }
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
 	
-	std::string score = ": " + std::to_string(scores[0]);
+	m_scoreStr = ": " + std::to_string(scores[0]);
 	top.AddWidget<Spacer>(250, 500);
 	top.AddWidget<Label>(300, 100, "Timer: 10", Justification::left);
 	top.AddWidget<Spacer>(0, 500);
@@ -88,7 +89,7 @@ void InGameLayer::SetInGame() {
 	bottom.AddWidget<Spacer>(40, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
-	bottom.AddWidget<Label>(10, 100, score.c_str(), Justification::left);
+	bottom.AddWidget<Label>(10, 100, m_scoreStr.c_str(), Justification::left);
 
 	bottom.AddWidget<Spacer>(80, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
