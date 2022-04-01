@@ -38,5 +38,5 @@ private:
 	glm::mat4 projection2D;
 	SceneWideUniforms m_swu;
 	ModalWindow m_window; //Window to render on
-	std::string m_scoreStr;
+	std::string m_scoreStr[4];
 };
