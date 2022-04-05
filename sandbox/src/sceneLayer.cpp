@@ -120,7 +120,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		13, 14, 15
 	};
 
-	std::vector <uint32_t> cubeIndices = 
+	std::vector <uint32_t> cubeIndices =
 	{
 		0, 1, 2,
 		2, 3, 0,
@@ -147,14 +147,14 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	std::shared_ptr<IndexBuffer> pyramidIBO;
 
 	cube.reset(VertexArray::create());
-	cubeVBO.reset(VertexBuffer::create(cubeVertices.data(), sizeof(TPVertexNormalised)* cubeVertices.size(), TPVertexNormalised::getLayout()));
+	cubeVBO.reset(VertexBuffer::create(cubeVertices.data(), sizeof(TPVertexNormalised) * cubeVertices.size(), TPVertexNormalised::getLayout()));
 	cubeIBO.reset(IndexBuffer::create(cubeIndices.data(), 36));
 
 	cube->addVertexBuffer(cubeVBO);
 	cube->setIndexBuffer(cubeIBO);
 
 	pyramid.reset(VertexArray::create());
-	pyramidVBO.reset(VertexBuffer::create(pyramidVertices.data(), sizeof(TPVertexNormalised)* pyramidVertices.size(), TPVertexNormalised::getLayout()));
+	pyramidVBO.reset(VertexBuffer::create(pyramidVertices.data(), sizeof(TPVertexNormalised) * pyramidVertices.size(), TPVertexNormalised::getLayout()));
 	pyramidIBO.reset(IndexBuffer::create(pyramidIndices.data(), 18));
 
 	pyramid->addVertexBuffer(pyramidVBO);
@@ -207,7 +207,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		t += deltaT;
 	}
 
-	Loader::ASSIMPLoad("./assets/models/plate/plato-1.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo); //needs geometry
+	Loader::ASSIMPLoad("./assets/models/plate/plato-1.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
