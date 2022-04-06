@@ -1,16 +1,19 @@
 #pragma once
 
 #include "engine.h"
-#include "scripting.h"
+#include "include/independent/components/scripting.h"
+namespace Engine {
+	class PlayerScript : public Engine::NativeScript
+	{
+	public:
+		PlayerScript(entt::entity& entity) : m_entity(entity) {};
+		virtual void onCreate() override;
+		virtual void onDestroy() override;
+		virtual void onUpdate(float timestep) override;
+		virtual void onKeyPress(KeyPressedEvent& e) override;
 
-class PlayerScript : public Engine::NativeScript
-{
-public:
-	PlayerScript(entt::entity& entity, float startT) : NativeScript(entity), t(startT) {};
-	virtual void onCreate() override;
-	virtual void onDestroy() override;
-	virtual void onUpdate(float timestep) override;
-	virtual void onKeyPress(KeyPressedEvent& e) override;
-protected:
-	entt::entity m_entity;
-};
+		int scores[4] = { 0,0,0,0 };
+	protected:
+		entt::entity m_entity;
+	};
+}

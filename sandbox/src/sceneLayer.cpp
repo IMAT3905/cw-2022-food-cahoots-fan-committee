@@ -1,6 +1,7 @@
 /* \file sceneLayer.cpp */
 #include "sceneLayer.h"
 #include "movementScript.h"
+#include "player.h"
 
 	/** \class TPVertexNormalised
 		** \brief Class which uses a textured phong and has normalised data
@@ -233,12 +234,18 @@
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
 
+		m_entities[2] = m_registry.create();
+		m_registry.emplace<LabelComponent>(m_entities[2], "Player1");
+
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[2]);
+		nsc.create<PlayerScript>(m_entities[2]);
+		
 		glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
 		float t = 0;
 		uint32_t cubeCount = 32;
 		float deltaT = 1.0f / static_cast<float>(cubeCount);
-		for (uint32_t i = 2; i < cubeCount + 2; i++)
+		for (uint32_t i = 3; i < cubeCount + 3; i++)
 		{
 			m_entities[i] = m_registry.create();
 			m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Platform Cube ") + std::to_string(i)).c_str());
@@ -249,6 +256,7 @@
 			nsc.create<MovementScript>(m_entities[i], t);
 			t += deltaT;
 		}
+
 	}
 
 	void SceneLayer::onRender()
@@ -289,7 +297,15 @@
 
 	void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 	{
-		glm::vec3 forward, right;	
+		glm::vec3 forward, right;
+
+		auto& view = m_registry.view<NativeScriptComponent>();
+		for (auto& entity : view)
+		{
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onKeyPress(e);
+		}
+		
 	}
 
 	void SceneLayer::onResize(WindowResizeEvent& e)
