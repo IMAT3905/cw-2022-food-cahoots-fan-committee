@@ -2,6 +2,7 @@
 #include "engine_pch.h"
 #include <glad/glad.h>
 #include "platform/OpenGL/OpenGLFrameBuffer.h"
+#include "rendering/renderBuffer.h"
 #include "systems/log.h"
 
 namespace Engine

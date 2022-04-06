@@ -38,8 +38,7 @@ private:
 
 	std::shared_ptr<Shader> TPShader;
 
-	std::shared_ptr<VertexArray> cubeVAO;
-	std::shared_ptr<VertexArray> pyramidVAO;
+	std::shared_ptr<VertexArray> cube, pyramid, geo;
 
 	std::shared_ptr<UniformBuffer> cameraUBO;
 	std::shared_ptr<UniformBuffer> lightsUBO;

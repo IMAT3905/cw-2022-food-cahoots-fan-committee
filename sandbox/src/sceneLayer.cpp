@@ -2,59 +2,6 @@
 #include "sceneLayer.h"
 #include "movementScript.h"
 
-	/** \class TPVertexNormalised
-		** \brief Class which uses a textured phong and has normalised data
-		*/
-	class TPVertexNormalised
-	{
-	public:
-		glm::vec3 m_pos; //!< The position data
-		std::array<int16_t, 3> m_normal; //!< The normal data
-		std::array<int16_t, 2> m_uv; //!< The UV data
-
-		TPVertexNormalised() : m_pos(glm::vec3(0.f)), m_normal({ 0, 0, 0 }), m_uv({ 0, 0 }) {} //!< Default constructor
-		TPVertexNormalised(const glm::vec3& pos, const std::array<int16_t, 3>& normal, const std::array<int16_t, 2>& uv) : m_pos(pos), m_normal(normal), m_uv(uv) {} //!< Constructor \param pos is the position of the object \param normal is the normal data for the object \param uv is the uv data for the object
-		static VertexBufferLayout getLayout() { return s_layout; } //!< Return the layout
-	private:
-		static VertexBufferLayout s_layout; //!< The layout of the data
-	};
-
-	VertexBufferLayout TPVertexNormalised::s_layout = { {ShaderDataType::Float3, {ShaderDataType::Short3, true}, {ShaderDataType::Short2, true} }, 24 }; //!< Layout for data in TPVertexNormalised
-
-	std::array<int16_t, 3> normalise(const glm::vec3& normal)
-	{
-		std::array<int16_t, 3> result;
-
-		if (normal.x == 1.0) result.at(0) = INT16_MAX;
-		else if (normal.x == -1.0) result.at(0) = INT16_MIN;
-		else result.at(0) = static_cast<int16_t>(normal.x * static_cast<float>(INT16_MAX));
-
-		if (normal.y == 1.0) result.at(1) = INT16_MAX;
-		else if (normal.y == -1.0) result.at(1) = INT16_MIN;
-		else result.at(1) = static_cast<int16_t>(normal.y * static_cast<float>(INT16_MAX));
-
-		if (normal.z == 1.0) result.at(2) = INT16_MAX;
-		else if (normal.z == -1.0) result.at(2) = INT16_MIN;
-		else result.at(2) = static_cast<int16_t>(normal.z * static_cast<float>(INT16_MAX));
-
-		return result;
-	};
-
-	std::array<int16_t, 2> normalise(const glm::vec2& uv)
-	{
-		std::array<int16_t, 2> result;
-
-		if (uv.x == 1.0) result.at(0) = INT16_MAX;
-		else if (uv.x == -1.0) result.at(0) = INT16_MIN;
-		else result.at(0) = static_cast<int16_t>(uv.x * static_cast<float>(INT16_MAX));
-
-		if (uv.y == 1.0) result.at(1) = INT16_MAX;
-		else if (uv.y == -1.0) result.at(1) = INT16_MIN;
-		else result.at(1) = static_cast<int16_t>(uv.y * static_cast<float>(INT16_MAX));
-
-		return result;
-	};
-
 	SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 	{
 		Renderer3D::init();
@@ -115,53 +62,55 @@
 
 #pragma region RAW_DATA
 
-		std::vector<TPVertexNormalised> cubeVertices(24);
+		std::vector<Renderer3DVertex> cubeVertices =
+		{
+			Renderer3DVertex({ 0.5f,  0.5f, -0.5f }, { 0.f,  0.f, -1.f }, { 0.f,   0.f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 0.f,  0.f, -1.f }, { 0.f,   0.5f }),
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { 0.f,  0.f, -1.f }, { 0.33f, 0.5f }),
+			Renderer3DVertex({ -0.5f,  0.5f, -0.5f }, { 0.f,  0.f, -1.f }, { 0.33f, 0.f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { 0.f,  0.f,  1.f }, { 0.33f, 0.5f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 0.f,  0.f,  1.f }, { 0.66f, 0.5f }),
+			Renderer3DVertex({ 0.5f,  0.5f,  0.5f }, { 0.f,  0.f,  1.f }, { 0.66f, 0.f }),
+			Renderer3DVertex({ -0.5f,  0.5f,  0.5f }, { 0.f,  0.f,  1.f }, { 0.33,  0.f }),
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { 0.f, -1.f,  0.f }, { 1.f,   0.f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 0.f, -1.f,  0.f }, { 0.66f, 0.f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 0.f, -1.f,  0.f }, { 0.66f, 0.5f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { 0.f, -1.f,  0.f }, { 1.0f,  0.5f }),
+			Renderer3DVertex({ 0.5f,  0.5f,  0.5f }, { 0.f,  1.f,  0.f }, { 0.f,   0.5f }),
+			Renderer3DVertex({ 0.5f,  0.5f, -0.5f }, { 0.f,  1.f,  0.f }, { 0.f,   1.0f }),
+			Renderer3DVertex({ -0.5f,  0.5f, -0.5f }, { 0.f,  1.f,  0.f }, { 0.33f, 1.0f }),
+			Renderer3DVertex({ -0.5f,  0.5f,  0.5f }, { 0.f,  1.f,  0.f }, { 0.3f,  0.5f }),
+			Renderer3DVertex({ -0.5f,  0.5f,  0.5f }, { -1.f,  0.f,  0.f }, { 0.66f, 0.5f }),
+			Renderer3DVertex({ -0.5f,  0.5f, -0.5f }, { -1.f,  0.f,  0.f }, { 0.33f, 0.5f }),
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { -1.f,  0.f,  0.f }, { 0.33f, 1.0f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { -1.f,  0.f,  0.f }, { 0.66f, 1.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 1.f,  0.f,  0.f }, { 1.0f,  1.0f }),
+			Renderer3DVertex({ 0.5f,  0.5f, -0.5f }, { 1.f,  0.f,  0.f }, { 1.0f,  0.5f }),
+			Renderer3DVertex({ 0.5f,  0.5f,  0.5f }, { 1.f,  0.f,  0.f }, { 0.66f, 0.5f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 1.f,  0.f,  0.f }, { 0.66f, 1.0f })
+		};
 
-		cubeVertices.at(0) = TPVertexNormalised({ 0.5f,  0.5f, -0.5f }, normalise({ 0.f,  0.f, -1.f }), normalise({ 0.f,   0.f }));
-		cubeVertices.at(1) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 0.f,  0.f, -1.f }), normalise({ 0.f,   0.5f }));
-		cubeVertices.at(2) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ 0.f,  0.f, -1.f }), normalise({ 0.33f, 0.5f }));
-		cubeVertices.at(3) = TPVertexNormalised({ -0.5f,  0.5f, -0.5f }, normalise({ 0.f,  0.f, -1.f }), normalise({ 0.33f, 0.f }));
-		cubeVertices.at(4) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ 0.f,  0.f,  1.f }), normalise({ 0.33f, 0.5f }));
-		cubeVertices.at(5) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 0.f,  0.f,  1.f }), normalise({ 0.66f, 0.5f }));
-		cubeVertices.at(6) = TPVertexNormalised({ 0.5f,  0.5f,  0.5f }, normalise({ 0.f,  0.f,  1.f }), normalise({ 0.66f, 0.f }));
-		cubeVertices.at(7) = TPVertexNormalised({ -0.5f,  0.5f,  0.5f }, normalise({ 0.f,  0.f,  1.f }), normalise({ 0.33,  0.f }));
-		cubeVertices.at(8) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ 0.f, -1.f,  0.f }), normalise({ 1.f,   0.f }));
-		cubeVertices.at(9) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 0.f, -1.f,  0.f }), normalise({ 0.66f, 0.f }));
-		cubeVertices.at(10) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 0.f, -1.f,  0.f }), normalise({ 0.66f, 0.5f }));
-		cubeVertices.at(11) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ 0.f, -1.f,  0.f }), normalise({ 1.0f,  0.5f }));
-		cubeVertices.at(12) = TPVertexNormalised({ 0.5f,  0.5f,  0.5f }, normalise({ 0.f,  1.f,  0.f }), normalise({ 0.f,   0.5f }));
-		cubeVertices.at(13) = TPVertexNormalised({ 0.5f,  0.5f, -0.5f }, normalise({ 0.f,  1.f,  0.f }), normalise({ 0.f,   1.0f }));
-		cubeVertices.at(14) = TPVertexNormalised({ -0.5f,  0.5f, -0.5f }, normalise({ 0.f,  1.f,  0.f }), normalise({ 0.33f, 1.0f }));
-		cubeVertices.at(15) = TPVertexNormalised({ -0.5f,  0.5f,  0.5f }, normalise({ 0.f,  1.f,  0.f }), normalise({ 0.3f,  0.5f }));
-		cubeVertices.at(16) = TPVertexNormalised({ -0.5f,  0.5f,  0.5f }, normalise({ -1.f,  0.f,  0.f }), normalise({ 0.66f, 0.5f }));
-		cubeVertices.at(17) = TPVertexNormalised({ -0.5f,  0.5f, -0.5f }, normalise({ -1.f,  0.f,  0.f }), normalise({ 0.33f, 0.5f }));
-		cubeVertices.at(18) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ -1.f,  0.f,  0.f }), normalise({ 0.33f, 1.0f }));
-		cubeVertices.at(19) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ -1.f,  0.f,  0.f }), normalise({ 0.66f, 1.0f }));
-		cubeVertices.at(20) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 1.f,  0.f,  0.f }), normalise({ 1.0f,  1.0f }));
-		cubeVertices.at(21) = TPVertexNormalised({ 0.5f,  0.5f, -0.5f }, normalise({ 1.f,  0.f,  0.f }), normalise({ 1.0f,  0.5f }));
-		cubeVertices.at(22) = TPVertexNormalised({ 0.5f,  0.5f,  0.5f }, normalise({ 1.f,  0.f,  0.f }), normalise({ 0.66f, 0.5f }));
-		cubeVertices.at(23) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 1.f,  0.f,  0.f }), normalise({ 0.66f, 1.0f }));
+		std::vector<Renderer3DVertex> pyramidVertices =
+		{
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { 0.0f, -1.f, 0.0f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 0.0f, -1.f, 0.0f }, { 0.0f, 0.5f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 0.0f, -1.f, 0.0f }, { 0.33f, 0.5f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { 0.0f, -1.f, 0.0f }, { 0.33f, 0.0f }),
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { -0.8944f, 0.4472f, 0.f }, { 0.33f, 1.0f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { -0.8944f, 0.4472f, 0.f }, { 0.66f, 1.0f }),
+			Renderer3DVertex({ 0.0f,  0.5f,  0.0f }, { -0.8944f, 0.4472f, 0.f }, { 0.5f, 0.0f }),
+			Renderer3DVertex({ -0.5f, -0.5f,  0.5f }, { 0.0f, 0.4472f, 0.8944f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 0.0f, 0.4472f, 0.8944f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.0f,  0.5f,  0.0f }, { 0.0f, 0.4472f, 0.8944f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f,  0.5f }, { 0.8944f, 0.4472f, 0.0f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 0.8944f, 0.4472f, 0.0f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.0f,  0.5f,  0.0f }, { 0.8944f, 0.4472f, 0.0f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.5f, -0.5f, -0.5f }, { 0.f, 0.4472f, -0.8944f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ -0.5f, -0.5f, -0.5f }, { 0.f, 0.4472f, -0.8944f }, { 0.0f, 0.0f }),
+			Renderer3DVertex({ 0.0f,  0.5f,  0.0f }, { 0.f, 0.4472f, -0.8944f }, { 0.0f, 0.0f })
+		};
 
-		std::vector<TPVertexNormalised> pyramidVertices(16);
-
-		pyramidVertices.at(0) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ 0.0f, -1.f, 0.0f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(1) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 0.0f, -1.f, 0.0f }), normalise({ 0.0f, 0.5f }));
-		pyramidVertices.at(2) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 0.0f, -1.f, 0.0f }), normalise({ 0.33f, 0.5f }));
-		pyramidVertices.at(3) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ 0.0f, -1.f, 0.0f }), normalise({ 0.33f, 0.0f }));
-		pyramidVertices.at(4) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ -0.8944f, 0.4472f, 0.f }), normalise({ 0.33f, 1.0f }));
-		pyramidVertices.at(5) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ -0.8944f, 0.4472f, 0.f }), normalise({ 0.66f, 1.0f }));
-		pyramidVertices.at(6) = TPVertexNormalised({ 0.0f,  0.5f,  0.0f }, normalise({ -0.8944f, 0.4472f, 0.f }), normalise({ 0.5f, 0.0f }));
-		pyramidVertices.at(7) = TPVertexNormalised({ -0.5f, -0.5f,  0.5f }, normalise({ 0.0f, 0.4472f, 0.8944f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(8) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 0.0f, 0.4472f, 0.8944f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(9) = TPVertexNormalised({ 0.0f,  0.5f,  0.0f }, normalise({ 0.0f, 0.4472f, 0.8944f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(10) = TPVertexNormalised({ 0.5f, -0.5f,  0.5f }, normalise({ 0.8944f, 0.4472f, 0.0f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(11) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 0.8944f, 0.4472f, 0.0f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(12) = TPVertexNormalised({ 0.0f,  0.5f,  0.0f }, normalise({ 0.8944f, 0.4472f, 0.0f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(13) = TPVertexNormalised({ 0.5f, -0.5f, -0.5f }, normalise({ 0.f, 0.4472f, -0.8944f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(14) = TPVertexNormalised({ -0.5f, -0.5f, -0.5f }, normalise({ 0.f, 0.4472f, -0.8944f }), normalise({ 0.0f, 0.0f }));
-		pyramidVertices.at(15) = TPVertexNormalised({ 0.0f,  0.5f,  0.0f }, normalise({ 0.f, 0.4472f, -0.8944f }), normalise({ 0.0f, 0.0f }));
-
-		uint32_t pyramidIndices[3 * 6] =
+		std::vector<uint32_t> pyramidIndices =
 		{
 			0, 1, 2,
 			2, 3, 0,
@@ -171,7 +120,8 @@
 			13, 14, 15
 		};
 
-		uint32_t cubeIndices[3 * 12] = {
+		std::vector <uint32_t> cubeIndices =
+		{
 			0, 1, 2,
 			2, 3, 0,
 			4, 5, 6,
@@ -196,19 +146,25 @@
 		std::shared_ptr<VertexBuffer> pyramidVBO;
 		std::shared_ptr<IndexBuffer> pyramidIBO;
 
-		cubeVAO.reset(VertexArray::create());
-		cubeVBO.reset(VertexBuffer::create(cubeVertices.data(), sizeof(TPVertexNormalised) * cubeVertices.size(), TPVertexNormalised::getLayout()));
-		cubeIBO.reset(IndexBuffer::create(cubeIndices, 36));
+		cube.reset(VertexArray::create());
+		cubeVBO.reset(VertexBuffer::create(cubeVertices.data(), sizeof(Renderer3DVertex)* cubeVertices.size(), Renderer3DVertex::getLayout()));
+		cubeIBO.reset(IndexBuffer::create(cubeIndices.data(), 36));
 
-		cubeVAO->addVertexBuffer(cubeVBO);
-		cubeVAO->setIndexBuffer(cubeIBO);
+		cube->addVertexBuffer(cubeVBO);
+		cube->setIndexBuffer(cubeIBO);
 
-		pyramidVAO.reset(VertexArray::create());
-		pyramidVBO.reset(VertexBuffer::create(pyramidVertices.data(), sizeof(TPVertexNormalised) * pyramidVertices.size(), TPVertexNormalised::getLayout()));
-		pyramidIBO.reset(IndexBuffer::create(pyramidIndices, 18));
+		pyramid.reset(VertexArray::create());
+		pyramidVBO.reset(VertexBuffer::create(pyramidVertices.data(), sizeof(Renderer3DVertex)* pyramidVertices.size(), Renderer3DVertex::getLayout()));
+		pyramidIBO.reset(IndexBuffer::create(pyramidIndices.data(), 18));
 
-		pyramidVAO->addVertexBuffer(pyramidVBO);
-		pyramidVAO->setIndexBuffer(pyramidIBO);
+		pyramid->addVertexBuffer(pyramidVBO);
+		pyramid->setIndexBuffer(pyramidIBO);
+
+
+		cubeVertices.clear();
+		cubeIndices.clear();
+		pyramidVertices.clear();
+		pyramidIndices.clear();
 
 #pragma endregion
 
@@ -236,6 +192,8 @@
 		m_screenQuad = Quad::createCentreHalfExtents({ 512.f, 400.f }, { 512.f, 400.f });
 		m_screenTexture = SubTexture(textureTarget->getTarget(0), { 0,1 }, { 1,0 });
 
+		//std::vector<Renderer3DVertex>
+
 #pragma endregion
 
 		m_entities.resize(100);
@@ -248,7 +206,7 @@
 		m_entities[1] = m_registry.create();
 		m_registry.emplace<LabelComponent>(m_entities[1], "Ground");
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
-		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
+		m_registry.emplace<RenderComponent>(m_entities[1], cube, checkerCubeMat);
 
 		glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
@@ -260,7 +218,7 @@
 			m_entities[i] = m_registry.create();
 			m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Platform Cube ") + std::to_string(i)).c_str());
 			m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), cubeDims);
-			m_registry.emplace<RenderComponent>(m_entities[i], cubeVAO, conveyorMat);
+			m_registry.emplace<RenderComponent>(m_entities[i], cube, conveyorMat);
 
 			auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
 			nsc.create<MovementScript>(m_entities[i], t);
