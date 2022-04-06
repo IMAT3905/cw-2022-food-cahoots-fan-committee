@@ -17,6 +17,8 @@
 
 namespace Engine
 {
+	enum class AttachmentType { None, Colour, Depth, Stencil, DepthAndStencil };
+
 	using SceneWideUniforms = std::unordered_map<const char*, std::pair<ShaderDataType, void*>>;
 
 	/** \class RendererCommon

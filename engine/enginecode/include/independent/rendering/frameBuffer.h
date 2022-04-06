@@ -3,12 +3,12 @@
 
 #include "events/events.h"
 #include "texture.h"
+#include "rendering/rendererCommon.h"
+#include "rendering/renderBuffer.h"
 #include <vector>
 
 namespace Engine
 {
-	enum class AttachmentType { None, Colour, Depth, Stencil, DepthAndStencil };
-
 	using Attachment = std::pair<AttachmentType, bool>;
 
 	class FrameBufferLayout

@@ -1,8 +1,8 @@
 /* \file renderBuffer.h */
 #pragma once
 
-#include "rendering/frameBuffer.h"
 #include "events/events.h"
+#include "rendering/rendererCommon.h"
 
 namespace Engine
 {

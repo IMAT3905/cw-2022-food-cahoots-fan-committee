@@ -63,6 +63,7 @@ namespace Engine
 		static void init(); //!< Initialise the renderer
 		static void begin(const SceneWideUniforms& sceneWideUniforms); //!< Begin a new 3D scene \param sceneWideUniforms is the scene wide data 
 		static void submit(const std::shared_ptr<VertexArray>& geometry, const std::shared_ptr<Material>& material, const glm::mat4& model); //!< Submit a piece of geometry to be rendered \param geometry is the geometry that will be rendered \param material is the object's material \param model is the model number that will be drawn
+		static void initShader(std::shared_ptr<Shader> shader);
 		static void end(); //!< End the current 3D scene
 	private:
 		/** \struct InternalData
@@ -70,6 +71,8 @@ namespace Engine
 		*/
 		struct InternalData
 		{
+			std::shared_ptr<UniformBuffer> cameraUBO;
+			std::shared_ptr<UniformBuffer> lightsUBO;
 			SceneWideUniforms sceneWideUniforms; //!< Stores the scene wide uniforms
 			std::shared_ptr<Texture> defaultTexture; //!< Empty white texture
 			glm::vec4 defaultTint; //!< Default white tint

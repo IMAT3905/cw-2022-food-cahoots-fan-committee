@@ -10,6 +10,7 @@
 #pragma region SHADERS
 
 		TPShader.reset(Shader::create("./assets/shaders/texturedPhong.glsl"));
+		Renderer3D::initShader(TPShader);
 
 #pragma endregion
 
@@ -21,27 +22,19 @@
 		p.height = window->getHeight();
 		m_eulerCam.reset(new CameraController(p));
 
-		UniformBufferLayout camLayout = { {"u_projection", ShaderDataType::Mat4}, {"u_view", ShaderDataType::Mat4} };
-		
-		cameraUBO.reset(UniformBuffer::create(camLayout));
+		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
+		m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().projection)));
+		m_swu["u_lightColour"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[0])));
+		m_swu["u_lightPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[1])));
+		m_swu["u_viewPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[2])));
 
-		cameraUBO->attachShaderBlock(TPShader, "b_camera");
-
-		cameraUBO->uploadData("u_projection", glm::value_ptr(m_eulerCam->getCamera().projection));
-		cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
-
-		glm::vec3 lightColour(1.f, 1.f, 1.f);
-		glm::vec3 lightPos(1.0f, 4.0f, 6.0f);
-		glm::vec3 viewPos(0.0f, 0.0f, 0.0f);
-
-		UniformBufferLayout lightLayout = { {"u_lightPos", ShaderDataType::Float4}, {"u_viewPos", ShaderDataType::Float4}, {"u_lightColour", ShaderDataType::Float4} };
-
-		lightsUBO.reset(UniformBuffer::create(lightLayout));
-
-		lightsUBO->attachShaderBlock(TPShader, "b_lights");
-		lightsUBO->uploadData("u_lightPos", glm::value_ptr(lightPos));
-		lightsUBO->uploadData("u_viewPos", glm::value_ptr(viewPos));
-		lightsUBO->uploadData("u_lightColour", glm::value_ptr(lightColour));
+		view2D = glm::mat4(1.f);
+		projection2D = glm::ortho(0.f, static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()), 0.f);
+		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
+		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
+		m_swu2D["u_lightColour"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[0])));
+		m_swu2D["u_lightPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[1])));
+		m_swu2D["u_viewPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[2])));
 
 		RenderCommands::setClearColourCommand(0.7f, 0.7f, 0.7f, 1.f)->action();
 
@@ -160,7 +153,6 @@
 		pyramid->addVertexBuffer(pyramidVBO);
 		pyramid->setIndexBuffer(pyramidIBO);
 
-
 		cubeVertices.clear();
 		cubeIndices.clear();
 		pyramidVertices.clear();
@@ -179,13 +171,11 @@
 #pragma endregion
 
 #pragma region FRAMEBUFFERS
-		FrameBufferLayout FBlayout = { { AttachmentType::Colour, true }, { AttachmentType::Depth, false } };
 
+		FrameBufferLayout FBlayout = { { AttachmentType::Colour, true }, { AttachmentType::Depth, false } };
 		textureTarget.reset(FrameBuffer::create({ window->getWidth(), window->getHeight() }, FBlayout));
 		defaultTarget.reset(FrameBuffer::createDefault());
 
-		glm::mat4 view2D = glm::mat4(1.f);
-		glm::mat4 projection2D = glm::ortho(0.f, static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()), 0.f);
 		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
@@ -228,11 +218,14 @@
 
 	void SceneLayer::onRender()
 	{
-		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
-		m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().projection)));	
-
 		textureTarget->use();
 
+		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
+		m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().projection)));	
+		
+		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
+		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
+		
 		RenderCommands::clearDepthAndColourBufferCommand()->action();
 		RenderCommands::setDepthTestCommand(true)->action();
 		RenderCommands::setBlendCommand(false);
@@ -267,7 +260,8 @@
 	void SceneLayer::onUpdate(float timestep)
 	{
 		m_eulerCam->onUpdate(timestep);
-		cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
+		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
+		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 
 		auto& view = m_registry.view<NativeScriptComponent>();
 		for (auto& entity : view)

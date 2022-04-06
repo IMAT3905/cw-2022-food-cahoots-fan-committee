@@ -40,9 +40,6 @@ private:
 
 	std::shared_ptr<VertexArray> cube, pyramid, geo;
 
-	std::shared_ptr<UniformBuffer> cameraUBO;
-	std::shared_ptr<UniformBuffer> lightsUBO;
-
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
 		
 	entt::registry& m_registry;
@@ -55,4 +52,7 @@ private:
 
 	Quad m_screenQuad;
 	SubTexture m_screenTexture;
+
+	glm::mat4 view2D;
+	glm::mat4 projection2D;
 };
