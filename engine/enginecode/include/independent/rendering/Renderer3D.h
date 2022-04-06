@@ -9,17 +9,17 @@ namespace Engine
 	/** \class TPVertexNormalised
 	** \brief Class which uses a textured phong and has normalised data
 	*/
-	class TPVertexNormalised
+	class Renderer3DVertex
 	{
 	public:
 		glm::vec3 m_pos; //!< The position data
 		std::array<int16_t, 3> m_normal; //!< The normal data
 		std::array<int16_t, 2> m_uv; //!< The UV data
 
-		TPVertexNormalised() : m_pos(glm::vec3(0.f)), m_normal({ 0, 0, 0 }), m_uv({ 0, 0 }) {} //!< Default constructor
+		Renderer3DVertex() : m_pos(glm::vec3(0.f)), m_normal({ 0, 0, 0 }), m_uv({ 0, 0 }) {} //!< Default constructor
 		std::array<int16_t, 3> normalise(const glm::vec3& normal);
 		std::array<int16_t, 2> normalise(const glm::vec2& uv);
-		TPVertexNormalised(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& uv) : m_pos(pos), m_normal(normalise(normal)), m_uv(normalise(uv)) {} //!< Constructor \param pos is the position of the object \param normal is the normal data for the object \param uv is the uv data for the object
+		Renderer3DVertex(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& uv) : m_pos(pos), m_normal(normalise(normal)), m_uv(normalise(uv)) {} //!< Constructor \param pos is the position of the object \param normal is the normal data for the object \param uv is the uv data for the object
 		static VertexBufferLayout getLayout() { return s_layout; } //!< Return the layout
 
 	private:

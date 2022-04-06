@@ -15,7 +15,7 @@ namespace Engine {
 	{
 		struct TempMesh
 		{
-			std::vector<TPVertexNormalised> vertices;
+			std::vector<Renderer3DVertex> vertices;
 			std::vector<uint32_t> indices;
 			std::shared_ptr<Texture> diffuseTexture = nullptr;
 			glm::vec3 diffuseTint = { 1.f, 1.f, 1.f };
@@ -50,7 +50,7 @@ namespace Engine {
 					texCoords[j] = glm::vec2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
 				}
 
-				tmpMesh.vertices.push_back(TPVertexNormalised(position, normal, texCoords[0]));
+				tmpMesh.vertices.push_back(Renderer3DVertex(position, normal, texCoords[0]));
 
 				// Log part - assume postion, normal and UV coords
 				//Log::info("VERTEX DATA");
@@ -122,7 +122,7 @@ namespace Engine {
 			std::shared_ptr<IndexBuffer> IBO;
 
 			s_geometry.reset(VertexArray::create());
-			VBO.reset(VertexBuffer::create(tmpMesh.vertices.data(), sizeof(TPVertexNormalised) * tmpMesh.vertices.size(), TPVertexNormalised::getLayout()));
+			VBO.reset(VertexBuffer::create(tmpMesh.vertices.data(), sizeof(Renderer3DVertex) * tmpMesh.vertices.size(), Renderer3DVertex::getLayout()));
 			IBO.reset(IndexBuffer::create(tmpMesh.indices.data(), tmpMesh.indices.size()));
 
 			s_geometry->addVertexBuffer(VBO);

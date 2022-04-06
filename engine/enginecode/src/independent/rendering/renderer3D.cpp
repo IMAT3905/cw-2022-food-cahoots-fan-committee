@@ -8,7 +8,7 @@ namespace Engine
 {
 	std::shared_ptr<Renderer3D::InternalData> Renderer3D::s_data = nullptr;
 
-	VertexBufferLayout TPVertexNormalised::s_layout = { {ShaderDataType::Float3, {ShaderDataType::Short3, true}, {ShaderDataType::Short2, true} }, 24 }; //!< Layout for data in TPVertexNormalised
+	VertexBufferLayout Renderer3DVertex::s_layout = { {ShaderDataType::Float3, {ShaderDataType::Short3, true}, {ShaderDataType::Short2, true} }, 24 }; //!< Layout for data in TPVertexNormalised
 
 	void Renderer3D::init()
 	{
@@ -62,7 +62,7 @@ namespace Engine
 		s_data->sceneWideUniforms.clear();
 	}
 
-	std::array<int16_t, 3> TPVertexNormalised::normalise(const glm::vec3& normal)
+	std::array<int16_t, 3> Renderer3DVertex::normalise(const glm::vec3& normal)
 	{
 		std::array<int16_t, 3> result;
 
@@ -81,7 +81,7 @@ namespace Engine
 		return result;
 	};
 
-	std::array<int16_t, 2> TPVertexNormalised::normalise(const glm::vec2& uv)
+	std::array<int16_t, 2> Renderer3DVertex::normalise(const glm::vec2& uv)
 	{
 		std::array<int16_t, 2> result;
 
