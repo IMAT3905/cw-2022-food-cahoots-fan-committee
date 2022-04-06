@@ -2,6 +2,7 @@
 #pragma once
 
 #include "rendering/frameBuffer.h"
+#include "rendering/renderBuffer.h"
 
 namespace Engine
 {

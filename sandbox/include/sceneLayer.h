@@ -9,10 +9,12 @@
 #include "engine.h"
 #include "include/platform/GLFW/GLFWCodes.h"
 #include "rendering/renderer3D.h"
+#include "rendering/renderer2D.h"
 #include "components/relationship.h"
 #include "components/transform.h"
 #include "components/render.h"
 #include "components/label.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
 
 using namespace Engine;
 
@@ -46,4 +48,12 @@ private:
 		
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
+
+	std::shared_ptr<FrameBuffer> textureTarget;
+	std::shared_ptr<FrameBuffer> defaultTarget;
+
+	SceneWideUniforms m_swu2D;
+
+	Quad m_screenQuad;
+	SubTexture m_screenTexture;
 };

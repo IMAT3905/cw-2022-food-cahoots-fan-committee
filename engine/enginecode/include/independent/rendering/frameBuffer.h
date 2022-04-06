@@ -2,6 +2,7 @@
 #pragma once
 
 #include "events/events.h"
+#include "rendering/renderBuffer.h"
 #include "texture.h"
 #include <vector>
 
@@ -43,6 +44,6 @@ namespace Engine
 		glm::ivec2 m_size; //!< Size of the framebuffer
 		FrameBufferLayout m_layout; //!< Layout of FBO attachments
 		std::vector<std::shared_ptr<Texture>> m_sampledTargets;
-		//std::vector<RenderBuffer> m_nonSampledTargets;
+		std::vector<RenderBuffer> m_nonSampledTargets;
 	};
 }

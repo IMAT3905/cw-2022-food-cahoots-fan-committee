@@ -58,6 +58,7 @@
 	SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 	{
 		Renderer3D::init();
+		Renderer2D::init();
 		
 #pragma region SHADERS
 
@@ -221,6 +222,22 @@
 
 #pragma endregion
 
+#pragma region FRAMEBUFFERS
+		FrameBufferLayout FBlayout = { { AttachmentType::Colour, true }, { AttachmentType::Depth, false } };
+
+		textureTarget.reset(FrameBuffer::create({ window->getWidth(), window->getHeight() }, FBlayout));
+		defaultTarget.reset(FrameBuffer::createDefault());
+
+		glm::mat4 view2D = glm::mat4(1.f);
+		glm::mat4 projection2D = glm::ortho(0.f, static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()), 0.f);
+		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
+		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
+
+		m_screenQuad = Quad::createCentreHalfExtents({ 512.f, 400.f }, { 512.f, 400.f });
+		m_screenTexture = SubTexture(textureTarget->getTarget(0), { 0,1 }, { 1,0 });
+
+#pragma endregion
+
 		m_entities.resize(100);
 
 		m_entities[0] = m_registry.create();
@@ -256,8 +273,11 @@
 		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
 		m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().projection)));	
 
+		textureTarget->use();
+
 		RenderCommands::clearDepthAndColourBufferCommand()->action();
 		RenderCommands::setDepthTestCommand(true)->action();
+		RenderCommands::setBlendCommand(false);
 
 		Renderer3D::begin(m_swu);
 
@@ -270,8 +290,20 @@
 
 			Renderer3D::submit(rc.geometry, rc.material, tc.getTransform());
 		}
-
+		
 		Renderer3D::end();
+
+		defaultTarget->use();
+
+		RenderCommands::setDepthTestCommand(false);
+		RenderCommands::setBlendCommand(true);
+
+		Renderer2D::begin(m_swu2D);
+
+		Renderer2D::submit(m_screenQuad, m_screenTexture);
+		Renderer2D::submit("2D Renderer", { 300.f, 780.f }, { 1.0,1.0,1.0,1.0 });
+
+		Renderer2D::end();
 	}
 
 	void SceneLayer::onUpdate(float timestep)

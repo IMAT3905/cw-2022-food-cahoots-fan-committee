@@ -30,13 +30,35 @@ namespace Engine
 					m_sampledTargets.push_back(std::shared_ptr<Texture>(Texture::create(m_size.x, m_size.y, 2, nullptr)));
 					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_sampledTargets.back()->getID(), 0);
 					break;
+				case AttachmentType::DepthAndStencil:
+					m_sampledTargets.push_back(std::shared_ptr<Texture>(Texture::create(m_size.x, m_size.y, 2, nullptr)));
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_sampledTargets.back()->getID(), 0);
+					break;
 				}
 			}
 			else
 			{
-
-			}
+				switch (type)
+				{
+				case AttachmentType::Colour:
+					m_nonSampledTargets.push_back(std::shared_ptr<RenderBuffer>(RenderBuffer::create(type, size)));
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colourAttachmentCount, GL_RENDERBUFFER, m_nonSampledTargets.back()->getID(), 0);
+					break;
+				case AttachmentType::Depth:
+					m_nonSampledTargets.push_back(std::shared_ptr<RenderBuffer>(RenderBuffer::create(type, size)));
+					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_nonSampledTargets.back()->getID());
+					break;
+				case AttachmentType::DepthAndStencil:
+					m_nonSampledTargets.push_back(std::shared_ptr<RenderBuffer>(RenderBuffer::create(type, size)));
+					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_nonSampledTargets.back()->getID());
+					break;
+				}
+			}			
 		}
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			Log::error("Framebuffer is not complete");
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
