@@ -130,7 +130,7 @@ namespace Engine {
 
 			//letterCubeMat.reset(new Material(TPShader, letterTexture));
 			s_material.reset(new Material(s_shader, tmpMesh.diffuseTexture, glm::vec4(tmpMesh.diffuseTint, 1.0f)));
-
+			//s_material.reset(new Material(s_shader,  glm::vec4(1.0f)));
 		}
 
 		static void ASSIMPProcessNode(aiNode* node, const aiScene* scene)

@@ -44,7 +44,7 @@ private:
 
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
 	
-	glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 4.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
+	glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 40.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
