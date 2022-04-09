@@ -4,7 +4,10 @@
 EngineApp::EngineApp(Engine::ApplicationProps props) : Application(props)
 {
 	m_layerStack.push(new SceneLayer("Scene Layer"));
-	//m_layerStack.push(new UILayer("UI Layer"));
+	m_layerStack.push(new MenuLayer("Menu Layer"));
+	m_layerStack.push(new InGameLayer("InGame Layer"));
+
+	m_layerStack.SetVariables();
 }
 
 EngineApp::~EngineApp()

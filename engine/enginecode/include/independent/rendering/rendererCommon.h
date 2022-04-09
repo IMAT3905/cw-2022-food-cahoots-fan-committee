@@ -14,6 +14,7 @@
 #include "rendering/uniformBuffer.h"
 #include "rendering/textureUnitManager.h"
 #include "rendering/textureAtlas.h"
+#include <array>
 
 namespace Engine
 {

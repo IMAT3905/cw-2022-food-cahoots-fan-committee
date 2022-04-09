@@ -74,7 +74,7 @@ namespace Engine
 		if (FT_New_Face(s_data->ft, filePath, 0, &s_data->fontFace)) Log::error("Error: Freetype could not load font: {0}", filePath);
 
 		// Set the char size
-		int32_t charSize = 86;
+		int32_t charSize = 24;
 		if (FT_Set_Pixel_Sizes(s_data->fontFace, 0, charSize)) Log::error("Error: Freetype can't set font size {0}", charSize);
 
 		// Fill the texture atlas
@@ -125,7 +125,7 @@ namespace Engine
 			gd.subTexture = SubTexture(s_data->glyphAtlas.getBaseTexture(), glm::vec2(0.f), glm::vec2(0.f));
 			if (!s_data->glyphAtlas.add(gd.size.x, gd.size.y, 4, glyphBuffer, gd.subTexture))
 			{
-				Log::error("No space to add glyph '{0}' ", ch);			
+				Log::error("No space to add glyph '{0}' ", ch);
 			}
 			s_data->glyphData.at(currentGlyph) = gd;
 
@@ -178,7 +178,7 @@ namespace Engine
 
 		s_data->model = glm::scale(glm::translate(glm::mat4(1.f), quad.m_translate), quad.m_scale);
 		uint32_t packedTint = Renderer2DVertex::pack(tint);
-		
+
 		uint32_t startIdx = s_data->drawCount;
 		for (int i = 0; i < 4; i++)
 		{
@@ -257,7 +257,7 @@ namespace Engine
 	{
 		uint32_t len = strlen(text);
 		float advance = 0.f, x = position.x;
-		
+
 		for (uint32_t i = 0; i < len; i++)
 		{
 			submit(text[i], { x, position.y }, advance, tint);
@@ -299,6 +299,20 @@ namespace Engine
 		}
 	}
 
+	glm::ivec2 Renderer2D::GetTextSize(const char* text) {
+		glm::ivec2 result = { 0,0 };
+
+		for (uint32_t i = 0; i < strlen(text); i++) {
+			// Get glyph data
+			GlyphData& gd = s_data->glyphData.at(text[i] - s_data->firstGlyph);
+			glm::ivec2 glyphsize = gd.size;
+			float advance = gd.advance;
+			result.x += (glyphsize.x + advance);
+			result.y = std::max(result.y, glyphsize.y);
+		}
+		return result;
+	}
+
 	Quad Quad::createCentreHalfExtents(const glm::vec2& centre, const glm::vec2& halfExtents)
 	{
 		Quad result;
@@ -307,6 +321,13 @@ namespace Engine
 		result.m_scale = glm::vec3(halfExtents * 2.f, 1.f);
 
 		return result;
+	}
+
+	Quad Quad::createTopLeftSize(const glm::vec2& topleft, const glm::vec2& size)
+	{
+		glm::vec2 halfextents = size / 2.0f;
+		glm::vec2 centre = topleft + halfextents;
+		return createCentreHalfExtents(centre, halfextents);
 	}
 
 	uint32_t Renderer2DVertex::pack(const glm::vec4& tint)

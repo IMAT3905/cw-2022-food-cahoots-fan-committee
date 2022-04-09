@@ -26,6 +26,13 @@ namespace Engine
 		inline const bool isFocused() const { return m_isFocused; }
 
 		virtual void onKeyPressed(KeyPressedEvent& e) { e.handle(false); } //!< On key press event
+		virtual void onMouseMoved(MouseMovedEvent& e) { e.handle(false); }
+		virtual void onMousePressed(MouseButtonPressedEvent& e) { e.handle(false); }
+		virtual void onMouseReleased(MouseButtonReleasedEvent& e) { e.handle(false); }
+
+		std::shared_ptr<Layer> enablelayer = nullptr;
+		int scores[4] = { 0,0,0,0 };
+		int time = 10;
 
 	protected:
 		const char* m_name; //!< Name, useful for debugging

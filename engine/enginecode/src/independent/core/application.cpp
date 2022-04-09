@@ -144,7 +144,7 @@ namespace Engine {
 	bool Application::onMousePressed(MouseButtonPressedEvent& e)
 	{
 		e.handle(true);
-		//Log::info("Mouse pressed event: button: {0}", e.getButton());
+		m_layerStack.onMousePressed(e);
 		return e.handled();
 	}
 
