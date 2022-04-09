@@ -234,18 +234,17 @@
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
 
-		m_entities[2] = m_registry.create();
-		m_registry.emplace<LabelComponent>(m_entities[2], "Player1");
-
-		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[2]);
-		nsc.create<PlayerScript>(m_entities[2]);
+		CreateNewPlayer(m_registry, m_entities, 2, "Player 1", NG_KEY_Z);
+		CreateNewPlayer(m_registry, m_entities, 3, "Player 2", NG_KEY_X);
+		CreateNewPlayer(m_registry, m_entities, 4, "Player 3", NG_KEY_C);
+		CreateNewPlayer(m_registry, m_entities, 5, "Player 4", NG_KEY_V);
 		
 		glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
 		float t = 0;
 		uint32_t cubeCount = 32;
 		float deltaT = 1.0f / static_cast<float>(cubeCount);
-		for (uint32_t i = 3; i < cubeCount + 3; i++)
+		for (uint32_t i = 6; i < cubeCount + 6; i++)
 		{
 			m_entities[i] = m_registry.create();
 			m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Platform Cube ") + std::to_string(i)).c_str());
@@ -313,6 +312,10 @@
 		m_eulerCam->onResize(e);
 	}
 
+	void SceneLayer::CreateNewPlayer(entt::registry& reg, std::vector<entt::entity>& entities, int id, const char* name, int keypress) {
+		entities[id] = reg.create();
+		reg.emplace<LabelComponent>(entities[id], name);
 
-
-
+		auto& nsc = reg.emplace<NativeScriptComponent>(entities[id]);
+		nsc.create<PlayerScript>(entities[id], keypress);
+	}

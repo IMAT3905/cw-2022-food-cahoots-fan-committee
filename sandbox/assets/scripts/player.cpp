@@ -15,9 +15,9 @@ namespace Engine {
 	}
 
 	void PlayerScript::onKeyPress(KeyPressedEvent& e) {
-		if (e.getKeyCode() == NG_KEY_Z) {
-			scores[0] += 1;
-			Log::info("GO UP");
+		if (e.getKeyCode() == key) {
+			score += 1;
+			Log::info(m_entity);
 		}
 	}
 }

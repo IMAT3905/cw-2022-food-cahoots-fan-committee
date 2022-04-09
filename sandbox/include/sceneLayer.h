@@ -46,4 +46,6 @@ private:
 		
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
+
+	void CreateNewPlayer(entt::registry& reg, std::vector<entt::entity>& entities, int id, const char* name, int keypress);
 };
