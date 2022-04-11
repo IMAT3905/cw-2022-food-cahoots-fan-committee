@@ -206,7 +206,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		t += deltaT;
 	}
 	
-	Loader::ASSIMPLoad("./assets/models/test/test.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	Loader::ASSIMPLoad("./assets/models/Plate_working/plateTest.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
 	//material->setTexture(checkerTexture);
