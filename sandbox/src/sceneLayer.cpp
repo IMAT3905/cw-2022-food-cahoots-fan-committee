@@ -234,10 +234,10 @@
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 		m_registry.emplace<RenderComponent>(m_entities[1], cubeVAO, checkerCubeMat);
 
-		CreateNewPlayer(m_registry, m_entities, 2, "Player 1", NG_KEY_Z);
-		CreateNewPlayer(m_registry, m_entities, 3, "Player 2", NG_KEY_X);
-		CreateNewPlayer(m_registry, m_entities, 4, "Player 3", NG_KEY_C);
-		CreateNewPlayer(m_registry, m_entities, 5, "Player 4", NG_KEY_V);
+		CreateNewPlayer(m_registry, m_entities, 2, "Player 1", NG_KEY_Z, 0);
+		CreateNewPlayer(m_registry, m_entities, 3, "Player 2", NG_KEY_X, 1);
+		CreateNewPlayer(m_registry, m_entities, 4, "Player 3", NG_KEY_C, 2);
+		CreateNewPlayer(m_registry, m_entities, 5, "Player 4", NG_KEY_V, 3);
 		
 		glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
@@ -299,12 +299,12 @@
 		glm::vec3 forward, right;
 
 		auto& view = m_registry.view<NativeScriptComponent>();
+		int i = 0;
 		for (auto& entity : view)
 		{
 			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
 			nsc.onKeyPress(e);
 		}
-		
 	}
 
 	void SceneLayer::onResize(WindowResizeEvent& e)
@@ -312,10 +312,10 @@
 		m_eulerCam->onResize(e);
 	}
 
-	void SceneLayer::CreateNewPlayer(entt::registry& reg, std::vector<entt::entity>& entities, int id, const char* name, int keypress) {
+	void SceneLayer::CreateNewPlayer(entt::registry& reg, std::vector<entt::entity>& entities, int id, const char* name, int keypress, int arrayid) {
 		entities[id] = reg.create();
 		reg.emplace<LabelComponent>(entities[id], name);
 
 		auto& nsc = reg.emplace<NativeScriptComponent>(entities[id]);
-		nsc.create<PlayerScript>(entities[id], keypress);
+		nsc.create<PlayerScript>(entities[id], keypress, arrayid, *this);
 	}

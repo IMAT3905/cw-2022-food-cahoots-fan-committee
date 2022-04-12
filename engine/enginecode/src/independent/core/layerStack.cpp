@@ -2,6 +2,7 @@
 
 #include "engine_pch.h"
 #include "core/layerStack.h"
+#include "include/independent/systems/log.h"
 
 namespace Engine
 {
@@ -26,6 +27,24 @@ namespace Engine
 	void LayerStack::update(float timestep)
 	{
 		for (auto& layer : m_stack) if (layer->isActive())layer->onUpdate(timestep);
+		int newscores[4] = { 0,0,0,0 };
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "Scene Layer") {
+				for (int i = 0; i < 4; i++) {
+					newscores[i] = layer->scores[i];
+				}
+			}
+		}
+
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "InGame Layer") {
+				for (int i = 0; i < 4; i++) {
+					layer->scores[i] = newscores[i];
+				}
+			}
+		}
 	}
 
 	void LayerStack::render()

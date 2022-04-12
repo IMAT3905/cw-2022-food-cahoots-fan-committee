@@ -33,6 +33,7 @@ namespace Engine
 			m_instance.reset(static_cast<NativeScript*>(ptr));
 			m_instance->onCreate();
 		}
+		int score = 0;
 	protected:
 		std::shared_ptr<NativeScript> m_instance = nullptr;
 	};
