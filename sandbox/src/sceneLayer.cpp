@@ -206,14 +206,14 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		t += deltaT;
 	}
 	
-	//Plate model
-	Loader::ASSIMPLoad("./assets/models/Plate_working/plateTest.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	//Plate with 1 orange model
+	Loader::ASSIMPLoad("./assets/models/Plate1Orange/Plate1Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
 	m_entities.push_back(m_registry.create());
-	m_registry.emplace<LabelComponent>(m_entities.back(), "Plate");
+	m_registry.emplace<LabelComponent>(m_entities.back(), "Plate1Orange");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
@@ -226,17 +226,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player1");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(1.f, 0.5f, 0.f), glm::vec3(0.f, 4.7f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
-
-	//Orange model
-	Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
-	material = Loader::s_material;
-	material->setShader(TPShader);
-	geo = Loader::s_geometry;
-
-	m_entities.push_back(m_registry.create());
-	m_registry.emplace<LabelComponent>(m_entities.back(), "Orange");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(-1.f, 0.5f, 0.f), glm::vec3(0.f, 0.0f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 }
 
