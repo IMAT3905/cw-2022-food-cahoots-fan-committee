@@ -205,17 +205,52 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		nsc.create<MovementScript>(m_entities[i], t);
 		t += deltaT;
 	}
-	
-	//Plate with 1 orange model
-	Loader::ASSIMPLoad("./assets/models/Plate1Orange/Plate1Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+
+	t = 0;
+	uint32_t platecount = 8;
+	deltaT = 1.0f / static_cast<float>(platecount);
+
+	//Plate
+	Loader::ASSIMPLoad("./assets/models/Plate_working/plateTest.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
-	m_entities.push_back(m_registry.create());
-	m_registry.emplace<LabelComponent>(m_entities.back(), "Plate1Orange");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+	for (uint32_t i = 34; i < platecount + 34; i++)
+	{
+		m_entities.push_back(m_registry.create());
+		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Plate") + std::to_string(i)).c_str());
+		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(2.5f, 2.5f, 2.5f));
+		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
+
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
+		nsc.create<MovementScript>(m_entities[i], t);
+		t += deltaT;
+	}
+
+	t = 0;
+	deltaT = 1.0f / static_cast<float>(platecount);
+
+	//Orange
+	Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	material = Loader::s_material;
+	material->setShader(TPShader);
+	geo = Loader::s_geometry;
+
+	for (uint32_t i = 34 + platecount; i < platecount + 34 + platecount; i++)
+	{
+		m_entities.push_back(m_registry.create());
+		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Orange") + std::to_string(i)).c_str());
+		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(2.5f, 2.5f, 2.5f));
+		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
+
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
+		nsc.create<MovementScript>(m_entities[i], t);
+		t += deltaT;
+	}
+
+	uint32_t num = 34 + (platecount * 2);
+
 
 	//Player model
 	Loader::ASSIMPLoad("./assets/models/PlayerModel/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
@@ -223,9 +258,28 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
+	//Left
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player1");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(1.f, 0.5f, 0.f), glm::vec3(0.f, 4.7f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(-4.5f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+
+	//Right
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), "Player2");
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(4.5f, 0.5f, 0.f), glm::vec3(0.f, 9.4f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+
+	//Top
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), "Player3");
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, -4.5f), glm::vec3(0.f, 4.7f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+
+	//Bottom
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), "Player4");
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.0, 0.5f, 4.5f), glm::vec3(0.f, 14.1f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 }
 
