@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "include/platform/GLFW/GLFWCodes.h"
 #include "rendering/renderer3D.h"
+#include "rendering/Renderer2DBillboard.h"
 #include "components/relationship.h"
 #include "components/transform.h"
 #include "components/render.h"
