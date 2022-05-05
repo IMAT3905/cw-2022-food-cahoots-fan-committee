@@ -2,6 +2,7 @@
 #include "sceneLayer.h"
 #include "movementScript.h"
 #include "assimpLoader.h"
+#include "player.h"
 
 SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 {
@@ -189,12 +190,14 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 	m_registry.emplace<RenderComponent>(m_entities[1], cube, checkerCubeMat);
 
+	uint32_t entcount = 2;
+
 	glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
 	float t = 0;
 	uint32_t cubeCount = 32;
 	float deltaT = 1.0f / static_cast<float>(cubeCount);
-	for (uint32_t i = 2; i < cubeCount + 2; i++)
+	for (uint32_t i = entcount; i < cubeCount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
 		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Platform Cube ") + std::to_string(i)).c_str());
@@ -205,6 +208,8 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		nsc.create<MovementScript>(m_entities[i], t, 0.f);
 		t += deltaT;
 	}
+
+	entcount += cubeCount;
 
 	t = 0;
 	uint32_t platecount = 8;
@@ -217,7 +222,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
-	for (uint32_t i = 34; i < platecount + 34; i++)
+	for (uint32_t i = entcount; i < platecount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
 		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Plate") + std::to_string(i)).c_str());
@@ -229,6 +234,8 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		t += deltaT;
 	}
 
+	entcount += platecount;
+
 	t = 0;
 	deltaT = 1.0f / static_cast<float>(platecount);
 
@@ -238,7 +245,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
-	for (uint32_t i = 34 + platecount; i < platecount + 34 + platecount; i++)
+	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
 		m_entities.push_back(m_registry.create());
 		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Orange") + std::to_string(i)).c_str());
@@ -267,8 +274,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	//	nsc.create<MovementScript>(m_entities[i], t, height * 2);
 	//	t += deltaT;
 	//}
-
-	uint32_t num = 34 + (platecount * 2);
 
 
 	//Player model
@@ -362,4 +367,12 @@ void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 void SceneLayer::onResize(WindowResizeEvent& e)
 {
 	m_eulerCam->onResize(e);
+}
+
+void SceneLayer::CreateNewPlayer(int id, const char* name, int keypress, int arrayid) {
+	m_entities[id] = m_registry.create();
+	m_registry.emplace<LabelComponent>(m_entities[id], name);
+
+	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[id]);
+	nsc.create<PlayerScript>(m_entities[id], keypress, arrayid, *this);
 }
