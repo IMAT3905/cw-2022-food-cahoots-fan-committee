@@ -177,7 +177,7 @@ namespace Engine
 		}
 
 		s_data->model = glm::scale(glm::translate(glm::mat4(1.f), quad.m_translate), quad.m_scale);
-		uint32_t packedTint = Renderer2DVertex::pack(tint);
+		uint32_t packedTint = RendererCommon::pack(tint);
 		
 		uint32_t startIdx = s_data->drawCount;
 		for (int i = 0; i < 4; i++)
@@ -219,7 +219,7 @@ namespace Engine
 		}
 
 		s_data->model = glm::scale(glm::rotate(glm::translate(glm::mat4(1.f), quad.m_translate), angle, { 0.f, 0.f, 1.f }), quad.m_scale);
-		uint32_t packedTint = Renderer2DVertex::pack(tint);
+		uint32_t packedTint = RendererCommon::pack(tint);
 
 		uint32_t startIdx = s_data->drawCount;
 		for (int i = 0; i < 4; i++)

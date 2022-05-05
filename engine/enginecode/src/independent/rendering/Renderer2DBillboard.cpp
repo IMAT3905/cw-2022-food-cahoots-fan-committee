@@ -1,4 +1,3 @@
-
 #include "engine_pch.h"
 #include "systems/log.h"
 #include <glad/glad.h>
@@ -19,6 +18,13 @@ namespace Engine
 	{
 		s_data.reset(new InternalData);
 		s_data->batchSize = batchSize * 4;
+
+		std::shared_ptr<Texture> CommonTexture = RendererCommon::defaultTexture;
+
+		if (!RendererCommon::defaultTexture)
+		{
+
+		}
 
 		unsigned char whitePx[4] = { 255, 255, 255, 255 };
 		s_data->defaultTexture.reset(Texture::create(1, 1, 4, whitePx));
