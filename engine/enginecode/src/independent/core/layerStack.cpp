@@ -46,6 +46,7 @@ namespace Engine
 	void LayerStack::onMousePressed(MouseButtonPressedEvent& e)
 	{
 		e.handle(false);
+		for (auto& layer : m_stack) if (layer->isFocused() && !e.handled()) layer->onMousePressed(e);
 	}
 
 	void LayerStack::onMouseReleased(MouseButtonReleasedEvent& e)
@@ -108,6 +109,19 @@ namespace Engine
 		for (auto& layer : m_stack)
 		{
 			layer->setActive(focusedState);
+		}
+	}
+
+	void LayerStack::SetVariables() {
+		std::shared_ptr<Layer> newlayer = nullptr;
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "InGame Layer") newlayer = layer;
+		}
+
+		for (auto& layer : m_stack)
+		{
+			if (layer->getName() == "Menu Layer") layer->enablelayer = newlayer;
 		}
 	}
 }

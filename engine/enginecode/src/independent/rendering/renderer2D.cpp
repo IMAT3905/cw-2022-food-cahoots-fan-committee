@@ -72,7 +72,7 @@ namespace Engine
 		if (FT_New_Face(s_data->ft, filePath, 0, &s_data->fontFace)) Log::error("Error: Freetype could not load font: {0}", filePath);
 
 		// Set the char size
-		int32_t charSize = 86;
+		int32_t charSize = 24;
 		if (FT_Set_Pixel_Sizes(s_data->fontFace, 0, charSize)) Log::error("Error: Freetype can't set font size {0}", charSize);
 
 		// Fill the texture atlas
@@ -305,5 +305,26 @@ namespace Engine
 		result.m_scale = glm::vec3(halfExtents * 2.f, 1.f);
 
 		return result;
+	}
+
+	glm::ivec2 Renderer2D::GetTextSize(const char* text) {
+		glm::ivec2 result = { 0,0 };
+
+		for (uint32_t i = 0; i < strlen(text); i++) {
+			// Get glyph data
+			GlyphData& gd = s_data->glyphData.at(text[i] - s_data->firstGlyph);
+			glm::ivec2 glyphsize = gd.size;
+			float advance = gd.advance;
+			result.x += (glyphsize.x + advance);
+			result.y = std::max(result.y, glyphsize.y);
+		}
+		return result;
+	}
+
+	Quad Quad::createTopLeftSize(const glm::vec2& topleft, const glm::vec2& size)
+	{
+		glm::vec2 halfextents = size / 2.0f;
+		glm::vec2 centre = topleft + halfextents;
+		return createCentreHalfExtents(centre, halfextents);
 	}
 }

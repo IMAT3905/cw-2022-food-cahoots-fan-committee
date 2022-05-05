@@ -31,6 +31,7 @@ namespace Engine
 	public:
 		Quad() = default; //!< Default constructor
 		static Quad createCentreHalfExtents(const glm::vec2& centre, const glm::vec2& halfExtents); //!< Creating a quad using half extents data \param centre is the centre of the quad \param halfExtents is data that represents the distance from the centre to the edges of the shape
+		static Quad createTopLeftSize(const glm::vec2& topleft, const glm::vec2& size);
 	private:
 		glm::vec3 m_translate = glm::vec3(0.f); //!< Translation vector
 		glm::vec3 m_scale = glm::vec3(1.0f); //!< Scale vector
@@ -54,6 +55,7 @@ namespace Engine
 
 		static void submit(char ch, const glm::vec2& position, float& advance, const glm::vec4& tint); //!< Render a single character with a tint \param ch is the character to be rendered \param position is the position of the character \param advance is the advance of the character \param tint is the tint to be applied to the character
 		static void submit(const char * text, const glm::vec2& position, const glm::vec4& tint); //!< Render a piece of text with a tint \param text is the collection of chars for the text \param position is the position of the text \param tint is the tint applied to the text
+		static glm::ivec2 GetTextSize(const char* text);
 
 		static void end(); //!< Ending a 2D scene
 		static void flush(); //!< Clearing the buffers and draw count
