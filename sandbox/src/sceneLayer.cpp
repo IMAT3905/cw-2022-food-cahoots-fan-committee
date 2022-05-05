@@ -202,13 +202,14 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 		m_registry.emplace<RenderComponent>(m_entities[i], cube, conveyorMat);
 
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t);
+		nsc.create<MovementScript>(m_entities[i], t, 0.f);
 		t += deltaT;
 	}
 
 	t = 0;
 	uint32_t platecount = 8;
 	deltaT = 1.0f / static_cast<float>(platecount);
+	float height = 0.2f;
 
 	//Plate
 	Loader::ASSIMPLoad("./assets/models/Plate_working/plateTest.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
@@ -220,11 +221,11 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	{
 		m_entities.push_back(m_registry.create());
 		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Plate") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(2.5f, 2.5f, 2.5f));
+		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
 		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
 
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t);
+		nsc.create<MovementScript>(m_entities[i], t, height);
 		t += deltaT;
 	}
 
@@ -241,13 +242,31 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	{
 		m_entities.push_back(m_registry.create());
 		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Orange") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(2.5f, 2.5f, 2.5f));
+		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
 		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
 
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t);
+		nsc.create<MovementScript>(m_entities[i], t, height*2);
 		t += deltaT;
 	}
+
+	////Bomb
+	//Loader::ASSIMPLoad("./assets/models/Bomb/Bomb_OBJ.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	//material = Loader::s_material;
+	//material->setShader(TPShader);
+	//geo = Loader::s_geometry;
+
+	//for (uint32_t i = 34 + platecount; i < platecount + 34 + platecount; i++)
+	//{
+	//	m_entities.push_back(m_registry.create());
+	//	m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Bomb") + std::to_string(i)).c_str());
+	//	m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
+	//	m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
+
+	//	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
+	//	nsc.create<MovementScript>(m_entities[i], t, height * 2);
+	//	t += deltaT;
+	//}
 
 	uint32_t num = 34 + (platecount * 2);
 
@@ -311,18 +330,46 @@ void SceneLayer::onUpdate(float timestep)
 {
 	m_eulerCam->onUpdate(timestep);
 	cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
+	
+	switch (currentstate) {
+	case Selection:
 
-	auto& view = m_registry.view<NativeScriptComponent>();
-	for (auto& entity : view)
-	{
-		auto& nsc = m_registry.get<NativeScriptComponent>(entity);
-		nsc.onUpdate(timestep);
+		break;
+
+	case Movement:
+		if (movetime > 0) {
+			moving = true;
+			movetime -= timestep;
+		}
+		else {
+			moving = false;
+		}
+		Log::info(movetime);
+
+		if (moving == true) {
+			auto& view = m_registry.view<NativeScriptComponent>();
+			for (auto& entity : view)
+			{
+				auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+				nsc.onUpdate(timestep);
+			}
+		}
+
+		break;
+
+	case CheckPoints:
+
+		break;
 	}
 }
 
 void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 {
 	glm::vec3 forward, right;
+
+	if (e.getKeyCode() == NG_KEY_1) { moving = true; Log::info("moving"); }
+	if (e.getKeyCode() == NG_KEY_2) { moving = false; Log::info("not moving"); }
+	if (e.getKeyCode() == NG_KEY_3) { movetime = 1.66f; Log::info("reset time"); }
 }
 
 void SceneLayer::onResize(WindowResizeEvent& e)

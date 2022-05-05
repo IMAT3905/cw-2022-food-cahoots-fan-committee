@@ -48,4 +48,11 @@ private:
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
+	bool moving = true;
+	float movetime = 3.1f;
+
+	enum State {Selection, Movement, CheckPoints};
+	State currentstate = Selection;
+	int movetriggers = 0;
+
 };
