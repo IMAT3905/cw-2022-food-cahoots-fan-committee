@@ -331,35 +331,22 @@ void SceneLayer::onUpdate(float timestep)
 	m_eulerCam->onUpdate(timestep);
 	cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
 	
-	switch (currentstate) {
-	case Selection:
+	if (movetime > 0) {
+		moving = true;
+		movetime -= timestep;
+	}
+	else {
+		moving = false;
+	}
+	Log::info(movetime);
 
-		break;
-
-	case Movement:
-		if (movetime > 0) {
-			moving = true;
-			movetime -= timestep;
+	if (moving == true) {
+		auto& view = m_registry.view<NativeScriptComponent>();
+		for (auto& entity : view)
+		{
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onUpdate(timestep);
 		}
-		else {
-			moving = false;
-		}
-		Log::info(movetime);
-
-		if (moving == true) {
-			auto& view = m_registry.view<NativeScriptComponent>();
-			for (auto& entity : view)
-			{
-				auto& nsc = m_registry.get<NativeScriptComponent>(entity);
-				nsc.onUpdate(timestep);
-			}
-		}
-
-		break;
-
-	case CheckPoints:
-
-		break;
 	}
 }
 
