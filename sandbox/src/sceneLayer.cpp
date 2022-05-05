@@ -190,7 +190,12 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(7.f, 0.25f, 7.f));
 	m_registry.emplace<RenderComponent>(m_entities[1], cube, checkerCubeMat);
 
-	uint32_t entcount = 2;
+	CreateNewPlayer("Player1", NG_KEY_Z, 0);
+	CreateNewPlayer("Player2", NG_KEY_X, 1);
+	CreateNewPlayer("Player3", NG_KEY_C, 2);
+	CreateNewPlayer("Player4", NG_KEY_V, 3);
+
+	uint32_t entcount = 6;
 
 	glm::vec3 cubeDims(1.f, 0.25f, 1.f);
 
@@ -200,12 +205,12 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < cubeCount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Platform Cube ") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), cubeDims);
-		m_registry.emplace<RenderComponent>(m_entities[i], cube, conveyorMat);
+		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Platform Cube ") + std::to_string(i)).c_str());
+		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), cubeDims);
+		m_registry.emplace<RenderComponent>(m_entities.back(), cube, conveyorMat);
 
-		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t, 0.f);
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
+		nsc.create<MovementScript>(m_entities.back(), t, 0.f);
 		t += deltaT;
 	}
 
@@ -225,12 +230,12 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < platecount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Plate") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
-		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
+		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Plate") + std::to_string(i)).c_str());
+		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
+		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
-		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t, height);
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
+		nsc.create<MovementScript>(m_entities.back(), t, height);
 		t += deltaT;
 	}
 
@@ -248,12 +253,12 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Orange") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
-		m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
+		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Orange") + std::to_string(i)).c_str());
+		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
+		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
-		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-		nsc.create<MovementScript>(m_entities[i], t, height*2);
+		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
+		nsc.create<MovementScript>(m_entities.back(), t, height*2);
 		t += deltaT;
 	}
 
@@ -343,7 +348,6 @@ void SceneLayer::onUpdate(float timestep)
 	else {
 		moving = false;
 	}
-	Log::info(movetime);
 
 	if (moving == true) {
 		auto& view = m_registry.view<NativeScriptComponent>();
@@ -362,6 +366,14 @@ void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 	if (e.getKeyCode() == NG_KEY_1) { moving = true; Log::info("moving"); }
 	if (e.getKeyCode() == NG_KEY_2) { moving = false; Log::info("not moving"); }
 	if (e.getKeyCode() == NG_KEY_3) { movetime = 1.66f; Log::info("reset time"); }
+
+	auto& view = m_registry.view<NativeScriptComponent>();
+	int i = 0;
+	for (auto& entity : view)
+	{
+		auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+		nsc.onKeyPress(e);
+	}
 }
 
 void SceneLayer::onResize(WindowResizeEvent& e)
@@ -369,10 +381,10 @@ void SceneLayer::onResize(WindowResizeEvent& e)
 	m_eulerCam->onResize(e);
 }
 
-void SceneLayer::CreateNewPlayer(int id, const char* name, int keypress, int arrayid) {
-	m_entities[id] = m_registry.create();
-	m_registry.emplace<LabelComponent>(m_entities[id], name);
+void SceneLayer::CreateNewPlayer(const char* name, int keypress, int arrayid) {
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), name);
 
-	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[id]);
-	nsc.create<PlayerScript>(m_entities[id], keypress, arrayid, *this);
+	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
+	nsc.create<PlayerScript>(m_entities.back(), keypress, arrayid, *this);
 }

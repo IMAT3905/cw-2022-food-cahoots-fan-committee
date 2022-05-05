@@ -55,5 +55,5 @@ private:
 	State currentstate = Selection;
 	int movetriggers = 0;
 
-	void CreateNewPlayer(int id, const char* name, int keypress, int arrayid);
+	void CreateNewPlayer(const char* name, int keypress, int arrayid);
 };
