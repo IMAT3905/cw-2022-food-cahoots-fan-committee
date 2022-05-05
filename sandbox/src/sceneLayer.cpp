@@ -58,6 +58,7 @@
 	SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().m_registry), m_entities(Application::getInstance().m_entities)
 	{
 		Renderer3D::init();
+		Renderer2DBillboard::init(8192);
 		
 #pragma region SHADERS
 
@@ -223,6 +224,7 @@
 		m_entities[1] = m_registry.create();
 		m_entities[2] = m_registry.create();
 		m_entities[3] = m_registry.create();
+		m_entities[4] = m_registry.create();
 
 		m_registry.emplace<RootComponent>(m_entities[0]);
 
@@ -230,11 +232,13 @@
 		m_registry.emplace<LabelComponent>(m_entities[1], "Pyramid");
 		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
 		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");
+		m_registry.emplace<LabelComponent>(m_entities[4], "BillboardQuad");
 
 		m_registry.emplace<TransformComponent>(m_entities[0]);
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(-2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 		m_registry.emplace<TransformComponent>(m_entities[2], glm::vec3(0.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 		m_registry.emplace<TransformComponent>(m_entities[3], glm::vec3(2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+		m_registry.emplace<TransformComponent>(m_entities[4], glm::vec3(2.f, 0.f, -10.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 
 		m_registry.emplace<RenderComponent>(m_entities[1], pyramidVAO, pyramidMat);
 		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, letterCubeMat);
@@ -263,6 +267,13 @@
 		}
 
 		Renderer3D::end();
+
+		auto t = m_registry.get<TransformComponent>(m_entities[4]).getTransform();
+		BillboardQuad quad({ t[3][0], t[3][1] + 1.4, t[3][2] }, { 0.6,0.2 });
+
+		Renderer2DBillboard::begin(m_swu);
+		Renderer2DBillboard::submit(quad, glm::vec4(1.0f, 0.f, 1.f, 1.f), RendererCommon::defaultSubTexture);
+		Renderer2DBillboard::end();
 	}
 
 	void SceneLayer::onUpdate(float timestep)

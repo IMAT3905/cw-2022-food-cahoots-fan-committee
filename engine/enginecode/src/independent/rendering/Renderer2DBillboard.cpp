@@ -23,20 +23,17 @@ namespace Engine
 
 		if (!RendererCommon::defaultTexture)
 		{
-
+			unsigned char whitePx[4] = { 255, 255, 255, 255 };
+			RendererCommon::defaultTexture.reset(Texture::create(1, 1, 4, whitePx));
+			RendererCommon::defaultSubTexture = SubTexture(RendererCommon::defaultTexture, glm::vec2(0.f, 0.f), glm::vec2( 1.f, 1.f ));
 		}
-
-		unsigned char whitePx[4] = { 255, 255, 255, 255 };
-		s_data->defaultTexture.reset(Texture::create(1, 1, 4, whitePx));
-
-		s_data->defaultSubTexture = SubTexture(s_data->defaultTexture, { 0.f, 0.f }, { 1.f, 1.f });
 
 		s_data->shader.reset(Shader::create("./assets/shaders/quad6.glsl"));
 
 		s_data->UBO.reset(UniformBuffer::create(UniformBufferLayout({
-		{ "u_view", ShaderDataType::Mat4 },
-		{ "u_projection", ShaderDataType::Mat4 }
-		})));
+			{ "u_view", ShaderDataType::Mat4 },
+			{ "u_projection", ShaderDataType::Mat4 }
+			})));
 
 		s_data->quad[0] = { -0.5f, -0.5f, 1.f, 1.f };
 		s_data->quad[1] = { -0.5f,  0.5f, 1.f, 1.f };
@@ -99,7 +96,7 @@ namespace Engine
 		//bind the shader
 		glUseProgram(s_data->shader->getID());
 
-		s_data->shader->uploadIntArray("u_texData", s_data->textureUnits.data(), 32);
+		s_data->shader->uploadIntArray("u_texData", RendererCommon::textureUnits.data(), 32);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, s_data->UBO->getID());
 		s_data->UBO->uploadData("u_projection", swu.at("u_projection").second);

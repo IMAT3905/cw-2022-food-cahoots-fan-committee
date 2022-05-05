@@ -40,9 +40,6 @@ namespace Engine
 	private:
 		struct InternalData
 		{
-			std::shared_ptr<Texture> defaultTexture; //!< The default texture of the 2D shape
-			SubTexture defaultSubTexture; //!< The default subtexture of the 2D shape
-			glm::vec4 defaultTint; //!< The default tint of the 2D shape
 			std::shared_ptr<Shader> shader;
 			std::shared_ptr<VertexArray> VAO;
 			std::shared_ptr<UniformBuffer> UBO;
@@ -50,7 +47,6 @@ namespace Engine
 			uint32_t batchSize;
 			uint32_t drawCount;
 			std::vector<BillboardVertex> vertices;
-			std::array<int32_t, 32> textureUnits; //!< An array of texture units
 		};
 
 		static std::shared_ptr<InternalData> s_data;
