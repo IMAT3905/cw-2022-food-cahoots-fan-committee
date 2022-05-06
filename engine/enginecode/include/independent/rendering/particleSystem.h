@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rendererCommon.h"
-//#include "systems/randomiser.h"
+#include "systems/randomiser.h"
 
 namespace Engine
 {
@@ -23,7 +23,10 @@ namespace Engine
 		glm::vec3 velocityRandomisation = { 0.f, 0.f, 0.f };
 		float scaleRandomisation = 0.f;
 		glm::vec3 colourRandomisation = { 0.f, 0.f, 0.f };
-		//randomiser stuff would go here, if I had it
+		RandomTypes positionRandomType = RandomTypes::None;
+		RandomTypes velocityRandomType = RandomTypes::None;
+		RandomTypes scaleRandomType = RandomTypes::None;
+		RandomTypes colourRandomType = RandomTypes::None;
 	};
 
 	struct particleDeviceProperties
@@ -44,7 +47,7 @@ namespace Engine
 		void onUpdate(float timestep);
 		ParticleHostProprties hostProps;
 		particleDeviceProperties deviceProps;
-		bool destroyMe() { return hostProps.lifetimeRemaining <= 0.f };
+		bool destroyMe() { return hostProps.lifetimeRemaining <= 0.f; }
 		BlendModes blendMode;
 	};
 
@@ -86,7 +89,7 @@ namespace Engine
 			uint32_t mbParticleDrawCount;
 			uint32_t abParticleDrawCount;
 			std::vector<ParticleVertex> nonBlendedVertices;
-			std::vector<ParticleVertex> mixBelndedVertices;
+			std::vector<ParticleVertex> mixBlendedVertices;
 			std::vector<ParticleVertex> additiveBlendedVertices;
 			std::vector<Particle> nonBlendedParticles;
 			std::vector<Particle> mixBlendedParticles;
