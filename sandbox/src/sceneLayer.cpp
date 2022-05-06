@@ -429,6 +429,7 @@ void SceneLayer::InitialState(float timestep) {
 		auto& view = m_registry.view<NativeScriptComponent>();
 		for (auto& entity : view)
 		{
+			Log::info("we are movingggggg");
 			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
 			nsc.onUpdate(timestep);
 		}

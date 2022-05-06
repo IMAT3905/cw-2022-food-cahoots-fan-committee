@@ -48,7 +48,7 @@ private:
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
-	float movetime = 0.001f;
+	float movetime = 1.5f;
 
 	enum State {None, InitialMove, Selection, Movement, CheckPoints};
 	State currentstate = InitialMove;
