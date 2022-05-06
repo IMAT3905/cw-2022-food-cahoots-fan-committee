@@ -59,6 +59,7 @@
 	{
 		Renderer3D::init();
 		Renderer2DBillboard::init(8192);
+		ParticleSystem::init(40);
 		
 #pragma region SHADERS
 
@@ -233,6 +234,7 @@
 		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
 		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");
 		m_registry.emplace<LabelComponent>(m_entities[4], "BillboardQuad");
+		m_registry.emplace<LabelComponent>(m_entities[4], "BillboardQuad");
 
 		m_registry.emplace<TransformComponent>(m_entities[0]);
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(-2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
@@ -243,6 +245,26 @@
 		m_registry.emplace<RenderComponent>(m_entities[1], pyramidVAO, pyramidMat);
 		m_registry.emplace<RenderComponent>(m_entities[2], cubeVAO, letterCubeMat);
 		m_registry.emplace<RenderComponent>(m_entities[3], cubeVAO, numberCubeMat);
+
+		glm::mat4 t = m_registry.get<TransformComponent>(m_entities[4]).getTransform();
+		auto& e3 = m_registry.emplace<EmitterComponent>(m_entities[4], 90.f, glm::vec3(t[3]), glm::vec3(0.f, 0.5f, 0.f));
+		e3.blendMode = BlendModes::None;
+		e3.hostProps.linearVelocity = { 0.f, 1.5f, 0.f };
+		e3.hostProps.linearAcceleration = { 0.f, 0.f, 0.f };
+		e3.hostProps.linearDrag = { 0.f, 0.f, 0.f };
+		e3.hostProps.angularAcceleration = 0.f;
+		e3.hostProps.startSize = { 0.2f, 0.2f };
+		e3.hostProps.endSize = { 0.07f, 0.07f };
+		e3.hostProps.startColour = { 0.7f, 0.7f, 0.7f, 0.9f };
+		e3.hostProps.endColour = { 0.2f,0.2f,0.2f,0.5f };
+		e3.hostProps.lifetime = 1.0f;
+		e3.hostProps.lifetimeRemaining = e3.hostProps.lifetime;
+		e3.hostProps.velocityRandomisation = { 0.15f, 0.0f, 0.15f };
+		e3.hostProps.velocityRandomType = RandomTypes::Normal;
+		e3.hostProps.positionRandomisation = { 0.05f, 0.0f, 0.15f };
+		e3.hostProps.positionRandomType = RandomTypes::Normal;
+		e3.deviceProps.linearPosition = { t[3][0], t[3][1] + 0.5, t[3][2] };
+		ParticleSystem::getUVs(16, e3.deviceProps.current_UVStart, e3.deviceProps.current_UVEnd);
 	}
 
 	void SceneLayer::onRender()
