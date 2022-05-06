@@ -1,20 +1,7 @@
-newmtl Bomb:Fuze
+newmtl initialShadingGroup
 illum 4
 Kd 0.00 0.00 0.00
-Ka 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd Bomb/Albedo.png
+map_Kd Bomb/DefaultMaterial_Base_Color.png
 Ni 1.00
-Ks 0.00 0.00 0.00
-map_Ks Metal.png
-Ns 96.08
-newmtl Bomb:Metal
-illum 4
-Kd 0.00 0.00 0.00
-Ka 1.00 1.00 1.00
-Tf 1.00 1.00 1.00
-map_Kd Bomb/Albedo.png
-Ni 1.00
-Ks 0.00 0.00 0.00
-map_Ks Bomb/Metal.png
-Ns 96.08

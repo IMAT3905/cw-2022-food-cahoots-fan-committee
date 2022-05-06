@@ -48,12 +48,20 @@ private:
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
-	bool moving = true;
 	float movetime = 3.1f;
 
-	enum State {Selection, Movement, CheckPoints};
-	State currentstate = Selection;
+	enum State {InitialMove, Selection, Movement, CheckPoints};
+	State currentstate = InitialMove;
 	int movetriggers = 0;
 
 	void CreateNewPlayer(const char* name, int keypress, int arrayid);
+	void GenerateArrayPos(std::array<uint32_t, 8>& objectid);
+
+	void InitialState(float timestep);
+	void SelectionState(float timestep);
+	void MovementState(float timestep);
+	void CheckState();
+
+	//Game Variables
+	int numselected[4] = { 0,0,0,0 };
 };

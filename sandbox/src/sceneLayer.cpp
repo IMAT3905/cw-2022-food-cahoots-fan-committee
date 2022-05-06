@@ -3,6 +3,8 @@
 #include "movementScript.h"
 #include "assimpLoader.h"
 #include "player.h"
+#include <ctime> 
+#include <array>
 
 SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 {
@@ -244,7 +246,14 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	t = 0;
 	deltaT = 1.0f / static_cast<float>(platecount);
 
-	//Orange
+	//Object
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	std::array<uint32_t, 8> objectid = { 0,0,0,0,0,0,0,0 };
+	for (int i = 0; i < 3; i++) {
+		GenerateArrayPos(objectid);
+	}
+
+
 	Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
@@ -253,33 +262,37 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Orange") + std::to_string(i)).c_str());
-		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
-		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+		switch (objectid[i-entcount]) {
+		case 0:
+			//Orange
+			Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+			material = Loader::s_material;
+			material->setShader(TPShader);
+			geo = Loader::s_geometry;
+			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Orange") + std::to_string(i)).c_str());
+			m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
+			break;
 
+		case 1:
+			//Bomb
+			Loader::ASSIMPLoad("./assets/models/Bomb/bomb_OBJ.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+			material = Loader::s_material;
+			material->setShader(TPShader);
+			geo = Loader::s_geometry;
+			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Bomb") + std::to_string(i)).c_str());
+			m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.5f));
+			break;
+
+		default:
+			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Undefined") + std::to_string(i)).c_str());
+			break;
+		}
+
+		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
 		nsc.create<MovementScript>(m_entities.back(), t, height*2);
 		t += deltaT;
 	}
-
-	////Bomb
-	//Loader::ASSIMPLoad("./assets/models/Bomb/Bomb_OBJ.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
-	//material = Loader::s_material;
-	//material->setShader(TPShader);
-	//geo = Loader::s_geometry;
-
-	//for (uint32_t i = 34 + platecount; i < platecount + 34 + platecount; i++)
-	//{
-	//	m_entities.push_back(m_registry.create());
-	//	m_registry.emplace<LabelComponent>(m_entities[i], (std::string("Bomb") + std::to_string(i)).c_str());
-	//	m_registry.emplace<TransformComponent>(m_entities[i], glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
-	//	m_registry.emplace<RenderComponent>(m_entities[i], geo, material);
-
-	//	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities[i]);
-	//	nsc.create<MovementScript>(m_entities[i], t, height * 2);
-	//	t += deltaT;
-	//}
-
 
 	//Player model
 	Loader::ASSIMPLoad("./assets/models/PlayerModel/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
@@ -340,32 +353,30 @@ void SceneLayer::onUpdate(float timestep)
 {
 	m_eulerCam->onUpdate(timestep);
 	cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
-	
-	if (movetime > 0) {
-		moving = true;
-		movetime -= timestep;
-	}
-	else {
-		moving = false;
-	}
 
-	if (moving == true) {
-		auto& view = m_registry.view<NativeScriptComponent>();
-		for (auto& entity : view)
-		{
-			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
-			nsc.onUpdate(timestep);
-		}
+	switch (currentstate) {
+	case InitialMove:
+		InitialState(timestep);
+		break;
+
+	case Selection:
+		SelectionState(timestep);
+		break;
+
+	case Movement:
+		MovementState(timestep);
+		break;
+
+	case CheckPoints:
+		CheckState();
+		break;
 	}
 }
 
 void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 {
 	glm::vec3 forward, right;
-
-	if (e.getKeyCode() == NG_KEY_1) { moving = true; Log::info("moving"); }
-	if (e.getKeyCode() == NG_KEY_2) { moving = false; Log::info("not moving"); }
-	if (e.getKeyCode() == NG_KEY_3) { movetime = 1.66f; Log::info("reset time"); }
+	if (e.getKeyCode() == NG_KEY_1) { movetime = 1.66f; Log::info("reset time"); }
 
 	auto& view = m_registry.view<NativeScriptComponent>();
 	int i = 0;
@@ -387,4 +398,66 @@ void SceneLayer::CreateNewPlayer(const char* name, int keypress, int arrayid) {
 
 	auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
 	nsc.create<PlayerScript>(m_entities.back(), keypress, arrayid, *this);
+}
+
+void SceneLayer::GenerateArrayPos(std::array<uint32_t, 8>& objectid) {
+	uint32_t arrayid = rand() % objectid.size() + 0;
+	if (objectid[arrayid] != 1) {
+		objectid[arrayid] = 1;
+		Log::info(arrayid);
+	}
+	else {
+		GenerateArrayPos(objectid);
+	}
+}
+
+void SceneLayer::InitialState(float timestep) {
+	if (movetime > 0) {
+		movetime -= timestep;
+
+		auto& view = m_registry.view<NativeScriptComponent>();
+		for (auto& entity : view)
+		{
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onUpdate(timestep);
+		}
+	}
+	else {
+		currentstate = Selection;
+		selecttime = 10;
+	}
+}
+
+void SceneLayer::SelectionState(float timestep) {
+	if (selecttime > 0 ) {
+		selecttime -= timestep;
+	}
+	else {
+		uint32_t movenum = 0;
+		for (int i = 0; i < 4; i++) {
+			if (numselected[i] == 1) { movenum++; }
+		}
+		movetime = 1.66f * movenum;
+		currentstate = Movement;
+	}
+}
+
+void SceneLayer::CheckState() {
+
+}
+
+void SceneLayer::MovementState(float timestep) {
+	if (movetime > 0) {
+		movetime -= timestep;
+
+		auto& view = m_registry.view<NativeScriptComponent>();
+		for (auto& entity : view)
+		{
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onUpdate(timestep);
+		}
+	}
+	else {
+		currentstate = CheckPoints;
+	}
 }

@@ -28,12 +28,14 @@ namespace Engine
 	{
 		for (auto& layer : m_stack) if (layer->isActive())layer->onUpdate(timestep);
 		int newscores[4] = { 0,0,0,0 };
+		int newtime = 0;
 		for (auto& layer : m_stack)
 		{
 			if (layer->getName() == "Scene Layer") {
 				for (int i = 0; i < 4; i++) {
 					newscores[i] = layer->scores[i];
 				}
+				newtime = layer->selecttime;
 			}
 		}
 
@@ -43,6 +45,7 @@ namespace Engine
 				for (int i = 0; i < 4; i++) {
 					layer->scores[i] = newscores[i];
 				}
+				layer->selecttime = newtime;
 			}
 		}
 	}
@@ -132,15 +135,21 @@ namespace Engine
 	}
 
 	void LayerStack::SetVariables() {
-		std::shared_ptr<Layer> newlayer = nullptr;
+		std::shared_ptr<Layer> newscene = nullptr;
+		std::shared_ptr<Layer> newgame = nullptr;
+		std::shared_ptr<Layer> newmenu = nullptr;
 		for (auto& layer : m_stack)
 		{
-			if (layer->getName() == "InGame Layer") newlayer = layer;
+			if (layer->getName() == "Scene Layer") newscene = layer;
+			if (layer->getName() == "InGame Layer") newgame = layer;
+			if (layer->getName() == "Menu Layer") newmenu = layer;
 		}
 
 		for (auto& layer : m_stack)
 		{
-			if (layer->getName() == "Menu Layer") layer->enablelayer = newlayer;
+			layer->scene = newscene;
+			layer->game = newgame;
+			layer->menu = newmenu;
 		}
 	}
 }

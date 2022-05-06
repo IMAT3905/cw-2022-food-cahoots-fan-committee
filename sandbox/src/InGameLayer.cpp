@@ -82,7 +82,6 @@ void InGameLayer::onUpdate(float timestep)
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
-	
 	top.AddWidget<Spacer>(250, 500);
 	top.AddWidget<Label>(300, 100, "Timer: 10", Justification::left);
 	top.AddWidget<Spacer>(0, 500);

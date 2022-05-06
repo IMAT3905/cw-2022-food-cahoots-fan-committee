@@ -30,9 +30,11 @@ namespace Engine
 		virtual void onMousePressed(MouseButtonPressedEvent& e) { e.handle(false); }
 		virtual void onMouseReleased(MouseButtonReleasedEvent& e) { e.handle(false); }
 
-		std::shared_ptr<Layer> enablelayer = nullptr;
+		std::shared_ptr<Layer> scene = nullptr;
+		std::shared_ptr<Layer> game = nullptr;
+		std::shared_ptr<Layer> menu = nullptr;
 		int scores[4] = { 0,0,0,0 };
-		int time = 10;
+		float selecttime = 10;
 
 	protected:
 		const char* m_name; //!< Name, useful for debugging
