@@ -271,4 +271,111 @@ namespace Engine
 		(*pRenderVerts)[startIdx + 3].uvCoords = { p.deviceProps.current_UVEnd.x, p.deviceProps.current_UVStart.y };
 	}
 
+
+
+	Particle::Particle(ParticleHostProprties& Hprops, particleDeviceProperties& Dprops, BlendModes p_blendMode) :
+		hostProps(Hprops), deviceProps(Dprops), blendMode(p_blendMode)
+	{
+		float r, g, b, a, scale;
+		glm::vec4 delta4; 
+		glm::vec3 delta3;
+
+		switch (hostProps.colourRandomType)
+		{
+		case RandomTypes::None:
+			deviceProps.currentColour = hostProps.startColour;
+			break;
+		case RandomTypes::Normal:
+			r = Randomiser::normalFloat(0, hostProps.colourRandomisation.x);
+			g = Randomiser::normalFloat(0, hostProps.colourRandomisation.y);
+			b = Randomiser::normalFloat(0, hostProps.colourRandomisation.z);
+			a = hostProps.startColour.a;
+			delta4 = glm::vec4(r, g, b, 0.f);
+			hostProps.startColour += delta4;
+			hostProps.endColour -= delta4;
+			deviceProps.currentColour = hostProps.startColour;
+			break;
+		case RandomTypes::Uniform:
+			r = Randomiser::uniformFloatBetween(-hostProps.colourRandomisation.r, hostProps.colourRandomisation.r);
+			g = Randomiser::uniformFloatBetween(-hostProps.colourRandomisation.g, hostProps.colourRandomisation.g);
+			b = Randomiser::uniformFloatBetween(-hostProps.colourRandomisation.b, hostProps.colourRandomisation.b);
+			a = hostProps.startColour.a;
+
+			delta4 = glm::vec4(r, g, b, 0.f);
+			hostProps.startColour += delta4;
+			hostProps.endColour - +delta4;
+			deviceProps.currentColour = hostProps.startColour;
+
+			break;
+		}
+
+		switch (hostProps.scaleRandomType)
+		{
+		case RandomTypes::None:
+			deviceProps.currentSize = hostProps.startSize;
+			break;
+		case RandomTypes::Normal:
+			scale = Randomiser::normalFloat(-hostProps.scaleRandomisation, hostProps.scaleRandomisation);
+			hostProps.startSize -= scale;
+			hostProps.endSize += scale;
+			deviceProps.currentSize = hostProps.startSize;
+			break;
+		case RandomTypes::Uniform:
+			scale = Randomiser::normalFloat(1.0, hostProps.scaleRandomisation);
+			hostProps.startSize -= scale;
+			hostProps.endSize += scale;
+			deviceProps.currentSize = hostProps.startSize;
+			break;
+		}
+
+		switch (hostProps.positionRandomType)
+		{
+		case RandomTypes::Normal:
+			delta3.x = Randomiser::normalFloat(deviceProps.linearPosition.x, hostProps.positionRandomisation.x);
+			delta3.y = Randomiser::normalFloat(deviceProps.linearPosition.y, hostProps.positionRandomisation.y);
+			delta3.z = Randomiser::normalFloat(deviceProps.linearPosition.z, hostProps.positionRandomisation.z);
+			deviceProps.linearPosition = delta3;
+			break;
+		case RandomTypes::Uniform:
+			delta3.x = Randomiser::uniformFloatBetween(-hostProps.positionRandomisation.x, hostProps.positionRandomisation.x);
+			delta3.y = Randomiser::uniformFloatBetween(-hostProps.positionRandomisation.y, hostProps.positionRandomisation.y);
+			delta3.z = Randomiser::uniformFloatBetween(-hostProps.positionRandomisation.z, hostProps.positionRandomisation.z);
+			deviceProps.linearPosition = delta3;
+			break;
+		}
+
+		switch (hostProps.velocityRandomType)
+		{
+		case RandomTypes::Normal:
+			delta3.x = Randomiser::normalFloat(hostProps.linearVelocity.x, hostProps.velocityRandomisation.x);
+			delta3.y = Randomiser::normalFloat(hostProps.linearVelocity.y, hostProps.velocityRandomisation.y);
+			delta3.z = Randomiser::normalFloat(hostProps.linearVelocity.z, hostProps.velocityRandomisation.z);
+			hostProps.linearVelocity = delta3;
+			break;
+		case RandomTypes::Uniform:
+			delta3.x = Randomiser::uniformFloatBetween(-hostProps.velocityRandomisation.x, hostProps.velocityRandomisation.x);
+			delta3.y = Randomiser::uniformFloatBetween(-hostProps.velocityRandomisation.y, hostProps.velocityRandomisation.y);
+			delta3.z = Randomiser::uniformFloatBetween(-hostProps.velocityRandomisation.z, hostProps.velocityRandomisation.z);
+			hostProps.linearVelocity = delta3;
+			break;
+		}
+	}
+
+	void Particle::onUpdate(float timestep)
+	{
+		//Euler integration
+		hostProps.linearVelocity += hostProps.linearAcceleration * timestep + hostProps.linearDrag * -hostProps.linearVelocity * timestep;
+		deviceProps.linearPosition += hostProps.linearVelocity * timestep;
+
+		hostProps.angularVelocity += hostProps.angularAcceleration * timestep + hostProps.angularDrag * -hostProps.angularVelocity * timestep;
+		deviceProps.angularPosition += hostProps.angularVelocity;
+
+		hostProps.lifetimeRemaining -= timestep;
+
+		float lifetime_t = 1.0f - (hostProps.lifetimeRemaining / hostProps.lifetime);
+
+		deviceProps.currentColour = glm::mix(hostProps.startColour, hostProps.endColour, lifetime_t);
+		deviceProps.currentSize = glm::mix(hostProps.startSize, hostProps.endSize, lifetime_t);
+	}
+
 }

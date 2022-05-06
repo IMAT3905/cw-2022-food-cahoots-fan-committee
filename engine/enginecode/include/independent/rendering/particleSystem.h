@@ -11,7 +11,7 @@ namespace Engine
 		glm::vec3 linearAcceleration = { 0.f, 0.f, 0.f };
 		glm::vec3 linearDrag = { 0.f, 0.f, 0.f };
 		float angularVelocity = 0.f;
-		float angluarAcceleration = 0.f;
+		float angularAcceleration = 0.f;
 		float angularDrag = 0.f;
 		float lifetime = 0.f;
 		float lifetimeRemaining = 0.f;
