@@ -38,18 +38,18 @@ void MenuLayer::onRender()
 }
 
 void MenuLayer::onKeyPressed(KeyPressedEvent& e) {
-	switch (e.getKeyCode()) {
-	case NG_KEY_G:
-		m_state = UILayerState::Activating;
-		Log::debug("Activating UI");
-		break;
-	case NG_KEY_H:
-		m_state = UILayerState::Deactivating;
-		Log::debug("Deactivating UI");
-		break;
-	}
+	//switch (e.getKeyCode()) {
+	//case NG_KEY_G:
+	//	m_state = UILayerState::Activating;
+	//	Log::debug("Activating UI");
+	//	break;
+	//case NG_KEY_H:
+	//	m_state = UILayerState::Deactivating;
+	//	Log::debug("Deactivating UI");
+	//	break;
+	//}
 
-	if (m_state == UILayerState::Active) e.handle(true);
+	//if (m_state == UILayerState::Active) e.handle(true);
 }
 
 void MenuLayer::onMouseMoved(MouseMovedEvent& e) {
@@ -90,6 +90,10 @@ void MenuLayer::ButtonCall() {
 
 	game->setDisplayed(true);
 	game->setFocused(true);
+
+	scene->setDisplayed(true);
+	scene->setFocused(true);
+
 	this->setDisplayed(false);
 	this->setFocused(false);
 }

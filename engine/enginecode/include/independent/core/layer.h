@@ -35,6 +35,7 @@ namespace Engine
 		std::shared_ptr<Layer> menu = nullptr;
 		int scores[4] = { 0,0,0,0 };
 		float selecttime = 10;
+		int numselected[4] = { 0,0,0,0 };
 
 	protected:
 		const char* m_name; //!< Name, useful for debugging

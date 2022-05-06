@@ -31,7 +31,7 @@ public:
 	virtual void onMouseReleased(MouseButtonReleasedEvent& e) override;
 	void SetMenu();
 	void ButtonCall();
-	UILayerState m_state = UILayerState::InActive; //Default state
+	UILayerState m_state = UILayerState::Active; //Default state
 private:
 	//FixedOthroCameraController2D
 	glm::mat4 view2D = glm::mat4(1.f);

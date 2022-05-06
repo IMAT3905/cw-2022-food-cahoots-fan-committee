@@ -20,7 +20,7 @@ namespace Engine {
 			glm::ivec2 winsize = glm::ivec2(Application::getInstance().getWindow()->getWidth(), Application::getInstance().getWindow()->getHeight());
 
 			glm::vec4 bgcover = m_windowcolourscheme.background;
-			bgcover.a = 0.5f;
+			bgcover.a = 0.0f;
 			Renderer2D::submit(Quad::createTopLeftSize({0.0f,0.0f},winsize), bgcover);
 			Renderer2D::submit(Quad::createTopLeftSize(m_position, m_size), m_windowcolourscheme.background);
 			m_container.OnRender();

@@ -78,30 +78,31 @@ void InGameLayer::onUpdate(float timestep)
 	m_scoreStr[1] = ": " + std::to_string(scores[1]);
 	m_scoreStr[2] = ": " + std::to_string(scores[2]);
 	m_scoreStr[3] = ": " + std::to_string(scores[3]);
+	currenttime = "Timer: " + std::to_string(selecttime);
 }
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
 	top.AddWidget<Spacer>(250, 500);
-	top.AddWidget<Label>(300, 100, "Timer: 10", Justification::left);
-	top.AddWidget<Spacer>(0, 500);
+	top.AddWidget<Label>(300, 100, currenttime.c_str(), Justification::left);
+	top.AddWidget<Spacer>(0, 650);
 
-	bottom.AddWidget<Spacer>(40, 0);
+	bottom.AddWidget<Spacer>(0, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[0].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<Spacer>(200, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[1].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<Spacer>(200, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[2].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(80, 0);
+	bottom.AddWidget<Spacer>(200, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 1, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[3].c_str(), Justification::left);

@@ -151,5 +151,15 @@ namespace Engine
 			layer->game = newgame;
 			layer->menu = newmenu;
 		}
+
+		newscene->setDisplayed(false);
+		newscene->setFocused(false);
+
+		newgame->setDisplayed(false);
+		newgame->setFocused(false);
+
+		newmenu->setDisplayed(true);
+		newmenu->setFocused(true);
+
 	}
 }

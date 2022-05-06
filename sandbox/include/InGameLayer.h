@@ -39,4 +39,5 @@ private:
 	SceneWideUniforms m_swu;
 	ModalWindow m_window; //Window to render on
 	std::string m_scoreStr[4];
+	std::string currenttime;
 };

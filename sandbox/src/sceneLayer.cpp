@@ -207,7 +207,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < cubeCount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Platform Cube ") + std::to_string(i)).c_str());
+		m_registry.emplace<LabelComponent>(m_entities.back(), "Platform Cube" + i);
 		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), cubeDims);
 		m_registry.emplace<RenderComponent>(m_entities.back(), cube, conveyorMat);
 
@@ -232,7 +232,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	for (uint32_t i = entcount; i < platecount + entcount; i++)
 	{
 		m_entities.push_back(m_registry.create());
-		m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Plate") + std::to_string(i)).c_str());
+		m_registry.emplace<LabelComponent>(m_entities.back(), "Plate");
 		m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
 		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
@@ -269,7 +269,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			material = Loader::s_material;
 			material->setShader(TPShader);
 			geo = Loader::s_geometry;
-			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Orange") + std::to_string(i)).c_str());
+			m_registry.emplace<LabelComponent>(m_entities.back(), "Orange");
 			m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1, 1, 1));
 			break;
 
@@ -279,12 +279,12 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			material = Loader::s_material;
 			material->setShader(TPShader);
 			geo = Loader::s_geometry;
-			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Bomb") + std::to_string(i)).c_str());
+			m_registry.emplace<LabelComponent>(m_entities.back(), "Bomb");
 			m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.5f));
 			break;
 
 		default:
-			m_registry.emplace<LabelComponent>(m_entities.back(), (std::string("Undefined") + std::to_string(i)).c_str());
+			m_registry.emplace<LabelComponent>(m_entities.back(), "Undefined");
 			break;
 		}
 
@@ -382,8 +382,20 @@ void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 	int i = 0;
 	for (auto& entity : view)
 	{
-		auto& nsc = m_registry.get<NativeScriptComponent>(entity);
-		nsc.onKeyPress(e);
+		std::string label = m_registry.get<LabelComponent>(entity).label;
+		if (label == "Player1" || label == "Player2" || label == "Player3" || label == "Player4") {
+			if (currentstate == Selection) {
+				auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+				nsc.onKeyPress(e);
+			}
+			else {
+				Log::info("NOT THE SELECT STATE YOU BELL END");
+			}
+		}
+		else {
+			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
+			nsc.onKeyPress(e);
+		}
 	}
 }
 
@@ -404,7 +416,6 @@ void SceneLayer::GenerateArrayPos(std::array<uint32_t, 8>& objectid) {
 	uint32_t arrayid = rand() % objectid.size() + 0;
 	if (objectid[arrayid] != 1) {
 		objectid[arrayid] = 1;
-		Log::info(arrayid);
 	}
 	else {
 		GenerateArrayPos(objectid);
@@ -424,6 +435,7 @@ void SceneLayer::InitialState(float timestep) {
 	}
 	else {
 		currentstate = Selection;
+		Log::info("Select State");
 		selecttime = 10;
 	}
 }
@@ -433,17 +445,13 @@ void SceneLayer::SelectionState(float timestep) {
 		selecttime -= timestep;
 	}
 	else {
-		uint32_t movenum = 0;
 		for (int i = 0; i < 4; i++) {
-			if (numselected[i] == 1) { movenum++; }
+			if (numselected[i] == 1) { movetriggers++; }
 		}
-		movetime = 1.66f * movenum;
+		movetime = 1.66f * movetriggers;
+		Log::info("Move State");
 		currentstate = Movement;
 	}
-}
-
-void SceneLayer::CheckState() {
-
 }
 
 void SceneLayer::MovementState(float timestep) {
@@ -459,5 +467,36 @@ void SceneLayer::MovementState(float timestep) {
 	}
 	else {
 		currentstate = CheckPoints;
+		Log::info("Check State");
 	}
+}
+
+void SceneLayer::CheckState() {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < movetriggers; j++) {
+			playerobjects[i] += 1;
+			if (playerobjects[i] > 53) { playerobjects[i] = 46; }
+		}
+		Log::info(playerobjects[i]);
+	}
+
+	for (int i = 0; i < 4; i++) {
+		auto& labelcomp = m_registry.get<LabelComponent>(m_entities[playerobjects[i]]);
+		if (labelcomp.label == "Orange") {
+			scores[i]++;
+		}
+		else if (labelcomp.label == "Bomb") {
+			scores[i]--;
+			if (scores[i] < 0) { scores[i] = 0; }
+		}
+	}
+
+	currentstate = Selection;
+	Log::info("Selection State");
+	numselected[0] = 0;
+	numselected[1] = 0;
+	numselected[2] = 0;
+	numselected[3] = 0;
+	movetriggers = 0;
+	selecttime = 5;
 }
