@@ -48,9 +48,9 @@ private:
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
-	float movetime = 1.5f;
+	float movetime = 6.42f;
 
-	enum State {None, InitialMove, Selection, Movement, CheckPoints};
+	enum State {InitialMove, Selection, Movement, CheckPoints};
 	State currentstate = InitialMove;
 	int movetriggers = 0;
 	int playerobjects[4] = { 46, 48, 50, 52 };

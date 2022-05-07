@@ -152,7 +152,7 @@ namespace Engine
 			layer->menu = newmenu;
 		}
 
-		newscene->setDisplayed(false);
+		newscene->setDisplayed(true);
 		newscene->setFocused(false);
 
 		newgame->setDisplayed(false);
