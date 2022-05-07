@@ -78,13 +78,13 @@ void InGameLayer::onUpdate(float timestep)
 	m_scoreStr[1] = ": " + std::to_string(scores[1]);
 	m_scoreStr[2] = ": " + std::to_string(scores[2]);
 	m_scoreStr[3] = ": " + std::to_string(scores[3]);
-	currenttime = "Timer: " + std::to_string(selecttime);
+	currenttime = "Timer: " + std::to_string((int)std::ceil(selecttime));
 }
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
-	top.AddWidget<Spacer>(250, 500);
-	top.AddWidget<Label>(300, 100, currenttime.c_str(), Justification::left);
+	top.AddWidget<Spacer>(0, 500);
+	top.AddWidget<Label>(100, 100, currenttime.c_str(), Justification::left);
 	top.AddWidget<Spacer>(0, 650);
 
 	bottom.AddWidget<Spacer>(0, 0);

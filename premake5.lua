@@ -17,6 +17,7 @@ project "Engine"
 	kind "StaticLib"
 	language "C++"
 	staticruntime "off"
+	vectorextensions "AVX2"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("build/" .. outputdir .. "/%{prj.name}")
@@ -90,6 +91,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	staticruntime "off"
+	vectorextensions "AVX2"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("build/" .. outputdir .. "/%{prj.name}")

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <unordered_map>
 #include <memory>
 #include <algorithm>
@@ -34,7 +35,7 @@ namespace Engine
 		static TextureUnitManager texUnitMan; //!< The texture unit manager
 		static std::shared_ptr<Texture> defaultTexture; //!< Empty white texture
 		static SubTexture defaultSubTexture; //!< Empty white sub texture
-		static glm::mat4 defaultTint; //!< Default white tint
-		static std::vector<int32_t> textureUnits; //!< Texture units
+		static glm::vec4 defaultTint; //!< Default white tint
+		static std::array<int32_t, 32> textureUnits; //!< Texture units
 	};
 }
