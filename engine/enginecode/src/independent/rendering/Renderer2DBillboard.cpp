@@ -96,7 +96,7 @@ namespace Engine
 		//bind the shader
 		glUseProgram(s_data->shader->getID());
 
-		//s_data->shader->uploadIntArray("u_texData", RendererCommon::textureUnits.data(), 32);
+		s_data->shader->uploadIntArray("u_texData", RendererCommon::textureUnits.data(), 32);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, s_data->UBO->getID());
 		s_data->UBO->uploadData("u_projection", swu.at("u_projection").second);

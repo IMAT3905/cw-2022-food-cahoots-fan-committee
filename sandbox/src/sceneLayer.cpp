@@ -9,6 +9,7 @@
 SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::getInstance().getRegistry()), m_entities(Application::getInstance().getEntities())
 {
 	Renderer3D::init();
+	Renderer2DBillboard::init(8192);
 
 #pragma region SHADERS
 
@@ -323,6 +324,10 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player4");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.0, 0.5f, 4.5f), glm::vec3(0.f, 14.1f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), "BillboardQuad");
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(2.f, 0.f, -10.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 }
 
 void SceneLayer::onRender()
@@ -347,6 +352,13 @@ void SceneLayer::onRender()
 	}
 
 	Renderer3D::end();
+
+	auto t = m_registry.get<TransformComponent>(m_entities.back()).getTransform();
+	BillboardQuad quad({ t[3][0], t[3][1] + 1.4, t[3][2] }, { 0.6,0.2 });
+
+	Renderer2DBillboard::begin(m_swu);
+	Renderer2DBillboard::submit(quad, glm::vec4(1.0f, 0.f, 1.f, 1.f), RendererCommon::defaultSubTexture);
+	Renderer2DBillboard::end();
 }
 
 void SceneLayer::onUpdate(float timestep)
