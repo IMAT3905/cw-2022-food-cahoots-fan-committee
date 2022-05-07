@@ -12,6 +12,7 @@ namespace Engine
 	{
 	public:
 		GLFW_OpenGL_GC(GLFWwindow* win) : m_window(win) {}
+		virtual ~GLFW_OpenGL_GC() override;
 		virtual void init() override; //!< Init the graphics context for the given windowing API
 		virtual void swapBuffers() override; //!< Swap the front and back buffer (double buffering)
 		virtual void updateViewport(int32_t width, int32_t height) override; //!< Update the viewport

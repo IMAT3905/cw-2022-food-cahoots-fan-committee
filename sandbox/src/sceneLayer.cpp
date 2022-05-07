@@ -32,9 +32,6 @@
 		projection2D = glm::ortho(0.f, static_cast<float>(window->getWidth()), static_cast<float>(window->getHeight()), 0.f);
 		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
-		m_swu2D["u_lightColour"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[0])));
-		m_swu2D["u_lightPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[1])));
-		m_swu2D["u_viewPos"] = std::pair<ShaderDataType, void*>(ShaderDataType::Float3, static_cast<void*>(glm::value_ptr(lightData[2])));
 
 		RenderCommands::setClearColourCommand(0.7f, 0.7f, 0.7f, 1.f)->action();
 
@@ -179,10 +176,10 @@
 		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
-		m_screenQuad = Quad::createCentreHalfExtents({ 512.f, 400.f }, { 512.f, 400.f });
+		m_screenQuad = Quad::createCentreHalfExtents({ window->getWidth() / 2, window->getHeight() / 2 }, { window->getWidth() / 2, window->getHeight() / 2 });
 		m_screenTexture = SubTexture(textureTarget->getTarget(0), { 0,1 }, { 1,0 });
 
-		//std::vector<Renderer3DVertex>
+		checkerTex = SubTexture(checkerCubeMat->getTexture(), { 0,0 }, { 1,1 });
 
 #pragma endregion
 
@@ -218,17 +215,14 @@
 
 	void SceneLayer::onRender()
 	{
-		textureTarget->use();
-
 		m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().view)));
 		m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(m_eulerCam->getCamera().projection)));	
 		
-		m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
-		m_swu2D["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
-		
+		textureTarget->use();
+
 		RenderCommands::clearDepthAndColourBufferCommand()->action();
 		RenderCommands::setDepthTestCommand(true)->action();
-		RenderCommands::setBlendCommand(false);
+		RenderCommands::setBlendCommand(false)->action();
 
 		Renderer3D::begin(m_swu);
 
@@ -246,15 +240,32 @@
 
 		defaultTarget->use();
 
-		RenderCommands::setDepthTestCommand(false);
-		RenderCommands::setBlendCommand(true);
+		ImGuiHelper::begin();
 
-		Renderer2D::begin(m_swu2D);
+		ImGui::Begin("Renderer Output");
+		uint32_t textureID = textureTarget->getTarget(0)->getID();
+		ImGui::Image((void*)textureID, ImVec2{ 800, 600 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		ImGui::End();
 
-		Renderer2D::submit(m_screenQuad, m_screenTexture);
-		Renderer2D::submit("2D Renderer", { 300.f, 780.f }, { 1.0,1.0,1.0,1.0 });
+		ImGui::Begin("Properties");
+		ImGui::TextWrapped("Object tints:");
+		ImGui::ColorEdit4(" : Floor", &checkerCubeMat->getTint()[0]);
+		ImGui::ColorEdit4(" : Conveyor", &conveyorMat->getTint()[0]);
 
-		Renderer2D::end();
+		ImGui::End();
+
+		ImGuiHelper::end();
+
+		//RenderCommands::setDepthTestCommand(false)->action();
+		//RenderCommands::setBlendCommand(true)->action();
+		//RenderCommands::setTransparencyBlend()->action();
+
+		//Renderer2D::begin(m_swu2D);
+
+		//Renderer2D::submit(m_screenQuad, m_screenTexture);
+		//Renderer2D::submit("2D Renderer", { 300.f, 780.f }, { 1.0,1.0,1.0,1.0 });
+
+		//Renderer2D::end();
 	}
 
 	void SceneLayer::onUpdate(float timestep)

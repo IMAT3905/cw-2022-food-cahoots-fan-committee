@@ -15,6 +15,7 @@
 #include "components/render.h"
 #include "components/label.h"
 #include "platform/OpenGL/OpenGLFrameBuffer.h"
+#include "platform/GLFW/ImGuiHelper.h"
 
 using namespace Engine;
 
@@ -52,6 +53,8 @@ private:
 
 	Quad m_screenQuad;
 	SubTexture m_screenTexture;
+
+	SubTexture checkerTex;
 
 	glm::mat4 view2D;
 	glm::mat4 projection2D;

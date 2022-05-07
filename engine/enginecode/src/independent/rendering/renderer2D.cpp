@@ -150,8 +150,8 @@ namespace Engine
 		s_data->shader->uploadIntArray("u_texData", s_data->textureUnits.data(), 32);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, s_data->UBO->getID());
-		s_data->UBO->uploadData("u_projection", swu.at("u_projection").second);
 		s_data->UBO->uploadData("u_view", swu.at("u_view").second);
+		s_data->UBO->uploadData("u_projection", swu.at("u_projection").second);	
 	}
 
 	void Renderer2D::submit(const Quad& quad, const glm::vec4& tint)
