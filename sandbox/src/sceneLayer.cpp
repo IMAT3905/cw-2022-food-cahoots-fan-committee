@@ -262,7 +262,11 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
-		m_entities.push_back(m_registry.create());
+		Log::error(i);
+		Log::error(i - entcount);
+		Log::error(objectid[i - entcount]);
+
+;		m_entities.push_back(m_registry.create());
 		switch (objectid[i-entcount]) {
 		case 0:
 			//Orange
@@ -288,6 +292,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Undefined");
 			break;
 		}
+		Log::error(m_registry.get<LabelComponent>(m_entities.back()).label);
 
 		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
@@ -400,9 +405,6 @@ void SceneLayer::onKeyPressed(KeyPressedEvent& e)
 				auto& nsc = m_registry.get<NativeScriptComponent>(entity);
 				nsc.onKeyPress(e);
 			}
-			else {
-				Log::info("NOT THE SELECT STATE YOU BELL END");
-			}
 		}
 		else {
 			auto& nsc = m_registry.get<NativeScriptComponent>(entity);
@@ -447,7 +449,6 @@ void SceneLayer::InitialState(float timestep) {
 	}
 	else {
 		currentstate = Selection;
-		Log::info("Select State");
 		selecttime = 10;
 	}
 }
@@ -461,7 +462,6 @@ void SceneLayer::SelectionState(float timestep) {
 			if (numselected[i] == 1) { movetriggers++; }
 		}
 		movetime = 1.66f * movetriggers;
-		Log::info("Move State");
 		currentstate = Movement;
 	}
 }
@@ -479,7 +479,6 @@ void SceneLayer::MovementState(float timestep) {
 	}
 	else {
 		currentstate = CheckPoints;
-		Log::info("Check State");
 	}
 }
 
@@ -489,7 +488,6 @@ void SceneLayer::CheckState() {
 			playerobjects[i] += 1;
 			if (playerobjects[i] > 53) { playerobjects[i] = 46; }
 		}
-		Log::info(playerobjects[i]);
 	}
 
 	for (int i = 0; i < 4; i++) {
@@ -504,7 +502,6 @@ void SceneLayer::CheckState() {
 	}
 
 	currentstate = Selection;
-	Log::info("Selection State");
 	numselected[0] = 0;
 	numselected[1] = 0;
 	numselected[2] = 0;
