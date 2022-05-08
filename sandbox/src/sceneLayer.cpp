@@ -248,7 +248,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	deltaT = 1.0f / static_cast<float>(platecount);
 
 	//Object
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	std::srand(static_cast<unsigned int>(5));
 	std::array<uint32_t, 8> objectid = { 0,0,0,0,0,0,0,0 };
 	for (int i = 0; i < 3; i++) {
 		GenerateArrayPos(objectid);
@@ -262,6 +262,9 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
+		Log::error(i);
+		Log::error(i - entcount);
+		Log::error(objectid[i - entcount]);
 ;		m_entities.push_back(m_registry.create());
 		switch (objectid[i-entcount]) {
 		case 0:
@@ -288,43 +291,58 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Undefined");
 			break;
 		}
-
+		Log::error(m_registry.get<LabelComponent>(m_entities.back()).label);
 		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
 		nsc.create<MovementScript>(m_entities.back(), t, height*2);
 		t += deltaT;
 	}
 
-	//Player model
-	Loader::ASSIMPLoad("./assets/models/PlayerModel/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	//Left
+	Loader::ASSIMPLoad("./assets/models/Player1Model/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
-	//Left
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player1");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(-4.5f, 0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
-	//Right
+	//Top
+	Loader::ASSIMPLoad("./assets/models/Player2Model/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	material = Loader::s_material;
+	material->setShader(TPShader);
+	geo = Loader::s_geometry;
+
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player2");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(4.5f, 0.5f, 0.f), glm::vec3(0.f, 9.4f, 0.f), glm::vec3(1.f, 1.f, 1.f));
-	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
-
-	//Top
-	m_entities.push_back(m_registry.create());
-	m_registry.emplace<LabelComponent>(m_entities.back(), "Player3");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, -4.5f), glm::vec3(0.f, 4.7f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
+	//Right
+	Loader::ASSIMPLoad("./assets/models/Player3Model/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	material = Loader::s_material;
+	material->setShader(TPShader);
+	geo = Loader::s_geometry;
+
+	m_entities.push_back(m_registry.create());
+	m_registry.emplace<LabelComponent>(m_entities.back(), "Player3");
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(4.5f, 0.5f, 0.f), glm::vec3(0.f, 9.4f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
+
 	//Bottom
+	Loader::ASSIMPLoad("./assets/models/Player4Model/Player.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
+	material = Loader::s_material;
+	material->setShader(TPShader);
+	geo = Loader::s_geometry;
+
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player4");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.0, 0.5f, 4.5f), glm::vec3(0.f, 14.1f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
+	//Quad
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "BillboardQuad");
 	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(2.f, 0.f, -10.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
@@ -366,22 +384,24 @@ void SceneLayer::onUpdate(float timestep)
 	m_eulerCam->onUpdate(timestep);
 	cameraUBO->uploadData("u_view", glm::value_ptr(m_eulerCam->getCamera().view));
 
-	switch (currentstate) {
-	case InitialMove:
-		InitialState(timestep);
-		break;
+	if (this->isFocused()) {
+		switch (currentstate) {
+		case InitialMove:
+			InitialState(timestep);
+			break;
 
-	case Selection:
-		SelectionState(timestep);
-		break;
+		case Selection:
+			SelectionState(timestep);
+			break;
 
-	case Movement:
-		MovementState(timestep);
-		break;
+		case Movement:
+			MovementState(timestep);
+			break;
 
-	case CheckPoints:
-		CheckState();
-		break;
+		case CheckPoints:
+			CheckState();
+			break;
+		}
 	}
 }
 
@@ -443,9 +463,13 @@ void SceneLayer::InitialState(float timestep) {
 		}
 	}
 	else {
-		if (this->isFocused()) {
-			currentstate = Selection;
-			selecttime = 10;
+		currentstate = Selection;
+		selecttime = 5;
+
+		for (int i = 46; i <= 53; i++) {
+			auto& labelcomp = m_registry.get<LabelComponent>(m_entities[i]);
+			std::string str = std::to_string(i) + " = " + labelcomp.label;
+			Log::info(str);
 		}
 	}
 }
@@ -462,7 +486,6 @@ void SceneLayer::SelectionState(float timestep) {
 		if (!Engine::Application::getInstance().GetAudio()->addSound("conveyor", "./assets/audio/conveyor.wav")) {
 			Engine::Log::error("Audio file: {0} did not load", "./assets/audio/conveyor.wav");
 		}
-		Engine::Application::getInstance().GetAudio()->setSoundLooping("conveyor", true);
 		Engine::Application::getInstance().GetAudio()->playSound("conveyor");
 
 		movetime = 1.66f * movetriggers;
