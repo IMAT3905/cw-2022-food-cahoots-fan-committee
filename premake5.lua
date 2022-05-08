@@ -52,7 +52,8 @@ project "Engine"
 		"vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/lua",
-		"vendor/react3D/include"
+		"vendor/react3D/include",
+		"vendor/SoLoud/include"
 	}
 	
 	links 
@@ -64,7 +65,8 @@ project "Engine"
 		"assimp",
 		"box2d",
 		"lua",
-		"ReactPhysics3D"
+		"ReactPhysics3D",
+		"SoLoud"
 	}
 	
 	filter "system:windows"
@@ -122,7 +124,8 @@ project "Sandbox"
 		"vendor/box2d/include",
 		"vendor/lua",
 		"vendor/react3D/include",
-		"%{prj.name}/assets/scripts"
+		"%{prj.name}/assets/scripts",
+		"vendor/SoLoud/include"
 	}
 
 	links
@@ -277,3 +280,4 @@ group "Vendor"
 	include "vendor/box2D"
 	include "vendor/lua"
 	include "vendor/react3D"
+	include "vendor/SoLoud"

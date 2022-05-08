@@ -48,6 +48,10 @@ namespace Engine {
 		m_timer->start();
 
 		WindowProperties props("My Game Engine", 1024, 800);
+
+		//start the audio system
+		m_audioSystem.reset(new AudioSystem);
+		m_audioSystem->start();
 		
 		m_window.reset(Window::create(appProps.winProps));
 
@@ -173,6 +177,8 @@ namespace Engine {
 
 	Application::~Application()
 	{
+		//stop audio system
+		m_audioSystem->stop();
 		// Stop systems
 		m_windowsSystem->stop();
 		//Stop logger

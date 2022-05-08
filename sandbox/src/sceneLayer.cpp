@@ -262,10 +262,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
-		Log::error(i);
-		Log::error(i - entcount);
-		Log::error(objectid[i - entcount]);
-
 ;		m_entities.push_back(m_registry.create());
 		switch (objectid[i-entcount]) {
 		case 0:
@@ -292,7 +288,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Undefined");
 			break;
 		}
-		Log::error(m_registry.get<LabelComponent>(m_entities.back()).label);
 
 		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());

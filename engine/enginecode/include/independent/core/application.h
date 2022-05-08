@@ -10,6 +10,7 @@
 #include "cameras/cameraController.h"
 #include "core/layerStack.h"
 #include <entt/entt.hpp>
+#include "systems/audio.h"
 
 namespace Engine {
 
@@ -35,6 +36,7 @@ namespace Engine {
 
 		std::shared_ptr<Log> m_logSystem; //!< Log system		
 		std::shared_ptr<System> m_windowsSystem; //!< Windows system
+		std::shared_ptr<AudioSystem> m_audioSystem; //!< Audio System
 
 		std::shared_ptr<Window> m_window; //!< Window
 		std::shared_ptr<Timer> m_timer; //!< Timer
