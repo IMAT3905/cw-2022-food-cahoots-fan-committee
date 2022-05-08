@@ -1,0 +1,2 @@
+[submodule "vendor/soloud"]
+	update = rebase

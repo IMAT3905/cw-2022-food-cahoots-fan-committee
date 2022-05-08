@@ -248,7 +248,7 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 	deltaT = 1.0f / static_cast<float>(platecount);
 
 	//Object
-	std::srand(static_cast<unsigned int>(5));
+	std::srand(static_cast<unsigned int>(time(nullptr)));
 	std::array<uint32_t, 8> objectid = { 0,0,0,0,0,0,0,0 };
 	for (int i = 0; i < 3; i++) {
 		GenerateArrayPos(objectid);
@@ -262,9 +262,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
-		Log::error(i);
-		Log::error(i - entcount);
-		Log::error(objectid[i - entcount]);
 ;		m_entities.push_back(m_registry.create());
 		switch (objectid[i-entcount]) {
 		case 0:
@@ -291,7 +288,6 @@ SceneLayer::SceneLayer(const char* name) : Layer(name), m_registry(Application::
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Undefined");
 			break;
 		}
-		Log::error(m_registry.get<LabelComponent>(m_entities.back()).label);
 		m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 		auto& nsc = m_registry.emplace<NativeScriptComponent>(m_entities.back());
 		nsc.create<MovementScript>(m_entities.back(), t, height*2);
@@ -465,12 +461,12 @@ void SceneLayer::InitialState(float timestep) {
 	else {
 		currentstate = Selection;
 		selecttime = 5;
-
-		for (int i = 46; i <= 53; i++) {
-			auto& labelcomp = m_registry.get<LabelComponent>(m_entities[i]);
-			std::string str = std::to_string(i) + " = " + labelcomp.label;
-			Log::info(str);
-		}
+		//ID stuff print to console
+		//for (int i = 46; i <= 53; i++) {
+		//	auto& labelcomp = m_registry.get<LabelComponent>(m_entities[i]);
+		//	std::string str = std::to_string(i) + " = " + labelcomp.label;
+		//	Log::info(str);
+		//}
 	}
 }
 
@@ -513,13 +509,17 @@ void SceneLayer::MovementState(float timestep) {
 void SceneLayer::CheckState() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < movetriggers; j++) {
-			playerobjects[i] += 1;
-			if (playerobjects[i] > 53) { playerobjects[i] = 46; }
+			playerobjects[i] -= 1;
+			if (playerobjects[i] < 46) { playerobjects[i] = 53; }
 		}
 	}
 
 	for (int i = 0; i < 4; i++) {
 		auto& labelcomp = m_registry.get<LabelComponent>(m_entities[playerobjects[i]]);
+		//ID stuff print to console
+		//std::string str = std::to_string(playerobjects[i]) + " = " + labelcomp.label;
+		//Log::error(str);
+
 		if (labelcomp.label == "Orange") {
 			scores[i]++;
 		}
