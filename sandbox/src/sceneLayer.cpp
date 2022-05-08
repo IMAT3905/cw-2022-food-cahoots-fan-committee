@@ -234,7 +234,6 @@
 		m_registry.emplace<LabelComponent>(m_entities[2], "Letter Cube 1");
 		m_registry.emplace<LabelComponent>(m_entities[3], "Letter Cube 2");
 		m_registry.emplace<LabelComponent>(m_entities[4], "BillboardQuad");
-		m_registry.emplace<LabelComponent>(m_entities[4], "BillboardQuad");
 
 		m_registry.emplace<TransformComponent>(m_entities[0]);
 		m_registry.emplace<TransformComponent>(m_entities[1], glm::vec3(-2.f, 0.f, -6.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f));
