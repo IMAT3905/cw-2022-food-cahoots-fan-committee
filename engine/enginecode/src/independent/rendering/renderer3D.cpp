@@ -18,11 +18,29 @@ namespace Engine
 		s_data->defaultTexture.reset(Texture::create(1, 1, 4, whitePx));
 
 		s_data->defaultTint = { 1.f, 1.f, 1.f, 1.f };
+
+		s_data->cameraUBO.reset(UniformBuffer::create(UniformBufferLayout({
+			{"u_projection", ShaderDataType::Mat4},
+			{"u_view", ShaderDataType::Mat4}
+			})));
+
+		s_data->lightsUBO.reset(UniformBuffer::create(UniformBufferLayout({
+			{"u_lightPos", ShaderDataType::Float3},
+			{"u_viewPos", ShaderDataType::Float3},
+			{"u_lightColour", ShaderDataType::Float3}
+			})));
 	}
 
 	void Renderer3D::begin(const SceneWideUniforms& sceneWideUniforms)
 	{
-		s_data->sceneWideUniforms = sceneWideUniforms;
+		glBindBuffer(GL_UNIFORM_BUFFER, s_data->cameraUBO->getID());
+		s_data->cameraUBO->uploadData("u_projection", sceneWideUniforms.at("u_projection").second);
+		s_data->cameraUBO->uploadData("u_view", sceneWideUniforms.at("u_view").second);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, s_data->lightsUBO->getID());
+		s_data->lightsUBO->uploadData("u_lightPos", sceneWideUniforms.at("u_lightPos").second);
+		s_data->lightsUBO->uploadData("u_viewPos", sceneWideUniforms.at("u_viewPos").second);
+		s_data->lightsUBO->uploadData("u_lightColour", sceneWideUniforms.at("u_lightColour").second);
 	}
 
 	void Renderer3D::submit(const std::shared_ptr<VertexArray>& geometry, const std::shared_ptr<Material>& material, const glm::mat4& model)
@@ -55,6 +73,12 @@ namespace Engine
 
 		// Submit the draw call
 		glDrawElements(GL_TRIANGLES, geometry->getDrawCount(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void Renderer3D::initShader(std::shared_ptr<Shader> shader)
+	{
+		s_data->cameraUBO->attachShaderBlock(shader, "b_camera");
+		s_data->lightsUBO->attachShaderBlock(shader, "b_lights");
 	}
 
 	void Renderer3D::end()

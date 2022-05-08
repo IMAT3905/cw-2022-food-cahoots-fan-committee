@@ -151,6 +151,70 @@ project "Sandbox"
 		defines "NG_RELEASE"
 		runtime "Release"
 		optimize "On"
+		
+project "Tool"
+	location "tool"
+	kind "ConsoleApp"
+	language "C++"
+	staticruntime "off"
+	vectorextensions "AVX2"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("build/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/include/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/assets/scripts/**.cpp"
+	}
+
+	includedirs
+	{
+		"%{prj.name}/include",
+		"engine/enginecode/",
+		"engine/enginecode/include/independent",
+		"engine/enginecode/include/",
+		"engine/precompiled/",
+		"vendor/glfw/include",
+		"vendor/glm/",
+		"vendor/spdlog/include",
+		"vendor/json/single_include/nlohmann",
+		"vendor/freetype2/include",
+		"vendor/IMGui",
+		"vendor/enTT/single_include",
+		"vendor/luaBridge/Source",
+		"vendor/assimp/include",
+		"vendor/box2d/include",
+		"vendor/lua",
+		"vendor/react3D/include",
+		"vendor/soLoud/include",
+		"%{prj.name}/assets/scripts"		
+	}
+
+	links
+	{
+		"Engine"
+	}
+
+	filter "system:windows"
+		cppdialect "C++17"
+		systemversion "latest"
+
+		defines
+		{
+			"NG_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "NG_DEBUG"
+		runtime "Debug"
+		symbols "On"
+
+	filter "configurations:Release"
+		defines "NG_RELEASE"
+		runtime "Release"
+		optimize "On"
 
  project "EngineTests"
 		location "engineTests"

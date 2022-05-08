@@ -9,11 +9,13 @@
 #include "engine.h"
 #include "include/platform/GLFW/GLFWCodes.h"
 #include "rendering/renderer3D.h"
+#include "rendering/renderer2D.h"
 #include "rendering/Renderer2DBillboard.h"
 #include "components/relationship.h"
 #include "components/transform.h"
 #include "components/render.h"
 #include "components/label.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
 
 using namespace Engine;
 
@@ -27,6 +29,8 @@ public:
 	void onResize(WindowResizeEvent& e) override;
 private:
 	SceneWideUniforms m_swu;
+	glm::vec3 lightData[3] = { {1.0f, 1.0f, 1.0f}, { -2.0f, 4.0f, 6.0f }, { 0.0f, 0.0f, 0.0f } };
+	//glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 40.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
 
 	std::shared_ptr<Material> pyramidMat;
 	std::shared_ptr<Material> letterCubeMat;
@@ -40,15 +44,19 @@ private:
 
 	std::shared_ptr<VertexArray> cube, pyramid, geo;
 
-	std::shared_ptr<UniformBuffer> cameraUBO;
-	std::shared_ptr<UniformBuffer> lightsUBO;
-
 	std::shared_ptr<CameraController> m_eulerCam; //!< An euler camera that can be moved and rotated
-	
-	glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 40.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
+	SceneWideUniforms m_swu2D;
+	glm::mat4 view2D;
+	glm::mat4 projection2D;
 
 	entt::registry& m_registry;
 	std::vector<entt::entity>& m_entities; 
+
+	std::shared_ptr<FrameBuffer> textureTarget;
+	std::shared_ptr<FrameBuffer> defaultTarget;
+	Quad m_screenQuad;
+	SubTexture m_screenTexture;
+
 	float movetime = 4.75f;
 
 	enum State {InitialMove, Selection, Movement, CheckPoints};

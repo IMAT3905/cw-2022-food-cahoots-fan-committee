@@ -34,6 +34,8 @@ namespace Engine
 		virtual void setVSync(bool VSync) = 0; //!< Setting vsync \param VSync is if vsync is set
 		virtual unsigned int getWidth() const = 0; //!< Returning width
 		virtual unsigned int getHeight() const = 0; //!< Returning height
+		virtual float getWidthf() const = 0; //!< Return width as float
+		virtual float getHeightf() const = 0; //!< Return height as float
 		virtual void* getNativeWindow() const = 0; //!< Return the platform
 		virtual bool isFullScreenMode() const = 0; //!< Checking if the window is fullscreen
 		virtual bool isVSync() const = 0; //!< Checking if vsync is enabled

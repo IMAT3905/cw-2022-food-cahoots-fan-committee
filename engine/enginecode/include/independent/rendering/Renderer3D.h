@@ -21,11 +21,9 @@ namespace Engine
 		std::array<int16_t, 2> normalise(const glm::vec2& uv);
 		Renderer3DVertex(const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& uv) : m_pos(pos), m_normal(normalise(normal)), m_uv(normalise(uv)) {} //!< Constructor \param pos is the position of the object \param normal is the normal data for the object \param uv is the uv data for the object
 		static VertexBufferLayout getLayout() { return s_layout; } //!< Return the layout
-
 	private:
 		static VertexBufferLayout s_layout; //!< The layout of the data
 	};
-
 
 	/** \class Material
 	** \brief Hold a shader and the uniform data associated with that shader
@@ -35,7 +33,7 @@ namespace Engine
 	public:
 		Material(const std::shared_ptr<Shader>& shader) : m_shader(shader), m_flags(0), m_texture(nullptr), m_tint(glm::vec4(0.f)) {} //!< A constructor that only requires a shader \param shader is the shader that will be used
 		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const glm::vec4& tint) : m_shader(shader), m_texture(texture), m_tint(tint) { setFlag(flag_texture | flag_tint); } //!< A constructor that requires a shader, texture and tint \param shader which is the shader that will be used \param texture which will be applied to the object \param tint which will be applied to the object
-		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) : m_shader(shader), m_texture(texture), m_tint(glm::vec4(0.f)) { setFlag(flag_texture); } //!< A constructor that requires a shader and a texture \param shader is the shader that will be used \param texture is the texture that will be applied
+		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) : m_shader(shader), m_texture(texture), m_tint(glm::vec4(1.f)) { setFlag(flag_texture | flag_tint); } //!< A constructor that requires a shader and a texture \param shader is the shader that will be used \param texture is the texture that will be applied
 		Material(const std::shared_ptr<Shader>& shader, const glm::vec4& tint) : m_shader(shader), m_texture(nullptr), m_tint(tint) { setFlag(flag_tint); } //!< A constructor that requires a shader and a tint \param shader is the shader that will be used \param tint is the tint that will be applied
 
 		inline std::shared_ptr<Shader> getShader() const { return m_shader; } //!< Return the shader
@@ -57,8 +55,6 @@ namespace Engine
 		void setFlag(uint32_t flag) { m_flags = m_flags | flag; } //!< Function to set flags \param flag is the flag that will be set
 	};
 
-
-
 	/** \class Renderer3D
 	** \brief A class which renders 3D geomatry instantly (non-batched)
 	*/
@@ -68,6 +64,7 @@ namespace Engine
 		static void init(); //!< Initialise the renderer
 		static void begin(const SceneWideUniforms& sceneWideUniforms); //!< Begin a new 3D scene \param sceneWideUniforms is the scene wide data 
 		static void submit(const std::shared_ptr<VertexArray>& geometry, const std::shared_ptr<Material>& material, const glm::mat4& model); //!< Submit a piece of geometry to be rendered \param geometry is the geometry that will be rendered \param material is the object's material \param model is the model number that will be drawn
+		static void initShader(std::shared_ptr<Shader> shader); //!< Initialise a shader
 		static void end(); //!< End the current 3D scene
 	private:
 		/** \struct InternalData
@@ -75,6 +72,8 @@ namespace Engine
 		*/
 		struct InternalData
 		{
+			std::shared_ptr<UniformBuffer> cameraUBO; //!< camera uniform buffer object
+			std::shared_ptr<UniformBuffer> lightsUBO; //!< lights uniform buffer object
 			SceneWideUniforms sceneWideUniforms; //!< Stores the scene wide uniforms
 			std::shared_ptr<Texture> defaultTexture; //!< Empty white texture
 			glm::vec4 defaultTint; //!< Default white tint
@@ -82,6 +81,4 @@ namespace Engine
 
 		static std::shared_ptr<InternalData> s_data; //!< Data internal to the renderer
 	};
-
-
 }

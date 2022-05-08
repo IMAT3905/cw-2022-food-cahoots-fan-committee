@@ -7,6 +7,7 @@
 #ifdef NG_PLATFORM_WINDOWS
 //#include "platform/windows/winTimer.h"
 #include "platform/GLFW/GLFWSystem.h"
+#include "platform/GLFW/ImGuiHelper.h"
 #endif
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -70,6 +71,8 @@ namespace Engine {
 		m_window->getEventHandler().setOnMouseWheelCallback(std::bind(&Application::onMouseWheel, this, std::placeholders::_1));
 
 		//m_window->getEventHandler().setOnMonitorConnectedCallback(std::bind(&Window::onMonitorConnected, m_window.get(), std::placeholders::_1));
+
+		ImGuiHelper::init();
 
 		InputPoller::setNativeWindow(m_window->getNativeWindow());
 

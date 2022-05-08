@@ -22,6 +22,8 @@ namespace Engine
 		virtual void setVSync(bool VSync) override; //!< setting vsync \param VSync is for whether vsync will be set or not
 		virtual inline unsigned int getWidth() const override { return m_props.width; } //!< returning width
 		virtual inline unsigned int getHeight() const override { return m_props.height; } //!< returning height
+		virtual inline float getWidthf() const override { return static_cast<float>(m_props.width); } //!< returning width as a float
+		virtual inline float getHeightf() const override { return static_cast<float>(m_props.height); } //!< return height as a float
 		virtual inline void* getNativeWindow() const override { return m_native; } //!< return the platform
 		virtual inline bool isFullScreenMode() const override { return m_props.isFullScreen; } //!< checking if the window is fullscreen
 		virtual inline bool isVSync() const override { return m_props.isVSync; } //!< checking if vsync is enabled

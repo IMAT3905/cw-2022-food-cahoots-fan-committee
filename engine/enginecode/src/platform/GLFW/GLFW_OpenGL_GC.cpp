@@ -9,6 +9,11 @@
 
 namespace Engine
 {
+	GLFW_OpenGL_GC::~GLFW_OpenGL_GC()
+	{
+
+	}
+
 	void GLFW_OpenGL_GC::init()
 	{
 		glfwMakeContextCurrent(m_window);

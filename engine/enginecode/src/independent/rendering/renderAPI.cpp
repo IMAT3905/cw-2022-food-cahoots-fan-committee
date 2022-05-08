@@ -11,6 +11,8 @@
 #include "platform/OpenGL/OpenGLTexture.h"
 #include "platform/OpenGL/OpenGLUniformBuffer.h"
 #include "platform/OpenGL/OpenGLIndirectBuffer.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
+#include "platform/OpenGL/OpenGLRenderBuffer.h"
 
 namespace Engine
 {
@@ -185,6 +187,66 @@ namespace Engine
 			break;
 		case RenderAPI::API::OpenGL:
 			return new OpenGLIndirectBuffer(commands, count);
+		case RenderAPI::API::Direct3D:
+			Log::error("Direct3D is not currently supported");
+			break;
+		case RenderAPI::API::Vulkan:
+			Log::error("Vulkan is not currently supported");
+			break;
+		}
+
+		return nullptr;
+	}
+
+	FrameBuffer* FrameBuffer::create(glm::ivec2 size, FrameBufferLayout layout)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case RenderAPI::API::None:
+			Log::error("Not having a rendering API is not currently supported");
+			break;
+		case RenderAPI::API::OpenGL:
+			return new OpenGLFrameBuffer(size, layout);
+		case RenderAPI::API::Direct3D:
+			Log::error("Direct3D is not currently supported");
+			break;
+		case RenderAPI::API::Vulkan:
+			Log::error("Vulkan is not currently supported");
+			break;
+		}
+
+		return nullptr;
+	}
+
+	FrameBuffer* FrameBuffer::createDefault()
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case RenderAPI::API::None:
+			Log::error("Not having a rendering API is not currently supported");
+			break;
+		case RenderAPI::API::OpenGL:
+			return new OpenGLFrameBuffer();
+		case RenderAPI::API::Direct3D:
+			Log::error("Direct3D is not currently supported");
+			break;
+		case RenderAPI::API::Vulkan:
+			Log::error("Vulkan is not currently supported");
+			break;
+		}
+
+		return nullptr;
+	}
+
+	RenderBuffer* RenderBuffer::create(AttachmentType type, glm::ivec2 size)
+	{
+		switch (RenderAPI::getAPI())
+		{
+		case RenderAPI::API::None:
+			Log::error("Not having a rendering API is not currently supported");
+			break;
+		case RenderAPI::API::OpenGL:
+			return new OpenGLRenderBuffer(type, size);
 		case RenderAPI::API::Direct3D:
 			Log::error("Direct3D is not currently supported");
 			break;

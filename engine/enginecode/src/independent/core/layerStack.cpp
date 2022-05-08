@@ -37,6 +37,12 @@ namespace Engine
 				}
 				newtime = layer->selecttime;
 			}
+			else if (layer->getName() == "ImGui Layer") {
+				for (int i = 0; i < 4; i++) {
+					newscores[i] = layer->scores[i];
+				}
+				newtime = layer->selecttime;
+			}
 		}
 
 		for (auto& layer : m_stack)
@@ -141,6 +147,8 @@ namespace Engine
 		for (auto& layer : m_stack)
 		{
 			if (layer->getName() == "Scene Layer") newscene = layer;
+			else if (layer->getName() == "ImGui Layer") newscene = layer;
+
 			if (layer->getName() == "InGame Layer") newgame = layer;
 			if (layer->getName() == "Menu Layer") newmenu = layer;
 		}

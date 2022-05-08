@@ -17,6 +17,7 @@ project "Engine"
 	kind "StaticLib"
 	language "C++"
 	staticruntime "off"
+	vectorextensions "AVX2"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("build/" .. outputdir .. "/%{prj.name}")
@@ -51,7 +52,8 @@ project "Engine"
 		"vendor/assimp/include",
 		"vendor/box2d/include",
 		"vendor/lua",
-		"vendor/react3D/include"
+		"vendor/react3D/include",
+		"vendor/soLoud/include"
 	}
 	
 	links 
@@ -63,7 +65,8 @@ project "Engine"
 		"assimp",
 		"box2d",
 		"lua",
-		"ReactPhysics3D"
+		"ReactPhysics3D",
+		"soLoud"
 	}
 	
 	filter "system:windows"
@@ -90,6 +93,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	staticruntime "off"
+	vectorextensions "AVX2"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("build/" .. outputdir .. "/%{prj.name}")
@@ -98,6 +102,7 @@ project "Sandbox"
 	{
 		"%{prj.name}/include/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/assets/scripts/**.cpp"
 	}
 
 	includedirs
@@ -119,7 +124,8 @@ project "Sandbox"
 		"vendor/box2d/include",
 		"vendor/lua",
 		"vendor/react3D/include",
-		"%{prj.name}/assets/scripts"
+		"%{prj.name}/assets/scripts",
+		"vendor/soLoud/include"
 	}
 
 	links
@@ -274,3 +280,4 @@ group "Vendor"
 	include "vendor/box2D"
 	include "vendor/lua"
 	include "vendor/react3D"
+	include "vendor/soLoud"
