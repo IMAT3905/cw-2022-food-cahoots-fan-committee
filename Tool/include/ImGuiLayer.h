@@ -39,8 +39,6 @@ private:
 	std::shared_ptr<Material> checkerCubeMat;
 	std::shared_ptr<Material> conveyorMat;
 
-	ImVec4 col = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
-
 	std::shared_ptr<Shader> TPShader;
 
 	std::shared_ptr<VertexArray> cube, pyramid, geo;
@@ -62,4 +60,5 @@ private:
 	glm::mat4 projection2D;
 
 	bool m_mouseOverScene;
+	glm::vec4 col;
 };

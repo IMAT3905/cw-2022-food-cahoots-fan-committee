@@ -33,7 +33,7 @@ namespace Engine
 	public:
 		Material(const std::shared_ptr<Shader>& shader) : m_shader(shader), m_flags(0), m_texture(nullptr), m_tint(glm::vec4(0.f)) {} //!< A constructor that only requires a shader \param shader is the shader that will be used
 		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture, const glm::vec4& tint) : m_shader(shader), m_texture(texture), m_tint(tint) { setFlag(flag_texture | flag_tint); } //!< A constructor that requires a shader, texture and tint \param shader which is the shader that will be used \param texture which will be applied to the object \param tint which will be applied to the object
-		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) : m_shader(shader), m_texture(texture), m_tint(glm::vec4(0.f)) { setFlag(flag_texture); } //!< A constructor that requires a shader and a texture \param shader is the shader that will be used \param texture is the texture that will be applied
+		Material(const std::shared_ptr<Shader>& shader, const std::shared_ptr<Texture>& texture) : m_shader(shader), m_texture(texture), m_tint(glm::vec4(1.f)) { setFlag(flag_texture | flag_tint); } //!< A constructor that requires a shader and a texture \param shader is the shader that will be used \param texture is the texture that will be applied
 		Material(const std::shared_ptr<Shader>& shader, const glm::vec4& tint) : m_shader(shader), m_texture(nullptr), m_tint(tint) { setFlag(flag_tint); } //!< A constructor that requires a shader and a tint \param shader is the shader that will be used \param tint is the tint that will be applied
 
 		inline std::shared_ptr<Shader> getShader() const { return m_shader; } //!< Return the shader

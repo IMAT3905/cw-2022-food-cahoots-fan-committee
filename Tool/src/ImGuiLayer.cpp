@@ -235,15 +235,8 @@
 			auto& tc = m_registry.get<TransformComponent>(entity);
 			auto& rc = m_registry.get<RenderComponent>(entity);
 
-			//Renderer3D::submit(rc.geometry, rc.material, tc.getTransform());
-
-			//if (rc.geometry == cube) rc.material = conveyorMat;
-			//rc.material->setTint(rc.material->getTint() + glm::vec4(0.0001f, 0.0f, 0.0f, 0.0f));
+			Renderer3D::submit(rc.geometry, rc.material, tc.getTransform());
 		}
-		
-		std::shared_ptr<Material> colour;
-		colour.reset(new Material(TPShader, glm::vec4(1.0f, 1.0f, 0.4f, 1.0f)));
-		Renderer3D::submit(cube, colour, glm::mat4(1));
 
 		Renderer3D::end();
 
@@ -260,8 +253,6 @@
 		else m_mouseOverScene = false;
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
-
 		ImGui::Begin("Properties");
 		ImGui::BeginGroup();
 		ImGui::TextWrapped("File:");
@@ -270,14 +261,16 @@
 		ImGui::SameLine();
 		if (ImGui::Button("Save")) saveJSONfile();
 		ImGui::EndGroup();
+
 		ImGui::TextWrapped("Object tints:");
 
-		//static ImVec4 checkerCol = { checkerCubeMat->getTint().r, checkerCubeMat->getTint().g, checkerCubeMat->getTint().b, checkerCubeMat->getTint().a };
-		ImGui::ColorEdit4(" : Floor",(float*)&colour);
-		//checkerCubeMat->setTint(glm::vec4(checkerCol.x, checkerCol.y, checkerCol.z, checkerCol.w));
+		col = checkerCubeMat->getTint();
+		ImGui::ColorEdit4(" : Floor",(float*)&col);
+		checkerCubeMat->setTint(glm::vec4(col));
 
-		ImGui::ColorEdit4(" : Conveyor", &conveyorMat->getTint()[0]);
-
+		col = conveyorMat->getTint();
+		ImGui::ColorEdit4(" : Conveyor", (float*)&col);
+		conveyorMat->setTint(glm::vec4(col));
 
 		ImGui::End();
 
@@ -346,6 +339,21 @@
 				}
 			}
 
+			if (jsonData.count("floor") > 0)
+			{
+				auto& floor = jsonData["floor"];
+				if (floor.count("tint") > 0)
+				{
+					glm::vec4 loadedTint = checkerCubeMat->getTint();
+					auto& tint = floor["tint"];
+					if (tint.count("r") > 0) loadedTint.r = tint["r"].get<float>();
+					if (tint.count("g") > 0) loadedTint.g = tint["g"].get<float>();
+					if (tint.count("b") > 0) loadedTint.b = tint["b"].get<float>();
+					if (tint.count("a") > 0) loadedTint.a = tint["a"].get<float>();
+					checkerCubeMat->setTint(loadedTint);
+				}
+			}
+
 			handle.close();
 			Log::info("JSON file loaded.");
 		}
@@ -365,7 +373,12 @@
 		jsonData["conveyor"]["tint"]["b"] = conveyorMat->getTint().b;
 		jsonData["conveyor"]["tint"]["a"] = conveyorMat->getTint().a;
 
-		std::ofstream handle("./assets.json/settings.json");
+		jsonData["floor"]["tint"]["r"] = checkerCubeMat->getTint().r;
+		jsonData["floor"]["tint"]["g"] = checkerCubeMat->getTint().g;
+		jsonData["floor"]["tint"]["b"] = checkerCubeMat->getTint().b;
+		jsonData["floor"]["tint"]["a"] = checkerCubeMat->getTint().a;
+
+		std::ofstream handle("./assets/json/settings.json");
 		handle << jsonData;
 		handle.close();
 

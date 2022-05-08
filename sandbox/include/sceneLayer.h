@@ -15,7 +15,6 @@
 #include "components/render.h"
 #include "components/label.h"
 #include "platform/OpenGL/OpenGLFrameBuffer.h"
-#include "platform/GLFW/ImGuiHelper.h"
 
 using namespace Engine;
 

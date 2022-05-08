@@ -72,8 +72,6 @@ namespace Engine {
 
 		InputPoller::setNativeWindow(m_window->getNativeWindow());
 
-
-
 		m_timer->reset();
 	}
 

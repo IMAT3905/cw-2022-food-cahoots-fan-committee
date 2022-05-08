@@ -5,14 +5,13 @@
 #include <GLFW/glfw3.h>
 
 #include "platform/GLFW/GLFW_OpenGL_GC.h"
-#include "platform/GLFW/ImGuiHelper.h"
 #include "systems/log.h"
 
 namespace Engine
 {
 	GLFW_OpenGL_GC::~GLFW_OpenGL_GC()
 	{
-		ImGuiHelper::shutdown();
+		
 	}
 
 	void GLFW_OpenGL_GC::init()

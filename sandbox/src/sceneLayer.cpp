@@ -240,32 +240,16 @@
 
 		defaultTarget->use();
 
-		ImGuiHelper::begin();
+		RenderCommands::setDepthTestCommand(false)->action();
+		RenderCommands::setBlendCommand(true)->action();
+		RenderCommands::setTransparencyBlend()->action();
 
-		ImGui::Begin("Renderer Output");
-		uint32_t textureID = textureTarget->getTarget(0)->getID();
-		ImGui::Image((void*)textureID, ImVec2{ 800, 600 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-		ImGui::End();
+		Renderer2D::begin(m_swu2D);
 
-		ImGui::Begin("Properties");
-		ImGui::TextWrapped("Object tints:");
-		ImGui::ColorEdit4(" : Floor", &checkerCubeMat->getTint()[0]);
-		ImGui::ColorEdit4(" : Conveyor", &conveyorMat->getTint()[0]);
+		Renderer2D::submit(m_screenQuad, m_screenTexture);
+		Renderer2D::submit("2D Renderer", { 300.f, 780.f }, { 1.0,1.0,1.0,1.0 });
 
-		ImGui::End();
-
-		ImGuiHelper::end();
-
-		//RenderCommands::setDepthTestCommand(false)->action();
-		//RenderCommands::setBlendCommand(true)->action();
-		//RenderCommands::setTransparencyBlend()->action();
-
-		//Renderer2D::begin(m_swu2D);
-
-		//Renderer2D::submit(m_screenQuad, m_screenTexture);
-		//Renderer2D::submit("2D Renderer", { 300.f, 780.f }, { 1.0,1.0,1.0,1.0 });
-
-		//Renderer2D::end();
+		Renderer2D::end();
 	}
 
 	void SceneLayer::onUpdate(float timestep)
