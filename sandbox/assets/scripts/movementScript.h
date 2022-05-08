@@ -19,7 +19,7 @@ public:
 
 private:
 	entt::registry& m_registry = Engine::Application::getInstance().getRegistry();
-	float speed = 0.3;
+	float speed = 0.3; //0.3
 	MovementKeyFrames keyFrames[17];
 	glm::vec3 pos;
 	float t = 0.f;

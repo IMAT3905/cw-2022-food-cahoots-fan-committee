@@ -34,7 +34,7 @@ namespace Engine
 		std::shared_ptr<Layer> game = nullptr;
 		std::shared_ptr<Layer> menu = nullptr;
 		int scores[4] = { 0,0,0,0 };
-		float selecttime = 10;
+		float selecttime = 5;
 		int numselected[4] = { 0,0,0,0 };
 
 	protected:

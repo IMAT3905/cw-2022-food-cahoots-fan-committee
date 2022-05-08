@@ -67,6 +67,7 @@ namespace Engine {
 		inline std::shared_ptr<Window> getWindow() { return m_window; }
 		inline std::vector<entt::entity>& getEntities() { return m_entities; }
 		inline entt::registry& getRegistry() { return m_registry; }
+		inline std::shared_ptr<AudioSystem> GetAudio() { return m_audioSystem; }
 	};
 
 	Application* startApplication(); //!< Function definition which provides an entry hook

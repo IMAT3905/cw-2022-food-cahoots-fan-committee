@@ -6,8 +6,8 @@ namespace Engine
 	bool AudioSystem::addSound(const std::string& tag, const std::string& filepath)
 	{
 		m_sounds[tag] = SoLoud::Wav();
-		m_sounds[tag].load(filepath.c_str());
-		return false;
+		auto result = m_sounds[tag].load(filepath.c_str());
+		return result == 0;
 	}
 	bool AudioSystem::playSound(const std::string& tag, float volume, float pan, float playSpeed)
 	{
@@ -32,5 +32,9 @@ namespace Engine
 			return true;
 		}
 		return false;
+	}
+
+	void AudioSystem::StopAllSounds() {
+		m_audioSystem.stopAll();
 	}
 }

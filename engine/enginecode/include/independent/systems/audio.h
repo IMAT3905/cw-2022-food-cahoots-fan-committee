@@ -24,6 +24,7 @@ namespace Engine
 		bool addSound(const std::string& tag, const std::string& filepath);//!< Add a wav file to the audio system
 		bool playSound(const std::string& tag, float volume = 1.0f, float pan = 0.f, float playSpeed = 1.0f);//!< Play the sound file stored within the audio system
 		bool setSoundLooping(const std::string& tag, bool looping); //!< Set sound looping property
+		void StopAllSounds();
 
 	private:
 		SoLoud::Soloud m_audioSystem;

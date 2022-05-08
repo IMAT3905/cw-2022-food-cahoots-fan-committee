@@ -443,8 +443,10 @@ void SceneLayer::InitialState(float timestep) {
 		}
 	}
 	else {
-		currentstate = Selection;
-		selecttime = 10;
+		if (this->isFocused()) {
+			currentstate = Selection;
+			selecttime = 10;
+		}
 	}
 }
 
@@ -456,6 +458,13 @@ void SceneLayer::SelectionState(float timestep) {
 		for (int i = 0; i < 4; i++) {
 			if (numselected[i] == 1) { movetriggers++; }
 		}
+
+		if (!Engine::Application::getInstance().GetAudio()->addSound("conveyor", "./assets/audio/conveyor.wav")) {
+			Engine::Log::error("Audio file: {0} did not load", "./assets/audio/conveyor.wav");
+		}
+		Engine::Application::getInstance().GetAudio()->setSoundLooping("conveyor", true);
+		Engine::Application::getInstance().GetAudio()->playSound("conveyor");
+
 		movetime = 1.66f * movetriggers;
 		currentstate = Movement;
 	}
@@ -473,6 +482,7 @@ void SceneLayer::MovementState(float timestep) {
 		}
 	}
 	else {
+		Engine::Application::getInstance().GetAudio()->StopAllSounds();
 		currentstate = CheckPoints;
 	}
 }
@@ -503,4 +513,10 @@ void SceneLayer::CheckState() {
 	numselected[3] = 0;
 	movetriggers = 0;
 	selecttime = 5;
+
+	//Audio
+	if (!Engine::Application::getInstance().GetAudio()->addSound("ping", "./assets/audio/ping.wav")) {
+		Engine::Log::error("Audio file: {0} did not load", "./assets/audio/ping.wav");
+	}
+	Engine::Application::getInstance().GetAudio()->playSound("ping");
 }
