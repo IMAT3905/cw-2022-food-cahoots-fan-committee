@@ -43,5 +43,6 @@ namespace Engine
 		std::vector<std::shared_ptr<Layer>>::const_reverse_iterator rend() const { return m_stack.rend(); }
 	private:
 		std::vector<std::shared_ptr<Layer>> m_stack;
+		std::shared_ptr<FrameBuffer> UI = nullptr;
 	};
 }

@@ -173,6 +173,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 	FrameBufferLayout FBlayout = { { AttachmentType::Colour, true }, { AttachmentType::Depth, false } };
 	m_sceneFBO.reset(FrameBuffer::create({ window->getWidth(), window->getHeight() }, FBlayout));
+	m_mergeFBO.reset(FrameBuffer::create({ window->getWidth(), window->getHeight() }, FBlayout));
 	m_defaultFBO.reset(FrameBuffer::createDefault());
 
 	m_swu2D["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
@@ -180,6 +181,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 	m_screenQuad = Quad::createCentreHalfExtents({ window->getWidth() / 2, window->getHeight() / 2 }, { window->getWidth() / 2, window->getHeight() / 2 });
 	m_screenTexture = SubTexture(m_sceneFBO->getTarget(0), { 0,1 }, { 1,0 });
+	m_mergetexture = SubTexture(m_mergeFBO->getTarget(0), { 0,1 }, { 1,0 });
 
 #pragma endregion
 
@@ -368,7 +370,6 @@ void ImGuiLayer::onRender()
 
 		Renderer3D::submit(rc.geometry, rc.material, tc.getTransform());
 	}
-
 	Renderer3D::end();
 
 	auto t = m_registry.get<TransformComponent>(m_entities.back()).getTransform();
@@ -378,13 +379,26 @@ void ImGuiLayer::onRender()
 	Renderer2DBillboard::submit(quad, glm::vec4(1.0f, 0.f, 1.f, 1.f), RendererCommon::defaultSubTexture);
 	Renderer2DBillboard::end();
 
+	m_mergeFBO->use();
+	RenderCommands::clearDepthAndColourBufferCommand()->action();
+	RenderCommands::setDepthTestCommand(true)->action();
+	if (UIFBO != nullptr) {
+		Renderer2D::MergeRender(m_sceneFBO->getTarget(0)->getID(), UIFBO->getTarget(0)->getID());
+	}
+	else {
+		Renderer2D::begin(m_swu2D);
+		Renderer2D::submit(m_screenQuad, m_screenTexture);
+		Renderer2D::end();
+	}
+
 	m_defaultFBO->use();
 
 	ImGuiHelper::begin();
 
 	ImGui::Begin("Renderer Output");
-	uint32_t textureID = m_sceneFBO->getTarget(0)->getID();
+	uint32_t textureID = m_mergeFBO->getTarget(0)->getID();
 	ImGui::Image((void*)textureID, ImVec2{ 800, 600 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
 	if (ImGui::IsWindowHovered()) m_mouseOverScene = true;
 	else m_mouseOverScene = false;
 	ImGui::End();

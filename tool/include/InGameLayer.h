@@ -11,6 +11,8 @@
 #include "engine.h"
 #include "rendering/renderer2D.h"
 #include "include/independent/UI/ModalWindow.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
+#include "platform/GLFW/ImGuiHelper.h"
 
 
 
@@ -40,4 +42,9 @@ private:
 	ModalWindow m_window; //Window to render on
 	std::string m_scoreStr[4];
 	std::string currenttime;
+
+	std::shared_ptr<FrameBuffer> m_defaultFBO;
+	Quad m_screenQuad;
+	SubTexture m_screenTexture;
+	bool m_mouseOverScene;
 };

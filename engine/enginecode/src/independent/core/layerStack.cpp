@@ -58,7 +58,17 @@ namespace Engine
 
 	void LayerStack::render()
 	{
-		for (auto& layer : m_stack) if (layer->isDisplayed()) layer->onRender();
+		for (auto& layer : m_stack) {
+			if (layer->isDisplayed()) layer->onRender();
+				
+			if (layer->getName() == "ImGui Layer") {
+				if (UI != nullptr) {
+					layer->UIFBO = UI;
+				}
+			}else if (layer->getName() == "InGame Layer") {
+				UI = layer->UIFBO;
+			}
+		}
 	}
 
 	void LayerStack::onKeyPressed(KeyPressedEvent& e)

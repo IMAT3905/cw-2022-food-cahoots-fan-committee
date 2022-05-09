@@ -56,6 +56,7 @@ namespace Engine
 		static void submit(char ch, const glm::vec2& position, float& advance, const glm::vec4& tint); //!< Render a single character with a tint \param ch is the character to be rendered \param position is the position of the character \param advance is the advance of the character \param tint is the tint to be applied to the character
 		static void submit(const char * text, const glm::vec2& position, const glm::vec4& tint); //!< Render a piece of text with a tint \param text is the collection of chars for the text \param position is the position of the text \param tint is the tint applied to the text
 		static glm::ivec2 GetTextSize(const char* text);
+		static void MergeRender(const uint32_t& texture, const uint32_t& texture2);
 
 		static void end(); //!< Ending a 2D scene
 		static void flush(); //!< Clearing the buffers and draw count
@@ -82,6 +83,7 @@ namespace Engine
 			SubTexture defaultSubTexture; //!< The default subtexture of the 2D shape
 			glm::vec4 defaultTint; //!< The default tint of the 2D shape
 			std::shared_ptr<Shader> shader; //!< A reference to the shader
+			std::shared_ptr<Shader> mergeshader;
 			std::shared_ptr<VertexArray> VAO; //!< The vertex array object
 			std::shared_ptr<UniformBuffer> UBO; //!< The uniform buffer object
 			glm::mat4 model; //!< The model 

@@ -11,6 +11,16 @@ InGameLayer::InGameLayer(const char* name) : Layer(name)
 	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
 	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
 
+	FrameBufferLayout FBlayout = { { AttachmentType::Colour, true }, { AttachmentType::Depth, false } };
+	UIFBO.reset(FrameBuffer::create({ window->getWidth(), window->getHeight() }, FBlayout));
+	m_defaultFBO.reset(FrameBuffer::createDefault());
+
+	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
+	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
+
+	m_screenQuad = Quad::createCentreHalfExtents({ window->getWidth() / 2, window->getHeight() / 2 }, { window->getWidth() / 2, window->getHeight() / 2 });
+	m_screenTexture = SubTexture(UIFBO->getTarget(0), { 0,1 }, { 1,0 });
+
 	SetInGame();
 
 	m_isFocused = false;
@@ -20,6 +30,14 @@ InGameLayer::InGameLayer(const char* name) : Layer(name)
 
 void InGameLayer::onRender()
 {
+	m_swu["u_view"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(view2D)));
+	m_swu["u_projection"] = std::pair<ShaderDataType, void*>(ShaderDataType::Mat4, static_cast<void*>(glm::value_ptr(projection2D)));
+
+	UIFBO->use();
+
+	RenderCommands::clearDepthAndColourBufferCommand()->action();
+	RenderCommands::setDepthTestCommand(true)->action();
+
 	switch (m_state) {
 	case UILayerState::Activating:
 		m_state = UILayerState::Active;

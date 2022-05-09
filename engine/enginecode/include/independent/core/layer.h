@@ -3,6 +3,7 @@
 
 #include <string>
 #include "window.h"
+#include "platform/OpenGL/OpenGLFrameBuffer.h"
 
 namespace Engine
 {
@@ -36,7 +37,7 @@ namespace Engine
 		int scores[4] = { 0,0,0,0 };
 		float selecttime = 5;
 		int numselected[4] = { 0,0,0,0 };
-
+		std::shared_ptr<FrameBuffer> UIFBO;
 	protected:
 		const char* m_name; //!< Name, useful for debugging
 		bool m_isDisplayed = true; //!< Should this layer be rendered

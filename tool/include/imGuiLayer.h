@@ -61,8 +61,10 @@ private:
 
 	std::shared_ptr<FrameBuffer> m_sceneFBO;
 	std::shared_ptr<FrameBuffer> m_defaultFBO;
+	std::shared_ptr<FrameBuffer> m_mergeFBO;
 	Quad m_screenQuad;
 	SubTexture m_screenTexture;
+	SubTexture m_mergetexture;
 	bool m_mouseOverScene;
 	glm::vec4 col;
 

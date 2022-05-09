@@ -31,6 +31,7 @@ namespace Engine
 		s_data->textureUnits = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
 
 		s_data->shader.reset(Shader::create("./assets/shaders/quad5.glsl"));
+		s_data->mergeshader.reset(Shader::create("./assets/shaders/merge.glsl"));
 
 		s_data->UBO.reset(UniformBuffer::create(UniformBufferLayout({
 			{ "u_projection", ShaderDataType::Mat4 },
@@ -326,5 +327,42 @@ namespace Engine
 		glm::vec2 halfextents = size / 2.0f;
 		glm::vec2 centre = topleft + halfextents;
 		return createCentreHalfExtents(centre, halfextents);
+	}
+
+	void Renderer2D::MergeRender(const uint32_t& texture, const uint32_t& texture2) {
+		Log::info(texture);
+		Log::info(texture2);
+		glUseProgram(s_data->mergeshader->getID());
+		glActiveTexture(GL_TEXTURE0 + texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE0 + texture2);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+
+		s_data->mergeshader->uploadInt("image1", texture);
+		s_data->mergeshader->uploadInt("image2", texture2);
+
+
+		float quadVertices[] = {
+			-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f,-1.0f,0.0f,0.0f,0.0f,
+			1.0f, 1.0f,0.0f, 1.0f,1.0f,
+			1.0f, -1.0f, 0.0f,1.0f,0.0f
+		};
+		unsigned int quadVBO, quadVAO;
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 }
