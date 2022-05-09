@@ -35,15 +35,15 @@ private:
 	glm::vec3 lightData[3] = { {1.0f, 1.0f, 1.0f}, { -2.0f, 4.0f, 6.0f }, { 0.0f, 0.0f, 0.0f } };
 	//glm::vec3 lightData[3] = { {1.f, 1.f, 1.f}, {1.0f, 40.0f, 6.0f}, {0.0f, 0.0f, 0.0f} };
 
-	std::shared_ptr<Material> pyramidMat;
-	std::shared_ptr<Material> letterCubeMat;
-	std::shared_ptr<Material> numberCubeMat;
 	std::shared_ptr<Material> checkerCubeMat;
 	std::shared_ptr<Material> conveyorMat;
 	std::shared_ptr<Material> playerOneMat;
 	std::shared_ptr<Material> playerTwoMat;
 	std::shared_ptr<Material> playerThreeMat;
 	std::shared_ptr<Material> playerFourMat;
+	std::shared_ptr<Material> plateMat;
+	std::shared_ptr<Material> orangeMat;
+	std::shared_ptr<Material> bombMat;
 
 	std::shared_ptr<Shader> TPShader;
 

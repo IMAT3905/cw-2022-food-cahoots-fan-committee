@@ -164,9 +164,6 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 #pragma region MATERIALS
 
-	pyramidMat.reset(new Material(TPShader, { 0.4f, 0.7f, 0.3f, 1.f }));
-	letterCubeMat.reset(new Material(TPShader, letterTexture));
-	numberCubeMat.reset(new Material(TPShader, numberTexture));
 	checkerCubeMat.reset(new Material(TPShader, checkerTexture));
 	conveyorMat.reset(new Material(TPShader, { 0.5f, 0.5f, 0.5f, 1.f }));
 
@@ -415,19 +412,19 @@ void ImGuiLayer::onRender()
 	conveyorMat->setTint(glm::vec4(col));
 
 	col = playerOneMat->getTint();
-	ImGui::ColorEdit4(" : Player One", (float*)&col);
+	ImGui::ColorEdit4(" : Player 1", (float*)&col);
 	playerOneMat->setTint(glm::vec4(col));
 
 	col = playerTwoMat->getTint();
-	ImGui::ColorEdit4(" : Player Two", (float*)&col);
+	ImGui::ColorEdit4(" : Player 2", (float*)&col);
 	playerTwoMat->setTint(glm::vec4(col));
 
 	col = playerThreeMat->getTint();
-	ImGui::ColorEdit4(" : Player Three", (float*)&col);
+	ImGui::ColorEdit4(" : Player 3", (float*)&col);
 	playerThreeMat->setTint(glm::vec4(col));
 
 	col = playerFourMat->getTint();
-	ImGui::ColorEdit4(" : Player Four", (float*)&col);
+	ImGui::ColorEdit4(" : Player 4", (float*)&col);
 	playerFourMat->setTint(glm::vec4(col));
 
 	ImGui::End();
@@ -546,27 +543,46 @@ bool ImGuiLayer::loadJSONfile()
 		for (auto& entity : view)
 		{
 			std::string label = m_registry.get<LabelComponent>(entity).label;
+			uint32_t playerNumber = 0;
+			std::shared_ptr<Material> mat;
 			if (label == "Player1")
 			{
-				if (jsonData.count("model 1") > 0)
-				{
-					auto& model = jsonData["model 1"];
-					if (model.count("tint") > 0)
-					{
-						std::shared_ptr<Material> material = m_registry.get<RenderComponent>(entity).material;
-						glm::vec4 loadedTint = material->getTint();
-						auto& tint = model["tint"];
-						if (tint.count("r") > 0) loadedTint.r = tint["r"].get<float>();
-						if (tint.count("g") > 0) loadedTint.g = tint["g"].get<float>();
-						if (tint.count("b") > 0) loadedTint.b = tint["b"].get<float>();
-						if (tint.count("a") > 0) loadedTint.a = tint["a"].get<float>();
-						material->setTint(loadedTint);
-					}
-				}
+				playerNumber = 1;
+				mat = playerOneMat;
 			}
+			else if (label == "Player2")
+			{
+				playerNumber = 2;
+				mat = playerTwoMat;
+			}
+			else if (label == "Player3")
+			{
+				playerNumber = 3;
+				mat = playerThreeMat;
+			}
+			else if (label == "Player4")
+			{
+				playerNumber = 4;
+				mat = playerFourMat;
+			}
+
+			if (jsonData.count("model " + std::to_string(playerNumber)) > 0)
+			{
+				auto& model = jsonData["model " + std::to_string(playerNumber)];
+				if (model.count("tint") > 0)
+				{
+					Log::debug("Model " + std::to_string(playerNumber));
+					glm::vec4 loadedTint = mat->getTint();
+					auto& tint = model["tint"];
+					if (tint.count("r") > 0) loadedTint.r = tint["r"].get<float>();
+					if (tint.count("g") > 0) loadedTint.g = tint["g"].get<float>();
+					if (tint.count("b") > 0) loadedTint.b = tint["b"].get<float>();
+					if (tint.count("a") > 0) loadedTint.a = tint["a"].get<float>();
+					mat->setTint(loadedTint);
+				}
+			}		
 		}
 		
-
 		handle.close();
 		Log::info("JSON file loaded.");
 	}
@@ -590,6 +606,26 @@ bool ImGuiLayer::saveJSONfile()
 	jsonData["floor"]["tint"]["g"] = checkerCubeMat->getTint().g;
 	jsonData["floor"]["tint"]["b"] = checkerCubeMat->getTint().b;
 	jsonData["floor"]["tint"]["a"] = checkerCubeMat->getTint().a;
+
+	jsonData["model 1"]["tint"]["r"] = playerOneMat->getTint().r;
+	jsonData["model 1"]["tint"]["g"] = playerOneMat->getTint().g;
+	jsonData["model 1"]["tint"]["b"] = playerOneMat->getTint().b;
+	jsonData["model 1"]["tint"]["a"] = playerOneMat->getTint().a;
+
+	jsonData["model 2"]["tint"]["r"] = playerTwoMat->getTint().r;
+	jsonData["model 2"]["tint"]["g"] = playerTwoMat->getTint().g;
+	jsonData["model 2"]["tint"]["b"] = playerTwoMat->getTint().b;
+	jsonData["model 2"]["tint"]["a"] = playerTwoMat->getTint().a;
+
+	jsonData["model 3"]["tint"]["r"] = playerThreeMat->getTint().r;
+	jsonData["model 3"]["tint"]["g"] = playerThreeMat->getTint().g;
+	jsonData["model 3"]["tint"]["b"] = playerThreeMat->getTint().b;
+	jsonData["model 3"]["tint"]["a"] = playerThreeMat->getTint().a;
+
+	jsonData["model 4"]["tint"]["r"] = playerFourMat->getTint().r;
+	jsonData["model 4"]["tint"]["g"] = playerFourMat->getTint().g;
+	jsonData["model 4"]["tint"]["b"] = playerFourMat->getTint().b;
+	jsonData["model 4"]["tint"]["a"] = playerFourMat->getTint().a;
 
 	std::ofstream handle("./assets/json/settings.json");
 	handle << jsonData;
