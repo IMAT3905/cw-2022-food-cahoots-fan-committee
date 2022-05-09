@@ -229,6 +229,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 	//Plate
 	Loader::ASSIMPLoad("./assets/models/Plate_working/plateTest.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 	material = Loader::s_material;
+	plateMat = material;
 	material->setShader(TPShader);
 	geo = Loader::s_geometry;
 
@@ -256,12 +257,6 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 		GenerateArrayPos(objectid);
 	}
 
-
-	Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
-	material = Loader::s_material;
-	material->setShader(TPShader);
-	geo = Loader::s_geometry;
-
 	for (uint32_t i = entcount; i < entcount + platecount; i++)
 	{
 ;		m_entities.push_back(m_registry.create());
@@ -270,6 +265,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 			//Orange
 			Loader::ASSIMPLoad("./assets/models/Orange_OBJ/Orange.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 			material = Loader::s_material;
+			orangeMat = material;
 			material->setShader(TPShader);
 			geo = Loader::s_geometry;
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Orange");
@@ -280,6 +276,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 			//Bomb
 			Loader::ASSIMPLoad("./assets/models/Bomb/bomb_OBJ.obj", aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_Triangulate /* | aiProcess_GenSmoothNormals*/, material, geo);
 			material = Loader::s_material;
+			bombMat = material;
 			material->setShader(TPShader);
 			geo = Loader::s_geometry;
 			m_registry.emplace<LabelComponent>(m_entities.back(), "Bomb");
@@ -427,6 +424,10 @@ void ImGuiLayer::onRender()
 	ImGui::ColorEdit4(" : Player 4", (float*)&col);
 	playerFourMat->setTint(glm::vec4(col));
 
+	col = plateMat->getTint();
+	ImGui::ColorEdit4(" : Plate", (float*)&col);
+	plateMat->setTint(glm::vec4(col));
+
 	ImGui::End();
 
 	ImGuiHelper::end();
@@ -539,6 +540,21 @@ bool ImGuiLayer::loadJSONfile()
 			}
 		}
 
+		if (jsonData.count("plate") > 0)
+		{
+			auto& plate = jsonData["plate"];
+			if (plate.count("tint") > 0)
+			{
+				glm::vec4 loadedTint = plateMat->getTint();
+				auto& tint = plate["tint"];
+				if (tint.count("r") > 0) loadedTint.r = tint["r"].get<float>();
+				if (tint.count("g") > 0) loadedTint.g = tint["g"].get<float>();
+				if (tint.count("b") > 0) loadedTint.b = tint["b"].get<float>();
+				if (tint.count("a") > 0) loadedTint.a = tint["a"].get<float>();
+				plateMat->setTint(loadedTint);
+			}
+		}
+
 		auto& view = m_registry.view<NativeScriptComponent>();
 		for (auto& entity : view)
 		{
@@ -626,6 +642,11 @@ bool ImGuiLayer::saveJSONfile()
 	jsonData["model 4"]["tint"]["g"] = playerFourMat->getTint().g;
 	jsonData["model 4"]["tint"]["b"] = playerFourMat->getTint().b;
 	jsonData["model 4"]["tint"]["a"] = playerFourMat->getTint().a;
+
+	jsonData["plate"]["tint"]["r"] = plateMat->getTint().r;
+	jsonData["plate"]["tint"]["g"] = plateMat->getTint().g;
+	jsonData["plate"]["tint"]["b"] = plateMat->getTint().b;
+	jsonData["plate"]["tint"]["a"] = plateMat->getTint().a;
 
 	std::ofstream handle("./assets/json/settings.json");
 	handle << jsonData;
