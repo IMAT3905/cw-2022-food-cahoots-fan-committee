@@ -330,8 +330,6 @@ namespace Engine
 	}
 
 	void Renderer2D::MergeRender(const uint32_t& texture, const uint32_t& texture2) {
-		Log::info(texture);
-		Log::info(texture2);
 		glUseProgram(s_data->mergeshader->getID());
 		glActiveTexture(GL_TEXTURE0 + texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
