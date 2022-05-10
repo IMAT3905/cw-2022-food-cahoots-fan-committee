@@ -33,18 +33,18 @@ namespace Engine
         glm::vec3 up = { m_transform[1][0], m_transform[1][1], m_transform[1][0] };
 
         //strafing
-        if (InputPoller::isKeyPressed(NG_KEY_A)) m_position -= (right * m_speed * timestep);
-        if (InputPoller::isKeyPressed(NG_KEY_D)) m_position += (right * m_speed * timestep);
+        //if (InputPoller::isKeyPressed(NG_KEY_A)) m_position -= (right * m_speed * timestep);
+        //if (InputPoller::isKeyPressed(NG_KEY_D)) m_position += (right * m_speed * timestep);
 
-        if (InputPoller::isKeyPressed(NG_KEY_W)) m_position += (forward * m_speed * timestep);
-        if (InputPoller::isKeyPressed(NG_KEY_S)) m_position -= (forward * m_speed * timestep);
+        //if (InputPoller::isKeyPressed(NG_KEY_W)) m_position += (forward * m_speed * timestep);
+        //if (InputPoller::isKeyPressed(NG_KEY_S)) m_position -= (forward * m_speed * timestep);
 
         //rotation with key presses
-        if (InputPoller::isKeyPressed(NG_KEY_LEFT)) m_rotation.y += m_rotationSpeed * timestep;
-        if (InputPoller::isKeyPressed(NG_KEY_RIGHT)) m_rotation.y -= m_rotationSpeed * timestep;
+        //if (InputPoller::isKeyPressed(NG_KEY_LEFT)) m_rotation.y += m_rotationSpeed * timestep;
+        //if (InputPoller::isKeyPressed(NG_KEY_RIGHT)) m_rotation.y -= m_rotationSpeed * timestep;
 
-        if (InputPoller::isKeyPressed(NG_KEY_UP)) m_rotation.x += m_rotationSpeed * timestep;
-        if (InputPoller::isKeyPressed(NG_KEY_DOWN)) m_rotation.x -= m_rotationSpeed * timestep;
+        //if (InputPoller::isKeyPressed(NG_KEY_UP)) m_rotation.x += m_rotationSpeed * timestep;
+        //if (InputPoller::isKeyPressed(NG_KEY_DOWN)) m_rotation.x -= m_rotationSpeed * timestep;
 
         //Mouse controls for camera
         glm::vec2 currentMousePos = InputPoller::getMousePosition();

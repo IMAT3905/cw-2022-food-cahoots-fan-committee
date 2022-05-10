@@ -587,7 +587,6 @@ bool ImGuiLayer::loadJSONfile()
 				auto& model = jsonData["model " + std::to_string(playerNumber)];
 				if (model.count("tint") > 0)
 				{
-					Log::debug("Model " + std::to_string(playerNumber));
 					glm::vec4 loadedTint = mat->getTint();
 					auto& tint = model["tint"];
 					if (tint.count("r") > 0) loadedTint.r = tint["r"].get<float>();
