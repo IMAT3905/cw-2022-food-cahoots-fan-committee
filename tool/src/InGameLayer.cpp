@@ -83,26 +83,25 @@ void InGameLayer::onUpdate(float timestep)
 
 void InGameLayer::SetInGame() {
 	HorizontalContainer top, bottom;
-	top.AddWidget<Spacer>(0, 500);
-	top.AddWidget<Label>(100, 100, currenttime.c_str(), Justification::left);
-	top.AddWidget<Spacer>(0, 650);
+	top.AddWidget<Spacer>(-200, 400);
+	top.AddWidget<Label>(0, -100, currenttime.c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(0, 0);
+	bottom.AddWidget<Spacer>(-200, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[0].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Spacer>(50, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 1, 0, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[1].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Spacer>(50, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(0, 0, 1, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[2].c_str(), Justification::left);
 
-	bottom.AddWidget<Spacer>(200, 0);
+	bottom.AddWidget<Spacer>(50, 0);
 	bottom.AddWidget<ColouredSquare>(50, 50, glm::vec4(1, 0, 1, 1));
 	bottom.AddWidget<Spacer>(10, 0);
 	bottom.AddWidget<Label>(10, 100, m_scoreStr[3].c_str(), Justification::left);
