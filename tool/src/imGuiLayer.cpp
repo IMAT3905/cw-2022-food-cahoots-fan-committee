@@ -314,7 +314,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player2");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, -4.5f), glm::vec3(0.f, 4.7f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.f, 0.5f, -4.5f), glm::vec3(0.f, 4.71239f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
 	//Right
@@ -326,7 +326,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player3");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(4.5f, 0.5f, 0.f), glm::vec3(0.f, 9.4f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(4.5f, 0.5f, 0.f), glm::vec3(0.f, 3.14159f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
 	//Bottom
@@ -338,7 +338,7 @@ ImGuiLayer::ImGuiLayer(const char* name) : Layer(name), m_registry(Application::
 
 	m_entities.push_back(m_registry.create());
 	m_registry.emplace<LabelComponent>(m_entities.back(), "Player4");
-	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.0, 0.5f, 4.5f), glm::vec3(0.f, 14.1f, 0.f), glm::vec3(1.f, 1.f, 1.f));
+	m_registry.emplace<TransformComponent>(m_entities.back(), glm::vec3(0.0, 0.5f, 4.5f), glm::vec3(0.f, 1.5708f, 0.f), glm::vec3(1.f, 1.f, 1.f));
 	m_registry.emplace<RenderComponent>(m_entities.back(), geo, material);
 
 	//Quad

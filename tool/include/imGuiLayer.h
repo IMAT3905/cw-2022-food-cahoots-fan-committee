@@ -65,6 +65,7 @@ private:
 	SubTexture m_screenTexture;
 	bool m_mouseOverScene;
 	glm::vec4 col;
+	float rotation = 0;
 
 	float movetime = 4.75f;
 
